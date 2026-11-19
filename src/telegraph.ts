@@ -123,10 +123,21 @@ export function createEngineTransport(
         x402Version: 2,
         scheme: "escrow",
         network: escrow.network,
-        payload: { signature, authorization: { from, to: escrow.payTo, value, validAfter, validBefore, nonce } },
+        // The escrow rail wants value and the validity bounds as strings (anjoman.ai/docs/using/escrow-inference).
+        payload: {
+          signature,
+          authorization: { from, to: escrow.payTo, value, validAfter: String(validAfter), validBefore: String(validBefore), nonce },
+        },
       };
       const paid = await send({ "x-payment": Buffer.from(JSON.stringify(payload)).toString("base64") });
-      if (paid.status !== 200) throw new TransportError(`paid ask answered ${paid.status}`, paid.status);
+      if (paid.status !== 200) {
+        // Refusals carry a reason (wrong amount, expired, signer mismatch, insufficient escrow): surface it.
+        const reason = await paid
+          .json()
+          .then((b: { reason?: string; error?: string }) => b.reason ?? b.error ?? "")
+          .catch(() => "");
+        throw new TransportError(`paid ask answered ${paid.status}${reason ? `: ${reason}` : ""}`, paid.status);
+      }
       const json = (await paid.json()) as { result?: Record<string, unknown>; signal_hash?: string; cost_usd?: number };
       const raw = paid.headers.get("x-payment-response");
       const receipt = raw ? (fromBase64Json(raw) as { receipt_hash?: string; rail?: string; amount_uusdc?: number }) : {};
