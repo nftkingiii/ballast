@@ -1,0 +1,338 @@
+{
+  "label": "DEMO: recorded public data from 2026-11-19T17:50Z, not Telegraph answers",
+  "recordedAt": "2026-11-19T17:50:33.544Z",
+  "note": "Recorded from free public sources. Telegraph was not called. `shaped` entries are the answers a Telegraph miner would give, taken from the same underlying service (Pecos and Gauge answer on their own public endpoints) or derived from public data (weather). They carry no Telegraph receipt.",
+  "public": {
+    "tipHeight": 976618,
+    "hashprice": {
+      "usdPerPhDay": 28.15166327776305,
+      "btcUsd": 62887,
+      "hashrateEhS": 1011.4172296165169,
+      "source": "mempool.space reward-stats(144), prices, hashrate(3d)"
+    },
+    "ercot": [
+      {
+        "market": "real-time",
+        "node": "HB_WEST",
+        "intervalStart": "2026-11-19T17:30:00.000Z",
+        "lmp": 16.79,
+        "source": "ERCOT public MIS archive, NP6-905-CD"
+      },
+      {
+        "market": "day-ahead",
+        "node": "HB_WEST",
+        "intervalStart": "2026-11-19T17:00:00.000Z",
+        "lmp": 13.69,
+        "source": "ERCOT public MIS archive, NP4-190-CD"
+      },
+      {
+        "market": "day-ahead",
+        "node": "HB_WEST",
+        "intervalStart": "2026-11-19T18:00:00.000Z",
+        "lmp": 12.4,
+        "source": "ERCOT public MIS archive, NP4-190-CD"
+      },
+      {
+        "market": "day-ahead",
+        "node": "HB_WEST",
+        "intervalStart": "2026-11-19T19:00:00.000Z",
+        "lmp": 13.16,
+        "source": "ERCOT public MIS archive, NP4-190-CD"
+      },
+      {
+        "market": "day-ahead",
+        "node": "HB_WEST",
+        "intervalStart": "2026-11-19T20:00:00.000Z",
+        "lmp": 13.79,
+        "source": "ERCOT public MIS archive, NP4-190-CD"
+      },
+      {
+        "market": "day-ahead",
+        "node": "HB_WEST",
+        "intervalStart": "2026-11-19T21:00:00.000Z",
+        "lmp": 17.35,
+        "source": "ERCOT public MIS archive, NP4-190-CD"
+      },
+      {
+        "market": "day-ahead",
+        "node": "HB_WEST",
+        "intervalStart": "2026-11-19T22:00:00.000Z",
+        "lmp": 33.19,
+        "source": "ERCOT public MIS archive, NP4-190-CD"
+      },
+      {
+        "market": "day-ahead",
+        "node": "HB_WEST",
+        "intervalStart": "2026-11-19T23:00:00.000Z",
+        "lmp": 45.45,
+        "source": "ERCOT public MIS archive, NP4-190-CD"
+      },
+      {
+        "market": "day-ahead",
+        "node": "HB_WEST",
+        "intervalStart": "2026-11-20T00:00:00.000Z",
+        "lmp": 36.99,
+        "source": "ERCOT public MIS archive, NP4-190-CD"
+      }
+    ],
+    "forecast": {
+      "hourlyC": {
+        "2026-11-19T17:00:00.000Z": 11.7,
+        "2026-11-19T18:00:00.000Z": 13.5,
+        "2026-11-19T19:00:00.000Z": 15.5,
+        "2026-11-19T20:00:00.000Z": 17.3,
+        "2026-11-19T21:00:00.000Z": 17.8,
+        "2026-11-19T22:00:00.000Z": 18.7,
+        "2026-11-19T23:00:00.000Z": 19.1,
+        "2026-11-20T00:00:00.000Z": 16.5
+      },
+      "source": "Open-Meteo forecast"
+    },
+    "observed": [
+      {
+        "date": "2026-11-18",
+        "highC": 18.6,
+        "source": "Open-Meteo archive"
+      }
+    ]
+  },
+  "shaped": {
+    "power": [
+      {
+        "market": "real-time",
+        "minerId": "7310042",
+        "intervalStart": "2026-11-19T17:30:00.000Z",
+        "answeredAt": "2026-11-19T17:50:04.925Z",
+        "result": {
+          "lmp_usd_per_mwh": 16.79,
+          "node_or_zone": "HB_WEST",
+          "market": "real-time",
+          "interval_start": "2026-11-19T17:30:00.000Z",
+          "currency": "USD",
+          "iso": "ERCOT",
+          "delivery": {
+            "deliveryDate": "2026-11-19",
+            "deliveryHour": 12,
+            "deliveryInterval": 3
+          },
+          "source_report": "np6-905-cd/spp_node_zone_hub",
+          "fetched_at": "2026-11-19T17:50:04.925Z"
+        },
+        "recordedFrom": "https://pecos-app.up.railway.app/price?node_or_zone=HB_WEST&market=real-time&interval_start=2026-11-19T17:30:00.000Z"
+      },
+      {
+        "market": "day-ahead",
+        "minerId": "7310042",
+        "intervalStart": "2026-11-19T17:00:00.000Z",
+        "answeredAt": "2026-11-19T17:50:10.553Z",
+        "result": {
+          "lmp_usd_per_mwh": 13.69,
+          "node_or_zone": "HB_WEST",
+          "market": "day-ahead",
+          "interval_start": "2026-11-19T17:00:00.000Z",
+          "currency": "USD",
+          "iso": "ERCOT",
+          "delivery": {
+            "deliveryDate": "2026-11-19",
+            "deliveryHour": 12,
+            "deliveryInterval": 1
+          },
+          "source_report": "np4-190-cd/dam_stlmnt_pnt_prices",
+          "fetched_at": "2026-11-19T17:50:10.553Z"
+        },
+        "recordedFrom": "https://pecos-app.up.railway.app/price?node_or_zone=HB_WEST&market=day-ahead&interval_start=2026-11-19T17:00:00.000Z"
+      },
+      {
+        "market": "day-ahead",
+        "minerId": "7310042",
+        "intervalStart": "2026-11-19T18:00:00.000Z",
+        "answeredAt": "2026-11-19T17:50:13.608Z",
+        "result": {
+          "lmp_usd_per_mwh": 12.4,
+          "node_or_zone": "HB_WEST",
+          "market": "day-ahead",
+          "interval_start": "2026-11-19T18:00:00.000Z",
+          "currency": "USD",
+          "iso": "ERCOT",
+          "delivery": {
+            "deliveryDate": "2026-11-19",
+            "deliveryHour": 13,
+            "deliveryInterval": 1
+          },
+          "source_report": "np4-190-cd/dam_stlmnt_pnt_prices",
+          "fetched_at": "2026-11-19T17:50:13.608Z"
+        },
+        "recordedFrom": "https://pecos-app.up.railway.app/price?node_or_zone=HB_WEST&market=day-ahead&interval_start=2026-11-19T18:00:00.000Z"
+      },
+      {
+        "market": "day-ahead",
+        "minerId": "7310042",
+        "intervalStart": "2026-11-19T19:00:00.000Z",
+        "answeredAt": "2026-11-19T17:50:15.901Z",
+        "result": {
+          "lmp_usd_per_mwh": 13.16,
+          "node_or_zone": "HB_WEST",
+          "market": "day-ahead",
+          "interval_start": "2026-11-19T19:00:00.000Z",
+          "currency": "USD",
+          "iso": "ERCOT",
+          "delivery": {
+            "deliveryDate": "2026-11-19",
+            "deliveryHour": 14,
+            "deliveryInterval": 1
+          },
+          "source_report": "np4-190-cd/dam_stlmnt_pnt_prices",
+          "fetched_at": "2026-11-19T17:50:15.901Z"
+        },
+        "recordedFrom": "https://pecos-app.up.railway.app/price?node_or_zone=HB_WEST&market=day-ahead&interval_start=2026-11-19T19:00:00.000Z"
+      },
+      {
+        "market": "day-ahead",
+        "minerId": "7310042",
+        "intervalStart": "2026-11-19T20:00:00.000Z",
+        "answeredAt": "2026-11-19T17:50:17.988Z",
+        "result": {
+          "lmp_usd_per_mwh": 13.79,
+          "node_or_zone": "HB_WEST",
+          "market": "day-ahead",
+          "interval_start": "2026-11-19T20:00:00.000Z",
+          "currency": "USD",
+          "iso": "ERCOT",
+          "delivery": {
+            "deliveryDate": "2026-11-19",
+            "deliveryHour": 15,
+            "deliveryInterval": 1
+          },
+          "source_report": "np4-190-cd/dam_stlmnt_pnt_prices",
+          "fetched_at": "2026-11-19T17:50:17.988Z"
+        },
+        "recordedFrom": "https://pecos-app.up.railway.app/price?node_or_zone=HB_WEST&market=day-ahead&interval_start=2026-11-19T20:00:00.000Z"
+      },
+      {
+        "market": "day-ahead",
+        "minerId": "7310042",
+        "intervalStart": "2026-11-19T21:00:00.000Z",
+        "answeredAt": "2026-11-19T17:50:19.952Z",
+        "result": {
+          "lmp_usd_per_mwh": 17.35,
+          "node_or_zone": "HB_WEST",
+          "market": "day-ahead",
+          "interval_start": "2026-11-19T21:00:00.000Z",
+          "currency": "USD",
+          "iso": "ERCOT",
+          "delivery": {
+            "deliveryDate": "2026-11-19",
+            "deliveryHour": 16,
+            "deliveryInterval": 1
+          },
+          "source_report": "np4-190-cd/dam_stlmnt_pnt_prices",
+          "fetched_at": "2026-11-19T17:50:19.952Z"
+        },
+        "recordedFrom": "https://pecos-app.up.railway.app/price?node_or_zone=HB_WEST&market=day-ahead&interval_start=2026-11-19T21:00:00.000Z"
+      },
+      {
+        "market": "day-ahead",
+        "minerId": "7310042",
+        "intervalStart": "2026-11-19T22:00:00.000Z",
+        "answeredAt": "2026-11-19T17:50:21.960Z",
+        "result": {
+          "lmp_usd_per_mwh": 33.19,
+          "node_or_zone": "HB_WEST",
+          "market": "day-ahead",
+          "interval_start": "2026-11-19T22:00:00.000Z",
+          "currency": "USD",
+          "iso": "ERCOT",
+          "delivery": {
+            "deliveryDate": "2026-11-19",
+            "deliveryHour": 17,
+            "deliveryInterval": 1
+          },
+          "source_report": "np4-190-cd/dam_stlmnt_pnt_prices",
+          "fetched_at": "2026-11-19T17:50:21.960Z"
+        },
+        "recordedFrom": "https://pecos-app.up.railway.app/price?node_or_zone=HB_WEST&market=day-ahead&interval_start=2026-11-19T22:00:00.000Z"
+      },
+      {
+        "market": "day-ahead",
+        "minerId": "7310042",
+        "intervalStart": "2026-11-19T23:00:00.000Z",
+        "answeredAt": "2026-11-19T17:50:24.170Z",
+        "result": {
+          "lmp_usd_per_mwh": 45.45,
+          "node_or_zone": "HB_WEST",
+          "market": "day-ahead",
+          "interval_start": "2026-11-19T23:00:00.000Z",
+          "currency": "USD",
+          "iso": "ERCOT",
+          "delivery": {
+            "deliveryDate": "2026-11-19",
+            "deliveryHour": 18,
+            "deliveryInterval": 1
+          },
+          "source_report": "np4-190-cd/dam_stlmnt_pnt_prices",
+          "fetched_at": "2026-11-19T17:50:24.170Z"
+        },
+        "recordedFrom": "https://pecos-app.up.railway.app/price?node_or_zone=HB_WEST&market=day-ahead&interval_start=2026-11-19T23:00:00.000Z"
+      },
+      {
+        "market": "day-ahead",
+        "minerId": "7310042",
+        "intervalStart": "2026-11-20T00:00:00.000Z",
+        "answeredAt": "2026-11-19T17:50:26.277Z",
+        "result": {
+          "lmp_usd_per_mwh": 36.99,
+          "node_or_zone": "HB_WEST",
+          "market": "day-ahead",
+          "interval_start": "2026-11-20T00:00:00.000Z",
+          "currency": "USD",
+          "iso": "ERCOT",
+          "delivery": {
+            "deliveryDate": "2026-11-19",
+            "deliveryHour": 19,
+            "deliveryInterval": 1
+          },
+          "source_report": "np4-190-cd/dam_stlmnt_pnt_prices",
+          "fetched_at": "2026-11-19T17:50:26.277Z"
+        },
+        "recordedFrom": "https://pecos-app.up.railway.app/price?node_or_zone=HB_WEST&market=day-ahead&interval_start=2026-11-20T00:00:00.000Z"
+      }
+    ],
+    "hashprice": [
+      {
+        "minerId": "4283",
+        "answeredAt": "2026-11-19T17:50:32.081Z",
+        "result": {
+          "hashprice_sats_per_ph_day": 46739.759367,
+          "block_height": 976618,
+          "hashrate_eh_s": 965.10662,
+          "hashprice_usd_per_ph_day": null,
+          "sources": [
+            {
+              "name": "blockchain.info",
+              "value": 46739.759367,
+              "fetched_at": "2026-11-19T17:50:32.358Z"
+            }
+          ],
+          "spread_pct": 0,
+          "method": "block reward (subsidy + fees) x 144 / network hashrate from the block's difficulty"
+        },
+        "recordedFrom": "https://gauge.129.121.144.223.sslip.io/hashprice?block_height=976618"
+      }
+    ],
+    "weather": [
+      {
+        "minerId": "76001",
+        "date": "2026-11-18",
+        "answeredAt": "2026-11-19T17:50:33.544Z",
+        "recordedFrom": "https://archive-api.open-meteo.com/v1/archive?latitude=31.42&longitude=-103.49&start_date=2026-11-18&end_date=2026-11-18&daily=temperature_2m_max,temperature_2m_min,precipitation_sum&timezone=UTC",
+        "result": {
+          "location": "Pecos, Texas",
+          "date": "2026-11-18",
+          "temp_max_c": 18.6,
+          "temp_min_c": 7.1,
+          "precipitation_mm": 0
+        }
+      }
+    ]
+  }
+}
