@@ -137,3 +137,36 @@ test("HTTP tool surface: needs the api key, serves the OpenAPI document, never l
   assert.equal(ok.status, 200);
   assert.equal(ok.body.plan.mode, "demo");
 });
+
+test("hybrid transport: power prices go to escrow, everything else to Anjoman", async () => {
+  const { hybridTransport } = await import("../src/runtime.ts");
+  const seen: string[] = [];
+  const fake = (name: string) => ({ kind: "engine" as const, ask: async (r: { intent: string; minerId: string }) => { seen.push(`${name}:${r.intent}`); return { minerId: r.minerId, result: {}, costUsd: 0.01, answeredAt: "t", receipt: {} }; } });
+  const t = hybridTransport(fake("escrow") as never, fake("anjoman") as never);
+  await t.ask({ ...request, intent: "GRID_POWER_PRICE_GENERAL" });
+  await t.ask({ ...request, intent: "MINING_HASHPRICE_VERIFY_GENERAL" });
+  await t.ask({ ...request, intent: "WEATHER_FORECAST_VERIFY_GENERAL" });
+  assert.deepEqual(seen, ["escrow:GRID_POWER_PRICE_GENERAL", "anjoman:MINING_HASHPRICE_VERIFY_GENERAL", "anjoman:WEATHER_FORECAST_VERIFY_GENERAL"]);
+  assert.equal(t.kind, "hybrid");
+});
+
+test("anjoman transport: stream mode takes the job id from the early event, then polls the job", async () => {
+  const sse = 'event: conversation\ndata: {"conversationId":"c1"}\n\nevent: job\ndata: {"jobId":"j9"}\n\nevent: token\ndata: {"t":"..."}\n\n';
+  let polls = 0;
+  const http = (async (url: string) => {
+    if (url.endsWith("/agent/chat")) return new Response(sse, { status: 200, headers: { "content-type": "text/event-stream" } });
+    polls++;
+    if (polls < 2) return new Response(JSON.stringify({ jobId: "j9", status: "running" }), { status: 200 });
+    return new Response(JSON.stringify({ jobId: "j9", status: "complete", answer: '{"lmp_usd_per_mwh": 16.23}', costUsd: 0.01, sources: [{ receiptHash: "0xr9", miner: { id: "7310042" } }] }), { status: 200 });
+  }) as unknown as typeof fetch;
+  const answer = await createAnjomanTransport("k", http, () => Date.now()).ask(request);
+  assert.equal(answer.receipt.jobId, "j9");
+  assert.equal(answer.receipt.receiptHash, "0xr9");
+  assert.equal(answer.result.lmp_usd_per_mwh, 16.23);
+  assert.ok(polls >= 2);
+});
+
+test("anjoman transport: a gateway 5xx says the job may still have run", async () => {
+  const http = (async () => new Response("bad gateway", { status: 504 })) as unknown as typeof fetch;
+  await assert.rejects(() => createAnjomanTransport("k", http).ask(request), /504 \(the job may still have run/);
+});

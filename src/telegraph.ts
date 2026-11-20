@@ -25,7 +25,7 @@ export interface Answer {
 }
 
 export interface Transport {
-  readonly kind: "fixture" | "engine" | "anjoman";
+  readonly kind: "fixture" | "engine" | "anjoman" | "hybrid";
   ask(request: AskRequest): Promise<Answer>;
 }
 
@@ -167,6 +167,38 @@ interface ChatReply {
  * which takes plain language, so the message names the intent, miner and params and asks for one JSON
  * object back. Anything that does not parse is refused rather than guessed at.
  */
+/** Reads a server-sent event stream until the `job` event and returns its jobId (or undefined if none arrives). */
+async function firstJobId(res: Response): Promise<string | undefined> {
+  const reader = res.body?.getReader();
+  if (!reader) return undefined;
+  const decoder = new TextDecoder();
+  let buffer = "";
+  try {
+    for (;;) {
+      const { value, done } = await reader.read();
+      if (done) return undefined;
+      buffer += decoder.decode(value, { stream: true });
+      let cut: number;
+      while ((cut = buffer.indexOf("\n\n")) !== -1) {
+        const block = buffer.slice(0, cut);
+        buffer = buffer.slice(cut + 2);
+        const event = /^event:\s*(.+)$/m.exec(block)?.[1]?.trim();
+        const data = block.split("\n").filter((l) => l.startsWith("data:")).map((l) => l.slice(5).trim()).join("\n");
+        if (!data) continue;
+        try {
+          const parsed = JSON.parse(data) as { jobId?: string; job?: { jobId?: string } };
+          const id = parsed.jobId ?? parsed.job?.jobId;
+          if (id && (event === "job" || event === undefined || event === "conversation")) return id;
+        } catch {
+          /* not JSON: keep reading */
+        }
+      }
+    }
+  } finally {
+    reader.cancel().catch(() => {});
+  }
+}
+
 /** The plain-language question each intent answers, built from its canonical parameters. */
 const QUESTION: Record<string, (p: Record<string, unknown>) => string> = {
   MINING_HASHPRICE_VERIFY_GENERAL: (p) => `What is the Bitcoin hashprice at block height ${p.block_height}?`,
@@ -180,7 +212,7 @@ export function createAnjomanTransport(
   http: Fetch = fetch,
   now = () => Date.now(),
   base = ANJOMAN_API,
-  waitMs = 120_000,
+  waitMs = 180_000,
 ): Transport {
   const headers = { authorization: `Bearer ${apiKey}`, "content-type": "application/json", accept: "application/json" };
   return {
@@ -195,16 +227,41 @@ export function createAnjomanTransport(
         `Use Telegraph intent ${request.intent} and buy the answer from miner ${request.minerId}; these are the intent parameters: ${JSON.stringify(call)}. ` +
         `If the miner needs a plain-language question, ask it this question. ` +
         `Reply with only the miner's answer fields as one JSON object, no commentary.`;
-      const res = await http(`${base}/agent/chat`, {
-        method: "POST",
-        headers,
-        body: JSON.stringify({ message, stream: false, maxSpendUsd: request.maxCostUsd }),
-        signal: AbortSignal.timeout(100_000),
-      });
-      if (res.status !== 200 && res.status !== 202) throw new TransportError(`Anjoman answered ${res.status}`, res.status);
-      let reply = (await res.json()) as ChatReply;
+      // Stream mode: Anjoman sends the job id as an early `job` event, so Ballast never holds a long request
+      // open. Waiting on one JSON reply (stream: false) hit gateway 504s on slower questions before Anjoman's own
+      // ~80 s switch to 202 + jobId, and a dropped request still runs and may still be charged on the server.
+      const controller = new AbortController();
+      const timer = setTimeout(() => controller.abort(), 100_000);
+      let res: Response;
+      try {
+        res = await http(`${base}/agent/chat`, {
+          method: "POST",
+          headers: { ...headers, accept: "text/event-stream, application/json" },
+          body: JSON.stringify({ message, maxSpendUsd: request.maxCostUsd }),
+          signal: controller.signal,
+        });
+      } catch (error) {
+        clearTimeout(timer);
+        throw new TransportError(`Anjoman request failed: ${(error as Error).message}`);
+      }
+      if (res.status !== 200 && res.status !== 202) {
+        clearTimeout(timer);
+        const hint = res.status >= 500 ? " (the job may still have run on Anjoman's side; check its activity before retrying)" : "";
+        throw new TransportError(`Anjoman answered ${res.status}${hint}`, res.status);
+      }
+      let reply: ChatReply;
+      if ((res.headers.get("content-type") ?? "").includes("text/event-stream")) {
+        const jobId = await firstJobId(res);
+        controller.abort();
+        clearTimeout(timer);
+        if (!jobId) throw new TransportError("Anjoman stream ended without a job id");
+        reply = { jobId, status: "running" };
+      } else {
+        reply = (await res.json()) as ChatReply;
+        clearTimeout(timer);
+      }
       const started = now();
-      while (reply.jobId && (res.status === 202 || reply.status === "running") && now() - started < waitMs) {
+      while (reply.jobId && reply.status === "running" && now() - started < waitMs) {
         await new Promise((r) => setTimeout(r, 2_000));
         const poll = await http(`${base}/agent/jobs/${encodeURIComponent(reply.jobId)}`, { headers, signal: AbortSignal.timeout(30_000) });
         if (!poll.ok) throw new TransportError(`job poll answered ${poll.status}`, poll.status);

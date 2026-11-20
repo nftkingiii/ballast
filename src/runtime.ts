@@ -27,22 +27,51 @@ export function demoDeps(fx: Fixture = loadFixture()): PlanDeps {
  * Paid mode needs all of: the explicit flag, a spend cap above zero on the site, and credentials in the environment.
  * Credentials are read from the environment only and never printed.
  */
-export async function paidDeps(site: SiteConfig, env: NodeJS.ProcessEnv = process.env): Promise<PlanDeps> {
-  if (!(site.intelligence.spendCapUsd > 0)) throw new RuntimeError("paid mode needs intelligence.spendCapUsd above zero");
-  let transport: Transport;
-  let via: string;
-  if (env.ANJOMAN_API_KEY) {
-    transport = createAnjomanTransport(env.ANJOMAN_API_KEY);
-    via = "Anjoman account balance (API key)";
-  } else if (env.BALLAST_SIGNER_MODULE) {
+/** An escrow signer from BALLAST_SIGNER_KEY (a hex key in the environment) or BALLAST_SIGNER_MODULE (a local module). */
+async function loadSigner(env: NodeJS.ProcessEnv): Promise<EscrowSigner | undefined> {
+  if (env.BALLAST_SIGNER_KEY) {
+    const { privateKeyToAccount } = await import("viem/accounts");
+    let key = env.BALLAST_SIGNER_KEY.trim();
+    if (!key.startsWith("0x")) key = `0x${key}`;
+    if (!/^0x[0-9a-fA-F]{64}$/.test(key)) throw new RuntimeError("BALLAST_SIGNER_KEY is not a 32-byte hex key");
+    const account = privateKeyToAccount(key as `0x${string}`);
+    return { address: account.address, personalSign: (message) => account.signMessage({ message }) };
+  }
+  if (env.BALLAST_SIGNER_MODULE) {
     const mod = (await import(pathToFileURL(env.BALLAST_SIGNER_MODULE).href)) as { default?: EscrowSigner };
     if (!mod.default?.address || typeof mod.default.personalSign !== "function") {
       throw new RuntimeError("BALLAST_SIGNER_MODULE must default-export { address, personalSign(message) }");
     }
-    transport = createEngineTransport(mod.default);
-    via = `Telegraph escrow, wallet ${mod.default.address}`;
+    return mod.default;
+  }
+  return undefined;
+}
+
+/**
+ * Picks the payment route per question. GRID_POWER_PRICE goes on the escrow route straight to the named miner,
+ * because the Anjoman API treats a named miner as a hint and its ranking sent ERCOT HB_WEST asks to NYISO "WEST"
+ * providers (2026-11-20). Everything else goes through the Anjoman API key, whose routing works for it.
+ */
+export function hybridTransport(escrow: Transport, anjoman: Transport, escrowIntents: Set<string> = new Set(["GRID_POWER_PRICE_GENERAL"])): Transport {
+  return { kind: "hybrid", ask: (request) => (escrowIntents.has(request.intent) ? escrow : anjoman).ask(request) };
+}
+
+export async function paidDeps(site: SiteConfig, env: NodeJS.ProcessEnv = process.env): Promise<PlanDeps> {
+  if (!(site.intelligence.spendCapUsd > 0)) throw new RuntimeError("paid mode needs intelligence.spendCapUsd above zero");
+  let transport: Transport;
+  let via: string;
+  const signer = await loadSigner(env);
+  if (env.ANJOMAN_API_KEY && signer) {
+    transport = hybridTransport(createEngineTransport(signer), createAnjomanTransport(env.ANJOMAN_API_KEY));
+    via = `Telegraph escrow for power prices (wallet ${signer.address}) and the Anjoman API key for the rest`;
+  } else if (env.ANJOMAN_API_KEY) {
+    transport = createAnjomanTransport(env.ANJOMAN_API_KEY);
+    via = "Anjoman account balance (API key)";
+  } else if (signer) {
+    transport = createEngineTransport(signer);
+    via = `Telegraph escrow, wallet ${signer.address}`;
   } else {
-    throw new RuntimeError("paid mode needs ANJOMAN_API_KEY (Anjoman account) or BALLAST_SIGNER_MODULE (escrow wallet signer) in the environment");
+    throw new RuntimeError("paid mode needs ANJOMAN_API_KEY (Anjoman account) and/or an escrow signer (BALLAST_SIGNER_KEY or BALLAST_SIGNER_MODULE) in the environment");
   }
   return {
     transport,
