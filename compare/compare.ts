@@ -3,9 +3,11 @@ import { readFileSync } from "node:fs";
 import type { Plan } from "../src/types.ts";
 import { planSite } from "../src/plan.ts";
 import { TransportError, type Answer, type Transport } from "../src/telegraph.ts";
-import { loadLatency, loadLiveRun, loadTruth, NODE, QUARTER, type Truth } from "./model.ts";
+import type { Memory } from "../src/reuse.ts";
+import { loadBaseline, loadLatency, loadLiveRun, loadTruth, NODE, QUARTER, type Truth } from "./model.ts";
 import { policyA, policyB, type Decided } from "./policies.ts";
-import { buildWorld, chooseInjections, DISAGREEMENT_DELTA, KINDS, loadSite, NEGATIVE_PRICE, oracle, profitAt, STALE_HOURS, trueEconomics, type Kind, type World } from "./world.ts";
+import { estimatorStudy, hashpriceCarryStudy, hashpriceDayToDay, MINUTES } from "./study.ts";
+import { buildWorld, chooseInjections, DISAGREEMENT_DELTA, KINDS, legacySite, loadSite, NEGATIVE_PRICE, oracle, profitAt, STALE_HOURS, trueEconomics, type Kind, type World } from "./world.ts";
 
 export const PAID_SECONDS: [number, number] = [8, 15];
 
@@ -24,6 +26,9 @@ export interface Row {
   basis: string;
   flagged: boolean;
   flags: string[];
+  recovered: boolean;
+  carried: boolean;
+  provisional: boolean;
   evidenceFields: number | null;
   telegraphCostUsd: number;
   paidAnswers: number;
@@ -50,7 +55,7 @@ function toRow(site: ReturnType<typeof loadSite>, w: World, d: Decided): Row {
   return {
     hour: d.hour, injected: w.kind.get(d.hour) ?? null, oracleAction: o.action, action: d.action, correct: d.action === o.action, hold: d.action === "HOLD",
     profit: r2(profit), best: r2(e.best), shortfall: r2(e.best - profit), truePrice: r2(w.rtHour(d.hour)), priceUsed: d.priceUsed, basis: d.basis,
-    flagged: d.flagged, flags: d.flags, evidenceFields, telegraphCostUsd: d.telegraphCostUsd, paidAnswers: d.paidAnswers, ms: d.ms,
+    flagged: d.flagged, flags: d.flags, recovered: d.recovered, carried: d.carried, provisional: d.provisional, evidenceFields, telegraphCostUsd: d.telegraphCostUsd, paidAnswers: d.paidAnswers, ms: d.ms,
   };
 }
 
@@ -86,6 +91,9 @@ export function summarize(rows: Row[], oracleProfit: number, perDecisionLiveSeco
     badInputsUsedSilently: bad.filter((r) => !r.flagged && !r.hold).length,
     badInputsThatCostMoney: bad.filter((r) => !r.hold && r.shortfall > 0.005 && !r.flagged).length,
     falseAlarms: flaggedClean.length,
+    recoveredHours: rows.filter((r) => r.recovered).length,
+    carriedHours: rows.filter((r) => r.carried).length,
+    provisionalHours: rows.filter((r) => r.provisional).length,
     fallbackToDayAhead: rows.filter((r) => !r.hold && r.basis === "day-ahead").length,
     meanAbsPriceErrorUsdPerMwh: r2(sum(acted.map((r) => Math.abs((r.priceUsed ?? 0) - r.truePrice))) / Math.max(1, acted.length)),
     evidenceCompletenessPct: fields.length ? r2((100 * sum(fields)) / (6 * fields.length)) : null,
@@ -128,7 +136,7 @@ async function anchor(truth: Truth) {
     forecast: async () => { throw new Error("unused"); },
     observedHigh: async () => null,
   };
-  const plan: Plan = await planSite({ ...site, planning: { hours: 1, startHour: "2026-11-19T18:00:00.000Z" } }, { transport, pub, now, mode: "paid", label: "replay of the 2026-11-19 paid run" });
+  const plan: Plan = await planSite({ ...site, planning: { ...site.planning, hours: 1, startHour: "2026-11-19T18:00:00.000Z" } }, { transport, pub, now, mode: "paid", label: "replay of the 2026-11-19 paid run" });
   const d = plan.decisions[0]!;
   return {
     origin: "live paid answer, 2026-11-19 (answers and receipts) replayed through Ballast's planner; public cross-check data saved",
@@ -146,6 +154,7 @@ export async function runAll() {
   const t0 = performance.now();
   const truth = loadTruth();
   const site = loadSite();
+  const prev = legacySite(site);
   const live = loadLiveRun();
   const lat = loadLatency();
   const median = (name: string) => quantile(lat.samplesMs[name] ?? [0], 0.5) / 1000;
@@ -160,24 +169,30 @@ export async function runAll() {
   const scenarios: Record<string, { title: string; origin: string; policies: PolicyResult[] }> = {};
   const plansByHour: Record<string, Plan> = {};
   for (const [name, w] of Object.entries(worlds) as [string, World][]) {
-    const defs: { id: string; title: string; origin: string; run: (h: string, carried: { hashprice: number }) => Promise<Decided>; live: (r: Row) => [number, number] }[] = [
+    type Carry = { hashprice: number; memory: { value: Memory } };
+    const defs: { id: string; title: string; origin: string; run: (h: string, carried: Carry) => Promise<Decided>; live: (r: Row) => [number, number] }[] = [
       { id: "A", title: "A: web-only Mind (latest price, unchecked)", origin: "modelled policy on public data", run: async (h, c) => policyA(site, w, h, c), live: aLive },
       {
-        id: "B", title: "B: Ballast with Telegraph (decides at :16)", origin: "Ballast's real planner; provider answers are public-data stand-ins (recorded live answers on 2026-11-19 are in the anchor)",
-        run: async (h) => { const r = await policyB(site, w, h); if (name === "injected" && w.kind.has(h)) plansByHour[h] = r.plan; return r.decided; }, live: bLive,
+        id: "B", title: "B: Ballast with Telegraph (decides at :16)", origin: "Ballast's real planner, current code; provider answers are public-data stand-ins (recorded live answers on 2026-11-19 are in the anchor)",
+        run: async (h, c) => { const r = await policyB(site, w, h, 16, c.memory); if (name === "injected" && w.kind.has(h)) plansByHour[h] = r.plan; return r.decided; }, live: bLive,
+      },
+      {
+        id: "B-prev", title: "B-prev: Ballast as at e2f949b (no hashprice memory, no recovery, whole hour at the latest interval)", origin: "the same planner with the three fixes switched off by site config; reproduces the e2f949b numbers exactly (checked against compare/data/baseline-e2f949b.json)",
+        run: async (h) => (await policyB(prev, w, h)).decided, live: bLive,
       },
     ];
     if (name === "clean") {
       defs.push(
         { id: "A-DA", title: "A-DA: web-only Mind reading the day-ahead table", origin: "modelled policy on public data", run: async (h, c) => policyA(site, w, h, c, "day-ahead"), live: aLive },
         { id: "A@14", title: "A@:14: web-only Mind, latest interval at :14", origin: "modelled policy on public data", run: async (h, c) => policyA(site, w, h, c, "latest-at-14"), live: aLive },
-        { id: "B@14", title: "B@:14: Ballast deciding at :14 like the live run", origin: "Ballast's real planner on stand-in answers", run: async (h) => (await policyB(site, w, h, 14)).decided, live: bLive },
+        { id: "B@14", title: "B@:14: Ballast deciding at :14 like the live run (decision is provisional)", origin: "Ballast's real planner on stand-in answers; at :14 no interval of the hour is published, so the plan labels the price provisional", run: async (h) => (await policyB(site, w, h, 14)).decided, live: bLive },
+        { id: "B-prev@14", title: "B-prev@:14: Ballast as at e2f949b deciding at :14", origin: "same as B@:14 with the fixes switched off", run: async (h) => (await policyB(prev, w, h, 14)).decided, live: bLive },
       );
     }
     const policies: PolicyResult[] = [];
     for (const def of defs) {
       const rows: Row[] = [];
-      const carried = { hashprice: w.hashprice(w.hours[0]!).usdPerPhDay };
+      const carried = { hashprice: w.hashprice(w.hours[0]!).usdPerPhDay, memory: { value: {} as Memory } };
       for (const h of w.hours) rows.push(toRow(site, w, await def.run(h, carried)));
       const oracleProfit = sum(w.hours.map((h) => { const o = oracle(site, w, h); return profitAt(site, w, h, o.fraction); }));
       policies.push({ id: def.id, title: def.title, origin: def.origin, rows, metrics: summarize(rows, oracleProfit, def.live) });
@@ -195,12 +210,12 @@ export async function runAll() {
     const stat = (id: string) => {
       const rows = scenarios.injected!.policies.find((p) => p.id === id)!.rows.filter((r) => r.injected === kind);
       return {
-        correct: rows.filter((r) => r.correct).length, holds: rows.filter((r) => r.hold).length, fellBackToDayAhead: rows.filter((r) => !r.hold && r.basis === "day-ahead").length,
+        correct: rows.filter((r) => r.correct).length, holds: rows.filter((r) => r.hold).length, recovered: rows.filter((r) => r.recovered).length, carried: rows.filter((r) => r.carried).length, fellBackToDayAhead: rows.filter((r) => !r.hold && r.basis === "day-ahead").length,
         flagged: rows.filter((r) => r.flagged || r.hold).length, shortfallUsd: r2(sum(rows.map((r) => r.shortfall))), profitUsd: r2(sum(rows.map((r) => r.profit))),
-        detail: rows.map((r) => ({ hour: r.hour, truePrice: r.truePrice, priceUsed: r.priceUsed, action: r.action, oracle: r.oracleAction })),
+        detail: rows.map((r) => ({ recovered: r.recovered, carried: r.carried, hour: r.hour, truePrice: r.truePrice, priceUsed: r.priceUsed, action: r.action, oracle: r.oracleAction })),
       };
     };
-    return { kind, hours, A: stat("A"), B: stat("B"), description: describeKind(kind) };
+    return { kind, hours, A: stat("A"), B: stat("B"), Bprev: stat("B-prev"), description: describeKind(kind) };
   });
 
   const wInj = worlds.injected;
@@ -226,11 +241,24 @@ export async function runAll() {
       paidAnswerSeconds: live.latencyPerPaidAnswerSeconds,
       publicFetchSecondsPerDecision: Math.round(publicSeconds * 100) / 100,
       holdTreatedAs: "idle that hour (profit $0); the cost of each HOLD is reported separately",
-      decisionTime: "H:16 UTC; the current hour is priced from the latest complete 15-minute interval (H:00)",
+      decisionTime: "H:16 UTC, when the hour's first 15-minute interval (H:00) is published; other minutes are in the timing table",
       evidenceFields: "per input: provider named, as-of time/interval, receipt; 2 inputs x 3 fields = 6 per decision",
     },
     scenarios,
     perKind,
+    beforeAfter: beforeAfter(scenarios, perKind),
+    timing: await timing(site, prev, worlds.clean),
+    studies: {
+      estimators: estimatorStudy(site, worlds.clean),
+      hashpriceCarry: hashpriceCarryStudy(site, worlds.clean, truth),
+      hashpriceDayToDay: hashpriceDayToDay(truth),
+    },
+    fixes: {
+      carryWindowMin: site.intelligence.maxAgeMin.hashpriceCarry,
+      recovery: site.intelligence.recovery,
+      hourEstimate: site.planning.hourEstimate,
+      inSampleNote: "The three fixes were written after the injected results of e2f949b had been seen, so the injected improvement is partly in-sample. The clean-window score and the per-minute timing table are the less biased check: nothing in them was injected.",
+    },
     anchor: await anchor(truth),
     latencySamplesMs: lat.samplesMs,
     runtimeSeconds: r2((performance.now() - t0) / 1000),
@@ -249,3 +277,63 @@ function describeKind(k: Kind): string {
   }
 }
 
+
+const metricRows: { label: string; pick: (m: PolicyResult["metrics"]) => number }[] = [
+  { label: "Decisions correct vs oracle (of 89)", pick: (m) => m.correct },
+  { label: "Wrong actions (not HOLD)", pick: (m) => m.wrongActions },
+  { label: "HOLDs raised", pick: (m) => m.holds },
+  { label: "Realized margin ($)", pick: (m) => m.realizedUsd },
+  { label: "Lost to wrong decisions ($)", pick: (m) => m.lostOnWrongActionsUsd },
+  { label: "Given up by HOLDs ($)", pick: (m) => m.lostToHoldsUsd },
+  { label: "Mean price error ($/MWh)", pick: (m) => m.meanAbsPriceErrorUsdPerMwh },
+  { label: "Telegraph cost, window ($)", pick: (m) => m.telegraphCostUsd },
+  { label: "Realized margin net of that cost ($)", pick: (m) => m.netOfIntelligenceCostUsd },
+  { label: "Evidence completeness (%)", pick: (m) => m.evidenceCompletenessPct ?? 0 },
+];
+
+type KindStat = { shortfallUsd: number; correct: number; holds: number; fellBackToDayAhead: number };
+
+function beforeAfter(scenarios: Record<string, { policies: PolicyResult[] }>, perKind: { kind: Kind; B: KindStat; Bprev: KindStat }[]) {
+  const base = loadBaseline();
+  const find = (sc: string, id: string) => scenarios[sc]!.policies.find((p) => p.id === id)!.metrics;
+  const table = (sc: "clean" | "injected") =>
+    metricRows.map((r) => {
+      const before = r.pick(base[sc]["B"]!.metrics as unknown as PolicyResult["metrics"]);
+      const after = r.pick(find(sc, "B"));
+      return { metric: r.label, before, after, change: r2(after - before) };
+    });
+  // The e2f949b numbers must be reproducible by the current code with the fixes switched off.
+  const reproduces = (sc: "clean" | "injected") => {
+    const now = find(sc, "B-prev") as Record<string, unknown>;
+    const old = base[sc]["B"]!.metrics as Record<string, unknown>;
+    return ["correct", "wrongActions", "holds", "realizedUsd", "lostOnWrongActionsUsd", "lostToHoldsUsd", "fallbackToDayAhead", "meanAbsPriceErrorUsdPerMwh", "telegraphCostUsd", "evidenceCompletenessPct"].every((k) => now[k] === old[k]);
+  };
+  return {
+    baselineCommit: base.commit,
+    clean: table("clean"),
+    injected: table("injected"),
+    perKind: base.perKind.map((o) => {
+      const n = perKind.find((k) => k.kind === o.kind)!;
+      return { kind: o.kind, before: { correct: o.B.correct, holds: o.B.holds, fellBackToDayAhead: o.B.fellBackToDayAhead, lostUsd: o.B.shortfallUsd }, after: { correct: n.B.correct, holds: n.B.holds, fellBackToDayAhead: n.B.fellBackToDayAhead, lostUsd: n.B.shortfallUsd } };
+    }),
+    switchedOffReproducesBaseline: { clean: reproduces("clean"), injected: reproduces("injected") },
+  };
+}
+
+/** The decision-minute table: Ballast before and after, on clean data, deciding at each minute past the hour. */
+async function timing(site: ReturnType<typeof loadSite>, prev: ReturnType<typeof loadSite>, w: World) {
+  const half = Math.floor(w.hours.length / 2);
+  const run = async (s: ReturnType<typeof loadSite>, minute: number) => {
+    const rows: Row[] = [];
+    for (const h of w.hours) rows.push(toRow(s, w, (await policyB(s, w, h, minute)).decided));
+    const part = (rs: Row[]) => ({ wrong: rs.filter((r) => !r.correct && !r.hold).length, shortfallUsd: r2(sum(rs.map((r) => r.shortfall))) });
+    const m = summarize(rows, 0, () => [0, 0]);
+    return {
+      wrong: m.wrongActions, correct: m.correct, shortfallUsd: m.shortfallVsBestUsd, realizedUsd: m.realizedUsd, meanAbsPriceErrorUsdPerMwh: m.meanAbsPriceErrorUsdPerMwh,
+      provisionalHours: m.provisionalHours, telegraphCostUsd: m.telegraphCostUsd, firstHalf: part(rows.slice(0, half)), secondHalf: part(rows.slice(half)),
+    };
+  };
+  const out = [];
+  for (const minute of MINUTES) out.push({ minute, before: await run(prev, minute), after: await run(site, minute) });
+  return out;
+}

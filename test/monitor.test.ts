@@ -24,6 +24,8 @@ async function run(name: string, cap?: number, timeline: Timeline = load(name)) 
   await demo.runAll();
   return demo.session;
 }
+/** The timeline with wrong-market and wrong-interval recovery switched off: the behaviour before recovery existed. */
+const noRecovery = (tl: Timeline): Timeline => ({ ...tl, siteOverrides: { ...(tl.siteOverrides ?? {}), intelligence: { recovery: { reask: false, publicArchive: false } } } });
 const hourOf = (r: TickResult, hhmm: string) => r.hours.find((h) => h.hour.slice(11, 16) === hhmm)!;
 const changeOf = (r: TickResult, hhmm: string) => r.changes.find((c) => c.hour.slice(11, 16) === hhmm)!;
 
@@ -91,8 +93,8 @@ test("providers disagree beyond tolerance: NO RECOMMENDATION, then revisited whe
   assert.ok(t1!.hours.filter((h) => h.hour.slice(11, 16) !== "18:00").every((h) => h.action !== "NO RECOMMENDATION"));
 });
 
-test("stale price: held while the answer is stale, revisited when a fresh one arrives", async () => {
-  const s = await run("stale");
+test("stale price: held while the answer is stale, revisited when a fresh one arrives (recovery off)", async () => {
+  const s = await run("stale", undefined, noRecovery(load("stale")));
   const [t0, t1, t2] = s.history;
   // Tick 1: Pecos answers the 20:00 day-ahead question with 19:00's price.
   const wrongHour = hourOf(t0!, "20:00");

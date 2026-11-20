@@ -13,6 +13,13 @@ export function receiptOf(e: Evidence): string {
   return r.receiptHash ?? r.jobId ?? r.signalHash ?? "-";
 }
 
+/** How an item was used beyond "accepted": carried from an earlier run, or recovering a rejected answer. */
+export function usedAs(e: Evidence): string {
+  if (e.carried) return `carried from ${e.carried.acceptedAt.slice(0, 16)}Z (${e.carried.ageMin} min old, window ${e.carried.windowMin} min)`;
+  if (e.recovery) return `recovery of ${e.recovery.of} via ${e.recovery.via === "re-ask" ? "asking again" : "the public archive"}${e.source.kind === "public" ? " (public, no receipt)" : ""}`;
+  return "";
+}
+
 export function sourceLabel(e: Evidence): string {
   return `${e.source.kind}:${e.source.id} ${e.source.name}`;
 }
@@ -20,7 +27,12 @@ export function sourceLabel(e: Evidence): string {
 export function renderPlan(plan: Plan): string {
   const lines: string[] = [];
   lines.push(plan.label, `Site: ${plan.site}   Generated: ${plan.generatedAt}`);
-  lines.push(`Hashprice used: ${plan.hashpriceUsdPerPhDay === null ? "none (no accepted answer)" : `$${money(plan.hashpriceUsdPerPhDay)} per PH/s per day`}`, "");
+  const carried = plan.hashpriceCarried;
+  lines.push(
+    `Hashprice used: ${plan.hashpriceUsdPerPhDay === null ? "none (no accepted answer)" : `$${money(plan.hashpriceUsdPerPhDay)} per PH/s per day`}` +
+      (carried ? ` (carried from ${carried.acceptedAt.slice(0, 16)}Z, ${carried.ageMin} min old, inside the ${carried.windowMin} min window: ${carried.provider}, receipt ${carried.receipt}; a fresh answer failed: ${carried.because})` : ""),
+    "",
+  );
 
   const shared = plan.decisions.length ? plan.decisions[0]!.evidence.filter((id) => plan.decisions.every((d) => d.evidence.includes(id))) : [];
   const table: string[][] = [["Hour (UTC)", "Action", "Run", "Power $/MWh", "Cost", "Revenue", "Margin", "Temp C", "Est. $", "Evidence"]];
@@ -34,6 +46,8 @@ export function renderPlan(plan: Plan): string {
   }
   lines.push(pad(table), `Shared by every hour: ${shared.join(", ") || "none"}`, "");
 
+  const provisional = plan.decisions.filter((d) => d.revisitAt);
+  if (provisional.length) lines.push(`Provisional: ${provisional.map((d) => `${hh(d.hour)} (decide again after ${d.revisitAt!.slice(11, 16)}Z)`).join("; ")}`, "");
   const holds = plan.decisions.filter((d) => d.action === "HOLD");
   if (holds.length) {
     lines.push("HOLD reasons:");
@@ -43,7 +57,7 @@ export function renderPlan(plan: Plan): string {
 
   const ev: string[][] = [["Id", "Check", "Subject", "Provider", "Answered (UTC)", "Cost $", "Receipt / job", "Accepted"]];
   for (const e of plan.evidence) {
-    ev.push([e.id, e.check, e.subject, sourceLabel(e), e.answeredAt.slice(0, 19), money(e.costUsd, 4), receiptOf(e), e.accepted ? "yes" : `NO: ${e.reason ?? ""}`]);
+    ev.push([e.id, e.check, e.subject, sourceLabel(e), e.answeredAt.slice(0, 19), money(e.costUsd, 4), receiptOf(e), e.accepted ? (usedAs(e) ? `yes: ${usedAs(e)}` : "yes") : `NO: ${e.reason ?? ""}`]);
   }
   lines.push("Evidence", pad(ev), "");
 
@@ -74,7 +88,7 @@ function explainOne(plan: Plan, d: HourDecision): string {
   out.push("Inputs:");
   for (const id of d.evidence) {
     const e = plan.evidence.find((x) => x.id === id);
-    if (e) out.push(`  ${e.id} ${e.check} ${e.subject} from ${sourceLabel(e)} at ${e.answeredAt}, $${e.costUsd.toFixed(4)}, receipt ${receiptOf(e)}${e.accepted ? "" : `, REJECTED: ${e.reason}`}`);
+    if (e) out.push(`  ${e.id} ${e.check} ${e.subject} from ${sourceLabel(e)} at ${e.answeredAt}, $${e.costUsd.toFixed(4)}, receipt ${receiptOf(e)}${e.accepted ? (usedAs(e) ? `, ${usedAs(e)}` : "") : `, REJECTED: ${e.reason}`}`);
   }
   if (d.gaps.length) out.push("Missing:", ...d.gaps.map((g) => `  - [${g.check}] ${g.reason}`));
   return out.join("\n");

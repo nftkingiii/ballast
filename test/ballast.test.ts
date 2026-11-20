@@ -11,10 +11,14 @@ import type { Plan, SiteConfig } from "../src/types.ts";
 
 const site = (): SiteConfig => parseSite(JSON.parse(readFileSync(new URL("../sites/west-texas.json", import.meta.url), "utf8")));
 
-async function run(scenario?: string): Promise<{ plan: Plan; fx: ReturnType<typeof loadFixture>; site: SiteConfig }> {
+/** The behaviour before recovery existed: a wrong-market or wrong-interval answer is refused and not retried. */
+const noRecovery = (s: SiteConfig) => { s.intelligence.recovery = { reask: false, publicArchive: false }; };
+
+async function run(scenario?: string, tweak?: (s: SiteConfig) => void): Promise<{ plan: Plan; fx: ReturnType<typeof loadFixture>; site: SiteConfig }> {
   let s = site();
   let fx = loadFixture();
   if (scenario) ({ fx, site: s } = SCENARIOS[scenario]!.apply(fx, s));
+  tweak?.(s);
   const deps = demoDeps(fx);
   return { plan: await planSite(s, deps), fx, site: s };
 }
@@ -75,8 +79,8 @@ test("throttle band: a thin positive margin runs part of the fleet", () => {
   assert.equal(d.runFraction, 0.5);
 });
 
-test("stale price: an old real-time answer is rejected and named, a substituted interval is a HOLD", async () => {
-  const { plan, fx } = await run("stale-price");
+test("stale price: an old real-time answer is rejected and named, a substituted interval is a HOLD (recovery off)", async () => {
+  const { plan, fx } = await run("stale-price", noRecovery);
   const now = at(plan, fx, 0);
   assert.equal(now.basis, "day-ahead");
   assert.ok(now.reasons.some((r) => r.includes("fell back to day-ahead")));
@@ -129,8 +133,9 @@ test("weather outage: hot hours HOLD, and verified heat derates efficiency", asy
   assert.ok(hot.reasons.some((r) => r.includes("efficiency penalty")));
 });
 
-test("a provider answering the wrong market is refused", async () => {
+test("a provider answering the wrong market is refused (recovery off)", async () => {
   const s = site();
+  noRecovery(s);
   const fx = loadFixture();
   const da = fx.shaped.power.find((p) => p.market === "day-ahead" && p.intervalStart === hourAt(fx, 2))!;
   da.result = { ...da.result, market: "real-time" };

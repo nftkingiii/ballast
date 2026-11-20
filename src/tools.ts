@@ -1,6 +1,8 @@
 import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
 import { parseSite } from "./config.ts";
+import { memoryAfter } from "./memory.ts";
+import type { Memory } from "./reuse.ts";
 import { createMonitorTools, MONITOR_TOOL_SCHEMAS } from "./monitor-tools.ts";
 import { planSite } from "./plan.ts";
 import { explainDecision, renderPlan } from "./render.ts";
@@ -22,6 +24,8 @@ const DEFAULT_SITE = new URL("../sites/west-texas.json", import.meta.url);
 
 export function createTools(options: ToolOptions) {
   const plans = new Map<string, Plan>();
+  /** The last accepted hashprice per site and mode, kept in this process only, so a repeat plan_site can reuse it inside the site's window. */
+  const memories = new Map<string, Memory>();
   const remember = (plan: Plan): string => {
     const id = createHash("sha256").update(JSON.stringify(plan)).digest("hex").slice(0, 10);
     plans.set(id, plan);
@@ -40,7 +44,9 @@ export function createTools(options: ToolOptions) {
       }
       const site = parseSite(raw);
       const deps = options.paid ? await paidDeps(site, options.env) : demoDeps(options.fixture);
-      const plan = await planSite(site, deps);
+      const key = `${deps.mode}|${site.name}|${site.node}`;
+      const plan = await planSite(site, { ...deps, memory: memories.get(key) });
+      if (plan.hashpriceMemory) memories.set(key, memoryAfter(plan));
       return { planId: remember(plan), text: renderPlan(plan), plan };
     },
 

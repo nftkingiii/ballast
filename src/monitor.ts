@@ -8,7 +8,8 @@ import { writeFileSync } from "node:fs";
 import { anticipate, type Anticipation } from "./anticipate.ts";
 import { decideHour } from "./decide.ts";
 import { diffHour, shortReceipt, usd, type AbstainKind, type Abstention, type Change, type HourState, type MonitorAction, type Need, type Snapshot } from "./diff.ts";
-import { gatherHashprice, gatherPower, gatherWeather, type Ctx, type HashpriceInput, type PowerInput, type WeatherInput } from "./evidence.ts";
+import { estimateHour, gatherHashprice, gatherPower, gatherWeather, type Ctx, type HashpriceInput, type PowerInput, type WeatherInput } from "./evidence.ts";
+import { classifyGap, mayReuse, outageOnly } from "./reuse.ts";
 import { receiptOf } from "./render.ts";
 import { paidDeps, RuntimeError } from "./runtime.ts";
 import type { PublicSources } from "./sources.ts";
@@ -71,13 +72,7 @@ interface Cached<T> {
 
 type PowerCache = Cached<PowerInput> & { interval?: string };
 
-/** Which kind of problem a gap is. Precedence when several apply: budget, conflict, stale, missing. */
-export function classifyGap(g: Gap): AbstainKind {
-  if (g.check === "budget" || /spend cap/i.test(g.reason)) return "budget";
-  if (/disagree/i.test(g.reason)) return "conflict";
-  if (/stale|substituted|older than|answered at/i.test(g.reason)) return "stale";
-  return "missing";
-}
+export { classifyGap };
 const PRECEDENCE: AbstainKind[] = ["budget", "conflict", "stale", "missing"];
 
 export function needFor(site: SiteConfig, g: Gap, kind: AbstainKind): Need {
@@ -120,8 +115,6 @@ export function abstentionFrom(site: SiteConfig, gaps: Gap[], lastDecided: Abste
   return abstention;
 }
 
-const outageOnly = (gaps: Gap[]): boolean => gaps.length > 0 && gaps.every((g) => ["missing", "budget"].includes(classifyGap(g)));
-
 export class MonitorSession {
   readonly ctx: Ctx;
   readonly history: TickResult[] = [];
@@ -129,6 +122,8 @@ export class MonitorSession {
   private states = new Map<string, HourState>();
   private lastDecided = new Map<string, { action: MonitorAction; tick: number; at: string }>();
   private hp?: Cached<HashpriceInput>;
+  /** Set while the hashprice on file is standing in for a refresh that failed (same rule as plan mode: reuse.ts mayReuse). */
+  private hpCarried?: { acceptedAt: string; because: string; windowMin: number };
   private wx?: Cached<WeatherInput>;
   private rt = new Map<string, PowerCache>();
   private da = new Map<string, PowerCache>();
@@ -177,12 +172,20 @@ export class MonitorSession {
         const was = this.hp?.input.usdPerPhDay ?? null;
         const moved = was !== null && Math.abs(was - fresh.usdPerPhDay) >= 0.005 ? `${fresh.usdPerPhDay > was ? "rose" : "fell"} from ${usd(was)} to ` : "";
         this.hp = { input: fresh, at: now };
+        this.hpCarried = undefined;
         actions.push(`hashprice refreshed: ${moved}${usd(fresh.usdPerPhDay)}/PH/day${e ? ` (${e.id}, receipt ${shortReceipt(receiptOf(e))})` : ""}`);
-      } else if (this.hp?.input.usdPerPhDay != null && outageOnly(fresh.gaps) && now - this.hp.at <= site.intelligence.maxAgeMin.hashprice * MIN) {
-        actions.push(`hashprice refresh failed (${fresh.gaps[0]?.reason}); keeping the answer from ${mins(this.hp.at)} min ago, inside its ${site.intelligence.maxAgeMin.hashprice} min limit`);
       } else {
-        this.hp = { input: fresh, at: now };
-        actions.push(`hashprice unavailable: ${fresh.gaps.map((g) => g.reason).join(" | ")}`);
+        const windowMin = site.intelligence.maxAgeMin.hashpriceCarry;
+        const verdict = this.hp?.input.usdPerPhDay != null ? mayReuse({ gaps: fresh.gaps, ageMs: now - this.hp.at, windowMin }) : undefined;
+        if (verdict?.ok && this.hp) {
+          const acceptedAt = this.hpCarried?.acceptedAt ?? new Date(this.hp.at).toISOString();
+          this.hpCarried = { acceptedAt, because: fresh.gaps[0]?.reason ?? "no fresh answer", windowMin };
+          actions.push(`hashprice refresh failed (${fresh.gaps[0]?.reason}); carried from ${acceptedAt.slice(11, 16)}Z (${mins(this.hp.at)} min old), inside its ${windowMin} min window`);
+        } else {
+          this.hp = { input: fresh, at: now };
+          this.hpCarried = undefined;
+          actions.push(`hashprice unavailable: ${fresh.gaps.map((g) => g.reason).join(" | ")}${verdict ? `; the earlier answer is not reused: ${verdict.why}` : ""}`);
+        }
       }
     }
     const hp = this.hp!.input;
@@ -235,7 +238,10 @@ export class MonitorSession {
           continue;
         }
         const got = await gatherPower(ctx, hour, "real-time");
-        const input: PowerInput = { basis: got.price === null ? "none" : "real-time", price: got.price, evidence: got.evidence, notes: [], gap: got.gap };
+        const est = got.price === null ? undefined : await estimateHour(ctx, hour, { price: got.price, start: new Date(Date.parse(interval)) });
+        const input: PowerInput = {
+          basis: got.price === null ? "none" : "real-time", price: est?.price ?? null, evidence: [...got.evidence, ...(est?.evidence ?? [])], notes: [...got.notes, ...(est?.notes ?? [])], gap: got.gap, revisitAt: est?.revisitAt,
+        };
         this.rt.set(k, { input, at: now, interval });
         power.set(k, input);
         continue;
@@ -255,7 +261,7 @@ export class MonitorSession {
         continue;
       }
       const got = await gatherPower(ctx, hour, "day-ahead");
-      const fresh: PowerInput = { basis: got.price === null ? "none" : "day-ahead", price: got.price, evidence: got.evidence, notes: [], gap: got.gap };
+      const fresh: PowerInput = { basis: got.price === null ? "none" : "day-ahead", price: got.price, evidence: got.evidence, notes: got.notes, gap: got.gap };
       if (got.price === null && cached?.input.price != null && got.gap && outageOnly([got.gap]) && now - cached.at <= site.intelligence.maxAgeMin.dayAhead * MIN) {
         power.set(k, cached.input);
         actions.push(`${k.slice(11, 16)} day-ahead refresh failed (${got.gap.reason}); keeping the answer from ${mins(cached.at)} min ago`);
@@ -272,7 +278,8 @@ export class MonitorSession {
       const k = keys[i]!;
       const p = power.get(k)!;
       const d = decideHour(site, {
-        hour: k, hashpriceUsdPerPhDay: hp.usdPerPhDay, hashpriceGaps: hp.gaps, power: p, tempC: wx.tempC[k], weatherRequired: wx.required,
+        hour: k, hashpriceUsdPerPhDay: hp.usdPerPhDay, hashpriceGaps: hp.gaps, power: p,
+        hashpriceNote: this.hpCarried ? `hashprice carried from ${this.hpCarried.acceptedAt.slice(11, 16)}Z: a fresh answer could not be had (${this.hpCarried.because}); inside the ${this.hpCarried.windowMin} min window` : undefined, tempC: wx.tempC[k], weatherRequired: wx.required,
         weatherTrusted: wx.trusted, weatherGaps: wx.gaps, evidence: [...hp.evidence, ...wx.evidence.filter(Boolean), ...p.evidence],
         forward: hour.getTime() > now,
       });

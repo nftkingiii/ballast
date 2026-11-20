@@ -3,6 +3,7 @@ import { decideHour } from "../src/decide.ts";
 import { planSite } from "../src/plan.ts";
 import { TransportError, type Answer, type AskRequest, type Transport } from "../src/telegraph.ts";
 import type { PublicSources } from "../src/sources.ts";
+import type { Memory } from "../src/reuse.ts";
 import type { Action, Plan, SiteConfig } from "../src/types.ts";
 import { createHash } from "node:crypto";
 import { HOUR, NODE, QUARTER } from "./model.ts";
@@ -23,6 +24,12 @@ export interface Decided {
   flags: string[];
   /** Evidence fields present for the inputs the decision used: provider, as-of time, receipt, per input (power, hashprice). */
   evidence: { power: [boolean, boolean, boolean]; hashprice: [boolean, boolean, boolean] } | null;
+  /** A wrong-market or wrong-interval answer was recovered (asked again, or read from the public archive). */
+  recovered: boolean;
+  /** The hashprice was an earlier accepted answer standing in for a missing fresh one. */
+  carried: boolean;
+  /** Decided before any interval of the hour was published: the plan said to decide again later. */
+  provisional: boolean;
   telegraphCostUsd: number;
   paidAnswers: number;
   publicCalls: number;
@@ -51,7 +58,7 @@ export function policyA(site: SiteConfig, w: World, hour: string, carried: { has
     hour, action: d.action, fraction: d.runFraction, priceUsed: obs.lmp, basis: obs.market, flagged: false, flags: [],
     // Assumption for the modelled Mind: it can cite the page it read (provider), but scraped values carry no interval/as-of time and there is no receipt.
     evidence: { power: [true, false, false], hashprice: [true, false, false] },
-    telegraphCostUsd: 0, paidAnswers: 0, publicCalls: 2, ms: performance.now() - t0,
+    recovered: false, carried: false, provisional: false, telegraphCostUsd: 0, paidAnswers: 0, publicCalls: 2, ms: performance.now() - t0,
   };
 }
 
@@ -108,25 +115,32 @@ export function replayPublic(w: World, hourOf: (now?: Date) => string): PublicSo
 }
 
 /** Policy B: Ballast's real planSite (evidence gathering, checks, decideHour) on the same world. */
-export async function policyB(site: SiteConfig, w: World, hour: string, offsetMin = DECISION_OFFSET_MIN): Promise<{ decided: Decided; plan: Plan }> {
+export async function policyB(site: SiteConfig, w: World, hour: string, offsetMin = DECISION_OFFSET_MIN, memory?: { value: Memory }): Promise<{ decided: Decided; plan: Plan }> {
   const now = new Date(Date.parse(hour) + offsetMin * 60_000);
   const t0 = performance.now();
-  const plan = await planSite({ ...site, planning: { hours: 1, startHour: hour } }, {
-    transport: replayTransport(w, now), pub: replayPublic(w, () => hour), now, mode: "demo", label: "comparison replay",
+  const plan = await planSite({ ...site, planning: { ...site.planning, hours: 1, startHour: hour } }, {
+    transport: replayTransport(w, now), pub: replayPublic(w, () => hour), now, mode: "demo", label: "comparison replay", memory: memory?.value,
   });
   const ms = performance.now() - t0;
+  // The next run remembers what this one accepted, as a planner run every hour would.
+  if (memory && plan.hashpriceMemory) memory.value = { hashprice: plan.hashpriceMemory };
   const d = plan.decisions[0]!;
   const used = d.evidence.map((id) => plan.evidence.find((e) => e.id === id)!);
   const telegraph = (check: string) => used.find((e) => e.check === check && e.source.kind !== "public" && e.accepted);
+  // A price recovered from the public archive has a provider and an as-of time but no receipt.
+  const powerEvidence = (check: string) => telegraph(check) ?? used.find((e) => e.check === check && e.accepted && e.recovery?.via === "public-archive");
   const fields = (e?: (typeof used)[number]): [boolean, boolean, boolean] => [Boolean(e?.source.id), Boolean(e?.answeredAt), Boolean(e?.receipt.receiptHash)];
   const flags = plan.missingChecks.map((g) => `${g.check}: ${g.reason}`);
   return {
     plan,
     decided: {
       hour, action: d.action, fraction: d.runFraction, priceUsed: d.powerPriceUsdPerMwh, basis: d.basis, flagged: flags.length > 0, flags,
-      evidence: d.action === "HOLD" ? null : { power: fields(telegraph(d.basis === "real-time" ? "power-real-time" : "power-day-ahead")), hashprice: fields(telegraph("hashprice")) },
+      evidence: d.action === "HOLD" ? null : { power: fields(powerEvidence(d.basis === "real-time" ? "power-real-time" : "power-day-ahead")), hashprice: fields(telegraph("hashprice")) },
+      recovered: used.some((e) => e.recovery !== undefined && e.accepted),
+      carried: used.some((e) => e.carried !== undefined),
+      provisional: d.revisitAt !== undefined,
       telegraphCostUsd: plan.projectedPaidCostUsd,
-      paidAnswers: plan.evidence.filter((e) => e.source.kind !== "public" && e.receipt.receiptHash !== undefined).length,
+      paidAnswers: plan.evidence.filter((e) => e.source.kind !== "public" && !e.carried && e.receipt.receiptHash !== undefined).length,
       publicCalls: plan.evidence.filter((e) => e.source.kind === "public").length + 2,
       ms,
     },

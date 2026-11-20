@@ -101,3 +101,11 @@ One site, ERCOT only. Power cost model is marginal (no demand charges, ramp cost
 ## With and without Telegraph
 
 `npm run compare` replays 89 real ERCOT hours (HB_WEST, saved under `compare/data/`) through a modelled web-only Mind and through Ballast's own planner, with and without six synthetic bad inputs, and writes `compare/results.md` and `compare/results.json`. It makes no network call, buys nothing and signs nothing. Provider answers in the replay are public-data stand-ins except the two recorded 2026-11-19 paid answers, and the results say so on every table.
+
+## Changes after the first comparison
+
+Three weaknesses the comparison exposed are fixed (before/after in `compare/results.md`, section "What changed since e2f949b"). The injected improvement is partly in-sample; the clean-window score and the per-minute timing table are the less biased check.
+
+- **Hashprice memory.** `plan --state <file>` (or a server process) remembers the last accepted hashprice. When a fresh one fails by outage, it is reused inside `intelligence.maxAgeMin.hashpriceCarry` (default 720 min) if it still agrees with the public reference, labelled "carried from <time>" with its original provider, time and receipt. Monitor mode uses the same rule. Set the window to 0 to turn it off.
+- **Recovery.** A wrong-market or wrong-interval answer is retried once, then read from the public ERCOT archive for that exact interval (labelled public). Switch off with `intelligence.recovery`.
+- **Hour estimate.** The current hour is priced from the intervals already published plus the latest repeated (`planning.hourEstimate`); before any interval of the hour is out the decision is labelled provisional with the time to decide again.

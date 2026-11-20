@@ -120,3 +120,24 @@ export function loadTruth(): Truth {
 
 export const loadLiveRun = (): LiveRun => read<LiveRun>("live-paid-2026-11-19.json");
 export const loadLatency = (): Latency => read<Latency>("public-latency.json");
+
+export interface HashpriceSample {
+  /** ms since epoch of the mempool.space average-rewards entry */
+  t: number;
+  usdPerPhDay: number;
+}
+
+/** Finer hashprice series: one value per saved mempool.space reward entry (BTC price and fees at that time, that day's network hashrate). */
+export function loadHashpriceSeries(): HashpriceSample[] {
+  const mp = read<MempoolFile>("mempool-hashprice-inputs.json");
+  const hashrates = mp.hashrate.hashrates.map((h) => ({ t: h.timestamp * 1000, ehs: h.avgHashrate / 1e18 }));
+  return mp.rewards
+    .map((e) => {
+      const t = e.timestamp * 1000;
+      const hr = hashrates.filter((h) => h.t <= t).at(-1) ?? hashrates[0]!;
+      return { t, usdPerPhDay: hashpriceUsdPerPhDay(e.avgRewards, e.USD, hr.ehs) };
+    })
+    .sort((a, b) => a.t - b.t);
+}
+
+export const loadBaseline = () => read<{ clean: Record<string, { metrics: Record<string, number | number[] | null> }>; injected: Record<string, { metrics: Record<string, number | number[] | null> }>; perKind: { kind: string; hours: number; A: { correct: number; shortfallUsd: number }; B: { correct: number; holds: number; fellBackToDayAhead: number; flagged: number; shortfallUsd: number } }[]; commit: string }>("baseline-e2f949b.json");

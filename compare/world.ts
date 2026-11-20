@@ -140,3 +140,12 @@ export function chooseInjections(site: SiteConfig, truth: Truth, perKind = PER_K
   take("negative-price", [...hours].sort((a, b) => base.rtHour(a) - base.rtHour(b)));
   return out;
 }
+
+/** The site as e2f949b ran it: no hashprice carrying, no wrong-market or wrong-interval recovery, the whole hour priced at the latest interval. */
+export function legacySite(site: SiteConfig = loadSite()): SiteConfig {
+  const s = JSON.parse(JSON.stringify(site)) as SiteConfig;
+  s.intelligence.maxAgeMin.hashpriceCarry = 0;
+  s.intelligence.recovery = { reask: false, publicArchive: false };
+  s.planning.hourEstimate = { mode: "latest-interval", earlierIntervals: "public" };
+  return s;
+}

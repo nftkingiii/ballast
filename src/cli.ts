@@ -1,5 +1,6 @@
 import { readFileSync } from "node:fs";
 import { parseSite } from "./config.ts";
+import { loadMemory, memoryAfter, saveMemory } from "./memory.ts";
 import { planSite } from "./plan.ts";
 import { explainDecision, renderPlan } from "./render.ts";
 import { demoDeps, loadFixture, paidDeps } from "./runtime.ts";
@@ -12,8 +13,10 @@ const value = (name: string) => {
   return i >= 0 ? args[i + 1] : undefined;
 };
 
-const USAGE = `ballast plan [--site sites/west-texas.json] [--json] [--explain <hour>] [--scenario <name>] [--paid --cap <usd>]
+const USAGE = `ballast plan [--site sites/west-texas.json] [--json] [--explain <hour>] [--scenario <name>] [--paid --cap <usd>] [--state <file>]
 
+--state keeps the last accepted hashprice in a JSON file, so a later run can reuse it (labelled "carried from <time>") when a fresh
+answer is unavailable, inside the site's maxAgeMin.hashpriceCarry window (default 12 h). Without it nothing is remembered.
 Default is DEMO mode: recorded public data, no Telegraph calls, no cost.
 --scenario stages a failure case on the recorded data (SYNTHETIC): ${Object.keys(SCENARIOS).join(', ')}.
 --paid buys real Telegraph answers; it needs --cap (USD) and credentials in the environment
@@ -42,7 +45,9 @@ try {
     deps = demoDeps(staged.fx);
     deps.label = `SYNTHETIC SCENARIO "${scenario.title}" - ${scenario.what} Edited recorded data, not live: ${deps.label}`;
   }
-  const plan = await planSite(site, deps);
+  const statePath = value("state");
+  const plan = await planSite(site, statePath ? { ...deps, memory: loadMemory(statePath) } : deps);
+  if (statePath) saveMemory(statePath, memoryAfter(plan));
   const hour = value("explain");
   if (flag("json")) console.log(JSON.stringify(plan, null, 2));
   else console.log(hour ? explainDecision(plan, hour) : renderPlan(plan));

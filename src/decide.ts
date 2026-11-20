@@ -5,6 +5,8 @@ export interface HourInputs {
   hour: string;
   hashpriceUsdPerPhDay: number | null;
   hashpriceGaps: Gap[];
+  /** Said in the reasons when the hashprice is an earlier accepted answer standing in for a fresh one. */
+  hashpriceNote?: string;
   power: PowerInput;
   tempC: number | undefined;
   weatherRequired: boolean;
@@ -43,7 +45,7 @@ export function decideHour(site: SiteConfig, i: HourInputs): HourDecision {
   const base: HourDecision = {
     hour: i.hour, action: "HOLD", runFraction: 0, basis: i.power.basis, powerPriceUsdPerMwh: i.power.price, powerCostUsdPerMwh: null,
     revenueUsdPerMwh: null, marginUsdPerMwh: null, tempC: i.tempC ?? null, fleetMw: null, expectedProfitUsd: null, reasons: [],
-    evidence: i.evidence, gaps: [],
+    evidence: i.evidence, gaps: [], ...(i.power.revisitAt ? { revisitAt: i.power.revisitAt } : {}),
   };
 
   // Fail closed: name every missing required input instead of deciding on part of the picture.
@@ -67,7 +69,7 @@ export function decideHour(site: SiteConfig, i: HourInputs): HourDecision {
   const revenuePerHour = (hashprice * (site.fleet.hashrateTh / 1000)) / 24;
   const revenue = revenuePerHour / mw;
   const margin = revenue - cost - site.operating.otherVariableUsdPerMwh;
-  const reasons = [...i.power.notes, why, `revenue $${round(revenue)}/MWh at hashprice $${round(hashprice)}/PH/day`];
+  const reasons = [...i.power.notes, ...(i.hashpriceNote ? [i.hashpriceNote] : []), why, `revenue $${round(revenue)}/MWh at hashprice $${round(hashprice)}/PH/day`];
 
   const out = { ...base, powerCostUsdPerMwh: round(cost), revenueUsdPerMwh: round(revenue), marginUsdPerMwh: round(margin), fleetMw: round(mw, 3), reasons };
   if (site.heat && i.tempC !== undefined && i.tempC >= site.heat.shutdownAboveC) {

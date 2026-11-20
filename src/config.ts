@@ -39,6 +39,8 @@ export function parseSite(raw: unknown): SiteConfig {
   const prov = obj(intel.providers);
   const tol = obj(intel.tolerances);
   const age = obj(intel.maxAgeMin);
+  const rec = obj(intel.recovery);
+  const est = obj(planning.hourEstimate);
 
   const mode = power.mode === "fixed" ? "fixed" : power.mode === "realtime" ? "realtime" : (problems.push("power.mode must be realtime or fixed"), "realtime");
   const fixed = power.fixedUsdPerMwh;
@@ -90,6 +92,10 @@ export function parseSite(raw: unknown): SiteConfig {
     planning: {
       hours: num(planning.hours, "planning.hours", (n) => Number.isInteger(n) && n >= 1 && n <= 48, 8),
       startHour: typeof planning.startHour === "string" ? planning.startHour : undefined,
+      hourEstimate: {
+        mode: est.mode === "latest-interval" ? "latest-interval" : "hour-estimate",
+        earlierIntervals: est.earlierIntervals === "telegraph" ? "telegraph" : "public",
+      },
     },
     intelligence: {
       spendCapUsd: num(intel.spendCapUsd, "intelligence.spendCapUsd", (n) => n >= 0 && n <= 100),
@@ -109,8 +115,14 @@ export function parseSite(raw: unknown): SiteConfig {
         realTime: num(age.realTime, "maxAgeMin.realTime", (n) => n > 0, 45),
         dayAhead: num(age.dayAhead, "maxAgeMin.dayAhead", (n) => n > 0, 24 * 60),
         hashprice: num(age.hashprice, "maxAgeMin.hashprice", (n) => n > 0, 6 * 60),
+        // How long an already-accepted hashprice may stand in for a fresh one that cannot be had. 12 h, because on the saved
+        // mempool.space data (2026-11-16 to 19) the hashprice moved at most 4.2% within the same day over any 12 h (90th percentile
+        // 3.3%), inside the 5% the site accepts as agreement; day to day it moved 3.7%, 8.4% and 5.3%, so 24 h would reuse values the
+        // site would not itself accept as fresh. 0 turns carrying off.
+        hashpriceCarry: num(age.hashpriceCarry, "maxAgeMin.hashpriceCarry", (n) => n >= 0, 12 * 60),
         weather: num(age.weather, "maxAgeMin.weather", (n) => n > 0, 24 * 60),
       },
+      recovery: { reask: rec.reask !== false, publicArchive: rec.publicArchive !== false },
       maxBlocksBehind: num(intel.maxBlocksBehind, "intelligence.maxBlocksBehind", (n) => n >= 0, 6),
     },
   };

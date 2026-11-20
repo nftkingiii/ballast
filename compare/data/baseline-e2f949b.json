@@ -1,0 +1,337 @@
+{
+  "source": "git show e2f949b:compare/results.json (the comparison before the three fixes); metrics only, machine-dependent timings dropped",
+  "commit": "e2f949b",
+  "window": {
+    "firstHour": "2026-11-16T01:00:00.000Z",
+    "lastHour": "2026-11-19T17:00:00.000Z",
+    "hours": 89,
+    "node": "HB_WEST"
+  },
+  "clean": {
+    "A": {
+      "metrics": {
+        "decisions": 89,
+        "correct": 82,
+        "correctPct": 92.13,
+        "wrongActions": 7,
+        "holds": 0,
+        "holdsJustified": 0,
+        "holdsUnjustified": 0,
+        "realizedUsd": 15566.09,
+        "oracleUsd": 15652.87,
+        "hindsightBestUsd": 16028.1,
+        "shortfallVsBestUsd": 462.03,
+        "lostOnWrongActionsUsd": 177.7,
+        "lostToHoldsUsd": 0,
+        "badInputHours": 0,
+        "badInputsCaught": 0,
+        "badInputsUsedSilently": 0,
+        "badInputsThatCostMoney": 0,
+        "falseAlarms": 0,
+        "fallbackToDayAhead": 0,
+        "meanAbsPriceErrorUsdPerMwh": 3.46,
+        "evidenceCompletenessPct": 33.33,
+        "telegraphCostUsd": 0,
+        "telegraphCostPerDecisionUsd": 0,
+        "netOfIntelligenceCostUsd": 15566.09,
+        "paidAnswers": 0,
+        "liveSecondsPerDecisionMean": [
+          1.08,
+          1.08
+        ]
+      }
+    },
+    "B": {
+      "metrics": {
+        "decisions": 89,
+        "correct": 82,
+        "correctPct": 92.13,
+        "wrongActions": 7,
+        "holds": 0,
+        "holdsJustified": 0,
+        "holdsUnjustified": 0,
+        "realizedUsd": 15566.09,
+        "oracleUsd": 15652.87,
+        "hindsightBestUsd": 16028.1,
+        "shortfallVsBestUsd": 462.03,
+        "lostOnWrongActionsUsd": 177.7,
+        "lostToHoldsUsd": 0,
+        "badInputHours": 0,
+        "badInputsCaught": 0,
+        "badInputsUsedSilently": 0,
+        "badInputsThatCostMoney": 0,
+        "falseAlarms": 0,
+        "fallbackToDayAhead": 0,
+        "meanAbsPriceErrorUsdPerMwh": 3.46,
+        "evidenceCompletenessPct": 100,
+        "telegraphCostUsd": 1.78,
+        "telegraphCostPerDecisionUsd": 0.02,
+        "netOfIntelligenceCostUsd": 15564.31,
+        "paidAnswers": 178,
+        "liveSecondsPerDecisionMean": [
+          17.08,
+          31.08
+        ]
+      }
+    },
+    "A-DA": {
+      "metrics": {
+        "decisions": 89,
+        "correct": 62,
+        "correctPct": 69.66,
+        "wrongActions": 27,
+        "holds": 0,
+        "holdsJustified": 0,
+        "holdsUnjustified": 0,
+        "realizedUsd": 14540.29,
+        "oracleUsd": 15652.87,
+        "hindsightBestUsd": 16028.1,
+        "shortfallVsBestUsd": 1487.82,
+        "lostOnWrongActionsUsd": 1378.72,
+        "lostToHoldsUsd": 0,
+        "badInputHours": 0,
+        "badInputsCaught": 0,
+        "badInputsUsedSilently": 0,
+        "badInputsThatCostMoney": 0,
+        "falseAlarms": 0,
+        "fallbackToDayAhead": 89,
+        "meanAbsPriceErrorUsdPerMwh": 10.82,
+        "evidenceCompletenessPct": 33.33,
+        "telegraphCostUsd": 0,
+        "telegraphCostPerDecisionUsd": 0,
+        "netOfIntelligenceCostUsd": 14540.29,
+        "paidAnswers": 0,
+        "liveSecondsPerDecisionMean": [
+          1.08,
+          1.08
+        ]
+      }
+    },
+    "A@14": {
+      "metrics": {
+        "decisions": 89,
+        "correct": 75,
+        "correctPct": 84.27,
+        "wrongActions": 14,
+        "holds": 0,
+        "holdsJustified": 0,
+        "holdsUnjustified": 0,
+        "realizedUsd": 15327.11,
+        "oracleUsd": 15652.87,
+        "hindsightBestUsd": 16028.1,
+        "shortfallVsBestUsd": 701.01,
+        "lostOnWrongActionsUsd": 427.54,
+        "lostToHoldsUsd": 0,
+        "badInputHours": 0,
+        "badInputsCaught": 0,
+        "badInputsUsedSilently": 0,
+        "badInputsThatCostMoney": 0,
+        "falseAlarms": 0,
+        "fallbackToDayAhead": 0,
+        "meanAbsPriceErrorUsdPerMwh": 4.26,
+        "evidenceCompletenessPct": 33.33,
+        "telegraphCostUsd": 0,
+        "telegraphCostPerDecisionUsd": 0,
+        "netOfIntelligenceCostUsd": 15327.11,
+        "paidAnswers": 0,
+        "liveSecondsPerDecisionMean": [
+          1.08,
+          1.08
+        ]
+      }
+    },
+    "B@14": {
+      "metrics": {
+        "decisions": 89,
+        "correct": 75,
+        "correctPct": 84.27,
+        "wrongActions": 14,
+        "holds": 0,
+        "holdsJustified": 0,
+        "holdsUnjustified": 0,
+        "realizedUsd": 15327.11,
+        "oracleUsd": 15652.87,
+        "hindsightBestUsd": 16028.1,
+        "shortfallVsBestUsd": 701.01,
+        "lostOnWrongActionsUsd": 427.54,
+        "lostToHoldsUsd": 0,
+        "badInputHours": 0,
+        "badInputsCaught": 0,
+        "badInputsUsedSilently": 0,
+        "badInputsThatCostMoney": 0,
+        "falseAlarms": 0,
+        "fallbackToDayAhead": 0,
+        "meanAbsPriceErrorUsdPerMwh": 4.26,
+        "evidenceCompletenessPct": 100,
+        "telegraphCostUsd": 1.78,
+        "telegraphCostPerDecisionUsd": 0.02,
+        "netOfIntelligenceCostUsd": 15325.33,
+        "paidAnswers": 178,
+        "liveSecondsPerDecisionMean": [
+          17.08,
+          31.08
+        ]
+      }
+    }
+  },
+  "injected": {
+    "A": {
+      "metrics": {
+        "decisions": 89,
+        "correct": 69,
+        "correctPct": 77.53,
+        "wrongActions": 20,
+        "holds": 0,
+        "holdsJustified": 0,
+        "holdsUnjustified": 0,
+        "realizedUsd": 14686.38,
+        "oracleUsd": 16794.46,
+        "hindsightBestUsd": 17169.67,
+        "shortfallVsBestUsd": 2483.3,
+        "lostOnWrongActionsUsd": 2198.97,
+        "lostToHoldsUsd": 0,
+        "badInputHours": 20,
+        "badInputsCaught": 0,
+        "badInputsUsedSilently": 20,
+        "badInputsThatCostMoney": 16,
+        "falseAlarms": 0,
+        "fallbackToDayAhead": 4,
+        "meanAbsPriceErrorUsdPerMwh": 8.17,
+        "evidenceCompletenessPct": 33.33,
+        "telegraphCostUsd": 0,
+        "telegraphCostPerDecisionUsd": 0,
+        "netOfIntelligenceCostUsd": 14686.38,
+        "paidAnswers": 0,
+        "liveSecondsPerDecisionMean": [
+          1.08,
+          1.08
+        ]
+      }
+    },
+    "B": {
+      "metrics": {
+        "decisions": 89,
+        "correct": 75,
+        "correctPct": 84.27,
+        "wrongActions": 10,
+        "holds": 4,
+        "holdsJustified": 4,
+        "holdsUnjustified": 0,
+        "realizedUsd": 15187.24,
+        "oracleUsd": 16794.46,
+        "hindsightBestUsd": 17169.67,
+        "shortfallVsBestUsd": 1982.44,
+        "lostOnWrongActionsUsd": 472.24,
+        "lostToHoldsUsd": 1225.87,
+        "badInputHours": 20,
+        "badInputsCaught": 20,
+        "badInputsUsedSilently": 0,
+        "badInputsThatCostMoney": 0,
+        "falseAlarms": 0,
+        "fallbackToDayAhead": 16,
+        "meanAbsPriceErrorUsdPerMwh": 5.19,
+        "evidenceCompletenessPct": 100,
+        "telegraphCostUsd": 1.86,
+        "telegraphCostPerDecisionUsd": 0.0209,
+        "netOfIntelligenceCostUsd": 15185.38,
+        "paidAnswers": 186,
+        "liveSecondsPerDecisionMean": [
+          17.8,
+          32.43
+        ]
+      }
+    }
+  },
+  "perKind": [
+    {
+      "kind": "stale-price",
+      "hours": 4,
+      "A": {
+        "correct": 0,
+        "shortfallUsd": 898.23
+      },
+      "B": {
+        "correct": 4,
+        "holds": 0,
+        "fellBackToDayAhead": 4,
+        "flagged": 4,
+        "shortfallUsd": 0
+      }
+    },
+    {
+      "kind": "wrong-node",
+      "hours": 4,
+      "A": {
+        "correct": 0,
+        "shortfallUsd": 618.73
+      },
+      "B": {
+        "correct": 3,
+        "holds": 0,
+        "fellBackToDayAhead": 4,
+        "flagged": 4,
+        "shortfallUsd": 31.88
+      }
+    },
+    {
+      "kind": "wrong-market",
+      "hours": 4,
+      "A": {
+        "correct": 0,
+        "shortfallUsd": 359.01
+      },
+      "B": {
+        "correct": 0,
+        "holds": 0,
+        "fellBackToDayAhead": 4,
+        "flagged": 4,
+        "shortfallUsd": 359.01
+      }
+    },
+    {
+      "kind": "disagreement",
+      "hours": 4,
+      "A": {
+        "correct": 0,
+        "shortfallUsd": 242.47
+      },
+      "B": {
+        "correct": 3,
+        "holds": 0,
+        "fellBackToDayAhead": 4,
+        "flagged": 4,
+        "shortfallUsd": 0.82
+      }
+    },
+    {
+      "kind": "missing-hashprice",
+      "hours": 4,
+      "A": {
+        "correct": 4,
+        "shortfallUsd": 0
+      },
+      "B": {
+        "correct": 0,
+        "holds": 4,
+        "fellBackToDayAhead": 0,
+        "flagged": 4,
+        "shortfallUsd": 1225.87
+      }
+    },
+    {
+      "kind": "negative-price",
+      "hours": 4,
+      "A": {
+        "correct": 4,
+        "shortfallUsd": 0
+      },
+      "B": {
+        "correct": 4,
+        "holds": 0,
+        "fellBackToDayAhead": 0,
+        "flagged": 0,
+        "shortfallUsd": 0
+      }
+    }
+  ]
+}

@@ -1,5 +1,6 @@
 import { decideHour } from "./decide.ts";
-import { gatherHashprice, gatherPowerHour, gatherWeather, type Ctx, type PowerInput } from "./evidence.ts";
+import { gatherPowerHour, gatherWeather, resolveHashprice, type Ctx, type PowerInput } from "./evidence.ts";
+import type { Memory } from "./reuse.ts";
 import type { PublicSources } from "./sources.ts";
 import { Budget, type Transport } from "./telegraph.ts";
 import type { Gap, Mode, Plan, SiteConfig } from "./types.ts";
@@ -13,6 +14,8 @@ export interface PlanDeps {
   mode: Mode;
   /** Printed at the top of every rendering, so demo output can never pass for live output. */
   label: string;
+  /** What an earlier run accepted. A hashprice in it may stand in for a missing fresh one inside the site's window (maxAgeMin.hashpriceCarry). */
+  memory?: Memory;
 }
 
 export async function planSite(site: SiteConfig, deps: PlanDeps): Promise<Plan> {
@@ -23,7 +26,7 @@ export async function planSite(site: SiteConfig, deps: PlanDeps): Promise<Plan> 
   const ctx: Ctx = { site, transport: deps.transport, pub: deps.pub, budget: new Budget(site.intelligence.spendCapUsd), now: deps.now, evidence: [] };
 
   // Buy the inputs every hour needs first; if one is missing there is no point buying prices.
-  const hashprice = await gatherHashprice(ctx);
+  const hashprice = await resolveHashprice(ctx, deps.memory?.hashprice, deps.mode);
   const weather = await gatherWeather(ctx, hourIso);
 
   const power = new Map<string, PowerInput>();
@@ -45,6 +48,9 @@ export async function planSite(site: SiteConfig, deps: PlanDeps): Promise<Plan> 
       hour: key,
       hashpriceUsdPerPhDay: hashprice.usdPerPhDay,
       hashpriceGaps: hashprice.gaps,
+      hashpriceNote: hashprice.carried
+        ? `hashprice carried from ${hashprice.carried.acceptedAt.slice(0, 16)}Z: a fresh answer could not be had (${hashprice.carried.because}); using the earlier accepted ${hashprice.usdPerPhDay!.toFixed(2)} from ${hashprice.carried.provider}, receipt ${hashprice.carried.receipt}, ${hashprice.carried.ageMin} min old, inside the ${hashprice.carried.windowMin} min window`
+        : undefined,
       power: p,
       tempC: weather.tempC[key],
       weatherRequired: weather.required,
@@ -59,6 +65,7 @@ export async function planSite(site: SiteConfig, deps: PlanDeps): Promise<Plan> 
   const note = (g: Gap) => missing.set(`${g.check}|${g.subject}|${g.reason}`, g);
   decisions.forEach((d) => d.gaps.forEach(note));
   hashprice.gaps.forEach(note);
+  if (hashprice.carried) note({ check: "hashprice", subject: "carried", reason: `hashprice is carried from ${hashprice.carried.acceptedAt.slice(0, 16)}Z (${hashprice.carried.ageMin} min old), not a fresh answer` });
   weather.gaps.forEach(note);
   for (const e of ctx.evidence) {
     if (e.reason === "cross-check unavailable") note({ check: e.check, subject: e.subject, reason: "free public cross-check unavailable; this price rests on one source" });
@@ -71,13 +78,15 @@ export async function planSite(site: SiteConfig, deps: PlanDeps): Promise<Plan> 
   }
   if (ctx.budget.breached) note({ check: "budget", subject: "plan", reason: `spend cap $${site.intelligence.spendCapUsd.toFixed(2)} reached; later hours were not priced` });
 
-  const telegraphCalls = ctx.evidence.filter((e) => e.source.kind !== "public").length;
+  const telegraphCalls = ctx.evidence.filter((e) => e.source.kind !== "public" && !e.carried).length;
   return {
     mode: deps.mode,
     label: deps.label,
     site: site.name,
     generatedAt: deps.now.toISOString(),
     hashpriceUsdPerPhDay: hashprice.usdPerPhDay,
+    ...(hashprice.carried ? { hashpriceCarried: hashprice.carried } : {}),
+    hashpriceMemory: hashprice.memory ?? null,
     decisions,
     evidence: ctx.evidence,
     intelligenceCostUsd: round(ctx.evidence.reduce((sum, e) => sum + e.costUsd, 0), 4),
