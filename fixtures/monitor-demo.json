@@ -1,0 +1,29 @@
+{
+  "label": "Evening ramp at Pecos: tick 1 uses the numbers from the recorded live paid run of 2026-11-19 18:14Z (Gauge hashprice $29.31/PH/day, Pecos HB_WEST real-time $15.92/MWh for 17:45Z); every later tick is invented to exercise the monitor.",
+  "synthetic": true,
+  "anchor": "live paid run 2026-11-19 18:14Z, Gauge 4283 receipt 0x685ac740498a1850728acbadc62639f9e4e26bf2250bff065ed46c5b9db63218, Pecos 7310042 receipt 0xb21b0c8b8212112ffd49a9564643d066a4d5e7db21f37654b21fd32e11685b94 (this replay shows fixture: receipts, not those).",
+  "startAt": "2026-11-19T18:14:00Z",
+  "cadenceMin": 15,
+  "sessionCapUsd": 0.5,
+  "siteOverrides": { "planning": { "hours": 6 } },
+  "ticks": [
+    { "note": "Start of the session.", "events": [
+      { "type": "hashprice", "usd": 29.31, "public": 28.15 },
+      { "type": "realTime", "lmp": 15.92 }
+    ] },
+    { "note": "Quiet quarter hour." },
+    { "note": "SYNTHETIC price spike.", "events": [ { "type": "realTime", "lmp": 142.1, "public": 141.7 } ] },
+    { "note": "SYNTHETIC spike clears.", "events": [ { "type": "realTime", "lmp": 24.0 } ] },
+    { "note": "New hour; hashprice is re-bought on the hour.", "events": [
+      { "type": "hashprice", "usd": 27.0 },
+      { "type": "realTime", "lmp": 26.0 }
+    ] },
+    { "note": "SYNTHETIC provider disagreement.", "events": [ { "type": "realTime", "lmp": 31.0, "public": 70.0 } ] },
+    { "note": "SYNTHETIC disagreement clears.", "events": [ { "type": "realTime", "lmp": 31.5, "public": 31.2 } ] },
+    { "note": "Quiet.", "events": [ { "type": "realTime", "lmp": 30.0 } ] },
+    { "note": "New hour.", "events": [ { "type": "realTime", "lmp": 33.0 } ] },
+    { "note": "SYNTHETIC real-time climbs toward break-even.", "events": [ { "type": "realTime", "lmp": 48.0 } ] },
+    { "note": "Still elevated.", "events": [] },
+    { "note": "Eases.", "events": [ { "type": "realTime", "lmp": 29.0 } ] }
+  ]
+}

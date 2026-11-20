@@ -1,0 +1,17 @@
+{
+  "label": "A $0.12 whole-session cap: the first plan costs $0.08, then the cap runs out partway through the second hour of ticks.",
+  "synthetic": true,
+  "startAt": "2026-11-19T18:14:00Z",
+  "cadenceMin": 15,
+  "sessionCapUsd": 0.12,
+  "siteOverrides": { "planning": { "hours": 6 } },
+  "ticks": [
+    { "note": "Baseline.", "events": [ { "type": "realTime", "lmp": 16.0 } ] },
+    { "note": "Quiet.", "events": [] },
+    { "note": "Quiet.", "events": [] },
+    { "note": "Quiet.", "events": [] },
+    { "note": "New hour: hashprice is due and takes the last of the cap.", "events": [ { "type": "realTime", "lmp": 25.0 } ] },
+    { "note": "Cap reached.", "events": [ { "type": "realTime", "lmp": 26.0 } ] },
+    { "note": "Cap reached.", "events": [] }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "label": "Gauge is down for the first two ticks, so nothing can be decided and nothing is bought; then it answers.",
+  "synthetic": true,
+  "startAt": "2026-11-19T18:14:00Z",
+  "cadenceMin": 15,
+  "sessionCapUsd": 0.5,
+  "siteOverrides": { "planning": { "hours": 6 } },
+  "ticks": [
+    { "note": "Gauge unavailable.", "events": [ { "type": "hashprice", "available": false }, { "type": "realTime", "lmp": 16.0 } ] },
+    { "note": "Still unavailable.", "events": [] },
+    { "note": "Gauge answers.", "events": [ { "type": "hashprice", "available": true } ] },
+    { "note": "Quiet.", "events": [] }
+  ]
+}

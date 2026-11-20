@@ -37,6 +37,14 @@ export async function handleRpc(tools: Tools, message: Rpc): Promise<object | nu
           const out = await tools.explain_decision({ planId: String(args.planId), hour: String(args.hour) });
           return reply({ content: [{ type: "text", text: out.text }] });
         }
+        if (name === "monitor_site") {
+          const out = await tools.monitor_site({ site: args.site, timeline: args.timeline, ticks: args.ticks, monitorId: args.monitorId, capUsd: args.capUsd });
+          return reply({ content: [{ type: "text", text: `monitorId: ${out.monitorId}\n\n${out.text}` }], structuredContent: { monitorId: out.monitorId, done: out.done, spentUsd: out.spentUsd, capUsd: out.capUsd, tick: out.tick } });
+        }
+        if (name === "whats_changed") {
+          const out = await tools.whats_changed({ monitorId: String(args.monitorId), tick: args.tick });
+          return reply({ content: [{ type: "text", text: out.text }] });
+        }
         return fail(-32602, `unknown tool ${name}`);
       } catch (error) {
         return reply({ isError: true, content: [{ type: "text", text: `Ballast refused: ${(error as Error).message}` }] });

@@ -10,6 +10,7 @@
     "mcp": "tsx src/mcp.ts",
     "record": "tsx scripts/record-fixtures.ts",
     "test": "tsx --test test/*.test.ts",
+    "monitor": "tsx src/monitor-cli.ts",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {

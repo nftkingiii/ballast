@@ -1,0 +1,20 @@
+{
+  "label": "A day-ahead answer for the wrong hour (from tick 1), then a real-time feed that serves 2-hour-old answers (tick 2), then both recover (tick 3).",
+  "synthetic": true,
+  "startAt": "2026-11-19T18:14:00Z",
+  "cadenceMin": 15,
+  "sessionCapUsd": 0.5,
+  "siteOverrides": { "planning": { "hours": 6 } },
+  "ticks": [
+    { "note": "Baseline, except Pecos answers the 20:00 day-ahead question with 19:00's price.", "events": [
+      { "type": "realTime", "lmp": 16.0 },
+      { "type": "dayAhead", "hour": "20:00", "substituted": true }
+    ] },
+    { "note": "Real-time feed lags by two hours.", "events": [ { "type": "realTime", "staleMin": 120 } ] },
+    { "note": "Both feeds recover.", "events": [
+      { "type": "realTime", "lmp": 16.5 },
+      { "type": "dayAhead", "hour": "20:00", "restore": true }
+    ] },
+    { "note": "Quiet.", "events": [] }
+  ]
+}

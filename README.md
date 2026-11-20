@@ -57,7 +57,7 @@ A plan of 8 hours costs about $0.10 to $0.12 at $0.01 per answer. First paid run
 
 ## Tools for a Mind (and other agents)
 
-Two tools, `plan_site(site?)` and `explain_decision(planId, hour)`.
+Four tools: `plan_site(site?)`, `explain_decision(planId, hour)`, and the monitor-mode pair `monitor_site` and `whats_changed` (next section).
 
 ```powershell
 npm run serve        # HTTP on :8787  GET /openapi.json, POST /plan_site, POST /explain_decision
@@ -68,9 +68,29 @@ npm run mcp          # MCP over stdio, same two tools
 - For Minds: host the HTTP server at a public URL, then ask your Mind to build an App from `<url>/openapi.json`, save the token under My Connections, and paste `minds/SKILL-PROMPT.md` as the Skill playbook. Whether Minds accepts an arbitrary HTTP tool this way is unconfirmed (RESEARCH.md section 2).
 - For Claude Code: `claude mcp add ballast -- npx tsx C:\path\to\Ballast\src\mcp.ts`.
 
+## Monitor mode
+
+`plan` answers once. `monitor` keeps watching: it re-checks every 15 minutes (the ERCOT real-time interval), revisits earlier decisions when new evidence arrives, and says exactly what changed and why.
+
+```powershell
+npm run monitor -- --site sites/west-texas.json                                   # replays fixtures/monitor-demo.json in a second, nothing paid
+npm run monitor -- --timeline fixtures/monitor-disagreement.json --log monitor-log.json
+```
+
+Timelines: `demo`, `disagreement`, `stale`, `missing-hashprice`, `spend-cap`, `negative-price`. Tick 1 of `demo` uses the numbers from the recorded live paid run of 2026-11-19 18:14Z (hashprice $29.31, Pecos real-time $15.92 for 17:45Z, RUN at $39.23/MWh); everything after that is **SYNTHETIC** and labelled so, and receipts in the replay start with `fixture:`.
+
+- **What changed.** Per hour, each tick compares the new decision with the previous one: `18:00 changed RUN → CURTAIL: Pecos real-time for 18:15 rose from $15.92 to $142.10 (E20, receipt …); public ERCOT archive agrees within $0.40 (E21); margin fell from $39.23 to -$86.95/MWh.` Unchanged hours are listed in one line.
+- **Anticipation.** Day-ahead prices and the weather forecast flag upcoming hours that may flip, always prefixed `FORECAST, not a decision`, with the real-time break-even price (`revenue - adder - other variable cost`). "At risk" means real-time only has to land `stressUsdPerMwh` (default $20, an assumption) above day-ahead to cross it.
+- **Abstention.** `NO RECOMMENDATION` with a kind (`conflict`, `stale`, `missing`, `budget`), the reasons, the last decision (marked not current), and what would let it decide: which check, from which provider. The current hour needs a fresh real-time answer every tick and never falls back to day-ahead. Held hours are retried every tick and revisited when the input arrives.
+- **Spend.** One cap for the whole session, not per run. A tick buys only what is due: real-time for the current hour each tick, hashprice hourly, day-ahead for new hours and every 6 h, weather every 6 h; slow inputs ride on their freshness window if a refresh fails. When the cap is reached nothing more is bought and hours that needed a refresh become `NO RECOMMENDATION`. Without a hashprice nothing is bought at all.
+- **History.** Kept in memory; `--log file.json` rewrites the full history and evidence ledger after every tick.
+- **Live.** `--live --paid --cap <usd> [--every 15] [--ticks n]` is the only path that waits and buys. It refuses to start without `--paid`, a cap above zero, and credentials in the environment. It has not been run.
+
+Tools: `monitor_site({site?, timeline?, ticks?, monitorId?, capUsd?})` starts or advances a session; `whats_changed({monitorId, tick?})` explains a tick without buying. On a server in paid mode (`BALLAST_PAID=1`) each `monitor_site` call runs one live check, so the caller sets the cadence; the session cap is enforced across calls and clamped to `BALLAST_MAX_CAP_USD`. A request cannot switch paid mode on.
+
 ## Layout
 
-`src/decide.ts` the margin and action logic (pure). `src/evidence.ts` buys and checks each input. `src/plan.ts` orchestrates and totals. `src/telegraph.ts` the escrow and Anjoman transports and the budget. `src/sources.ts` public sources and the fixture replay. `src/scenarios.ts` the staged failures. `scripts/record-fixtures.ts` re-records the day from free public sources (`node --experimental-transform-types scripts/record-fixtures.ts`).
+`src/decide.ts` the margin and action logic (pure). `src/evidence.ts` buys and checks each input. `src/plan.ts` orchestrates and totals. `src/telegraph.ts` the escrow and Anjoman transports and the budget. `src/sources.ts` public sources and the fixture replay. `src/scenarios.ts` the staged failures. Monitor mode: `src/monitor.ts` (session, refresh policy, abstention), `src/diff.ts` (decision diff and wording), `src/anticipate.ts`, `src/timeline.ts` (synthetic world for the demo), `src/monitor-demo.ts`, `src/monitor-render.ts`, `src/monitor-cli.ts`, `src/monitor-tools.ts`, `fixtures/monitor-*.json`. `scripts/record-fixtures.ts` re-records the day from free public sources (`node --experimental-transform-types scripts/record-fixtures.ts`).
 
 Node 22, `tsx`, no other runtime dependency. Tests inject `fetch` and replay recorded data; the 402 challenge in `fixtures/` is a real unpaid response from the node.
 

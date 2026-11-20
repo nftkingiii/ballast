@@ -1,6 +1,7 @@
 import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
 import { parseSite } from "./config.ts";
+import { createMonitorTools, MONITOR_TOOL_SCHEMAS } from "./monitor-tools.ts";
 import { planSite } from "./plan.ts";
 import { explainDecision, renderPlan } from "./render.ts";
 import { demoDeps, paidDeps, type RuntimeError } from "./runtime.ts";
@@ -29,6 +30,7 @@ export function createTools(options: ToolOptions) {
   };
 
   return {
+    ...createMonitorTools(options),
     /** Plan the next hours for a site: RUN, THROTTLE, CURTAIL or HOLD per hour, with the evidence behind each. */
     async plan_site(input: { site?: unknown }): Promise<{ planId: string; text: string; plan: Plan }> {
       const raw = (input.site ?? options.defaultSite ?? JSON.parse(readFileSync(DEFAULT_SITE, "utf8"))) as Record<string, any>;
@@ -83,4 +85,5 @@ export const TOOL_SCHEMAS = {
       required: ["planId", "hour"],
     },
   },
+  ...MONITOR_TOOL_SCHEMAS,
 } as const;

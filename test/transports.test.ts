@@ -98,10 +98,10 @@ test("budget: a refusal is permanent", () => {
   assert.equal(b.breached, true);
 });
 
-test("MCP: lists both tools and plans a site in demo mode", async () => {
+test("MCP: lists the tools and plans a site in demo mode", async () => {
   const tools = createTools({ paid: false, maxCapUsd: 0.5 });
   const list = (await handleRpc(tools, { jsonrpc: "2.0", id: 1, method: "tools/list" })) as { result: { tools: { name: string }[] } };
-  assert.deepEqual(list.result.tools.map((t) => t.name), ["plan_site", "explain_decision"]);
+  assert.deepEqual(list.result.tools.map((t) => t.name), ["plan_site", "explain_decision", "monitor_site", "whats_changed"]);
   const call = (await handleRpc(tools, { jsonrpc: "2.0", id: 2, method: "tools/call", params: { name: "plan_site", arguments: {} } })) as { result: { content: { text: string }[] } };
   const text = call.result.content[0]!.text;
   assert.match(text, /^planId: [0-9a-f]{10}/);

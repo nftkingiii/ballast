@@ -1,0 +1,15 @@
+{
+  "label": "Pecos real-time and the public ERCOT archive disagree for two quarter hours, then agree again.",
+  "synthetic": true,
+  "startAt": "2026-11-19T18:14:00Z",
+  "cadenceMin": 15,
+  "sessionCapUsd": 0.5,
+  "siteOverrides": { "planning": { "hours": 6 } },
+  "ticks": [
+    { "note": "Baseline.", "events": [ { "type": "realTime", "lmp": 16.0 } ] },
+    { "note": "SYNTHETIC: Pecos says $20, the archive says $95.", "events": [ { "type": "realTime", "lmp": 20.0, "public": 95.0 } ] },
+    { "note": "Still disagreeing.", "events": [] },
+    { "note": "Archive catches up.", "events": [ { "type": "realTime", "lmp": 21.0, "public": 20.5 } ] },
+    { "note": "Quiet.", "events": [] }
+  ]
+}

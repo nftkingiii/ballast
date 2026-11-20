@@ -1,0 +1,18 @@
+{
+  "label": "Day-ahead for 21:00 is revised to -$18.40/MWh and 22:00 to $450/MWh (both re-checked every 15 minutes in this timeline), then real-time for the current hour goes negative.",
+  "synthetic": true,
+  "startAt": "2026-11-19T18:14:00Z",
+  "cadenceMin": 15,
+  "sessionCapUsd": 1.0,
+  "siteOverrides": { "planning": { "hours": 6 } },
+  "policy": { "dayAheadEveryMin": 15 },
+  "ticks": [
+    { "note": "Baseline.", "events": [ { "type": "realTime", "lmp": 16.0 } ] },
+    { "note": "SYNTHETIC day-ahead revisions.", "events": [
+      { "type": "dayAhead", "hour": "21:00", "lmp": -18.4 },
+      { "type": "dayAhead", "hour": "22:00", "lmp": 450 }
+    ] },
+    { "note": "SYNTHETIC negative real-time for the current hour.", "events": [ { "type": "realTime", "lmp": -6.5 } ] },
+    { "note": "Quiet.", "events": [] }
+  ]
+}

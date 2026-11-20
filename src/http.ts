@@ -3,6 +3,8 @@
 //   GET  /openapi.json      tool definitions to paste into a Minds App manifest
 //   POST /plan_site         { site? }                -> { planId, text, plan }
 //   POST /explain_decision  { planId, hour }         -> { text }
+//   POST /monitor_site      { site?, timeline?, ticks?, monitorId?, capUsd? } -> { monitorId, text, tick, done }
+//   POST /whats_changed     { monitorId, tick? }     -> { text }
 // Set BALLAST_TOOL_TOKEN to require it as the x-api-key header. Paid mode is BALLAST_PAID=1 on the server only.
 import { createServer, type IncomingMessage, type ServerResponse } from "node:http";
 import { timingSafeEqual } from "node:crypto";
@@ -15,7 +17,7 @@ export function openApi(baseUrl: string) {
     post: {
       operationId: name,
       description: TOOL_SCHEMAS[name].description,
-      requestBody: { required: name === "explain_decision", content: { "application/json": { schema: TOOL_SCHEMAS[name].inputSchema } } },
+      requestBody: { required: name === "explain_decision" || name === "whats_changed", content: { "application/json": { schema: TOOL_SCHEMAS[name].inputSchema } } },
       responses: { "200": { description: "Result", content: { "application/json": { schema: { type: "object" } } } } },
     },
   });
@@ -25,7 +27,7 @@ export function openApi(baseUrl: string) {
     servers: [{ url: baseUrl }],
     components: { securitySchemes: { key: { type: "apiKey", in: "header", name: "x-api-key" } } },
     security: [{ key: [] }],
-    paths: { "/plan_site": op("plan_site"), "/explain_decision": op("explain_decision") },
+    paths: { "/plan_site": op("plan_site"), "/explain_decision": op("explain_decision"), "/monitor_site": op("monitor_site"), "/whats_changed": op("whats_changed") },
   };
 }
 
@@ -75,6 +77,8 @@ export function createHandler(tools: Tools, token = process.env.BALLAST_TOOL_TOK
       const body = (await readBody(req)) as Record<string, unknown>;
       if (url.pathname === "/plan_site") return send(200, await tools.plan_site({ site: body.site }));
       if (url.pathname === "/explain_decision") return send(200, await tools.explain_decision({ planId: String(body.planId ?? ""), hour: String(body.hour ?? "") }));
+      if (url.pathname === "/monitor_site") return send(200, await tools.monitor_site({ site: body.site, timeline: body.timeline as string | undefined, ticks: body.ticks as number | undefined, monitorId: body.monitorId as string | undefined, capUsd: body.capUsd as number | undefined }));
+      if (url.pathname === "/whats_changed") return send(200, await tools.whats_changed({ monitorId: String(body.monitorId ?? ""), tick: body.tick as number | undefined }));
       return send(404, { error: "not_found" });
     } catch (error) {
       const status = (error as { status?: number }).status ?? 400;
