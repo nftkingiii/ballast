@@ -43,16 +43,23 @@ export function createLivePublicSources(http: Fetch = fetch): PublicSources {
         tip(),
         json<{ totalReward: string; startBlock: number; endBlock: number }>(`${MEMPOOL}/api/v1/mining/reward-stats/144`),
         json<{ USD: number }>(`${MEMPOOL}/api/v1/prices`),
-        json<{ currentHashrate: number }>(`${MEMPOOL}/api/v1/mining/hashrate/3d`),
+        json<{ currentHashrate: number; currentDifficulty?: number }>(`${MEMPOOL}/api/v1/mining/hashrate/3d`),
       ]);
       const blocks = stats.endBlock - stats.startBlock + 1;
-      const hashrateEhS = rate.currentHashrate / 1e18;
+      // Hashprice divides revenue by network hashrate, which can only be estimated. Use the figure implied by
+      // the current difficulty (difficulty * 2^32 / 600 s): it comes straight from the chain and is the basis
+      // providers such as Gauge use. mempool.space's 3-day observed estimate ran 6% higher on 2026-11-20 and
+      // alone pushed a correct provider answer outside the 5% tolerance.
+      const fromDifficulty = rate.currentDifficulty ? (rate.currentDifficulty * 2 ** 32) / 600 / 1e18 : undefined;
+      const hashrateEhS = fromDifficulty ?? rate.currentHashrate / 1e18;
       return {
         usdPerPhDay: hashpriceUsdPerPhDay(Number(stats.totalReward) / blocks, prices.USD, hashrateEhS),
         btcUsd: prices.USD,
         hashrateEhS,
         tipHeight: height,
-        source: "mempool.space reward-stats(144), prices, hashrate(3d)",
+        source: fromDifficulty
+          ? "mempool.space reward-stats(144), prices, difficulty-implied hashrate"
+          : "mempool.space reward-stats(144), prices, hashrate(3d)",
       };
     },
     async forecast(lat, lon) {
