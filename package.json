@@ -3,8 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "engines": { "node": ">=22" },
+  "engines": {
+    "node": ">=22"
+  },
   "scripts": {
+    "start": "tsx src/http.ts",
     "plan": "tsx src/cli.ts plan",
     "serve": "tsx src/http.ts",
     "mcp": "tsx src/mcp.ts",
