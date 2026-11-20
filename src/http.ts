@@ -66,7 +66,7 @@ export function createHandler(tools: Tools, token = process.env.BALLAST_TOOL_TOK
     };
     const url = new URL(req.url ?? "/", "http://localhost");
     if (req.method === "GET" && url.pathname === "/health") return send(200, { ok: true });
-    if (req.method === "GET" && url.pathname === "/openapi.json") return send(200, openApi(process.env.BALLAST_PUBLIC_URL ?? `http://${req.headers.host ?? "localhost"}`));
+    if (req.method === "GET" && url.pathname === "/openapi.json") return send(200, openApi(process.env.BALLAST_PUBLIC_URL ?? `${String(req.headers["x-forwarded-proto"] ?? "http").split(",")[0]}://${req.headers.host ?? "localhost"}`));
     if (req.method !== "POST") return send(404, { error: "not_found" });
 
     if (token && !safeEqual(String(req.headers["x-api-key"] ?? ""), token)) return send(401, { error: "bad_api_key" });
