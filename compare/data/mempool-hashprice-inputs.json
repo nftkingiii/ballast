@@ -1,0 +1,4833 @@
+{
+ "fetchedAt": "2026-11-20T03:25:35.710Z",
+ "sources": [
+  "https://mempool.space/api/v1/mining/blocks/rewards/1w",
+  "https://mempool.space/api/v1/mining/hashrate/1w"
+ ],
+ "rewards": [
+  {
+   "avgHeight": 975628,
+   "timestamp": 1794542889,
+   "avgRewards": 318261890,
+   "USD": 68889
+  },
+  {
+   "avgHeight": 975630,
+   "timestamp": 1794543120,
+   "avgRewards": 314537372,
+   "USD": 68889
+  },
+  {
+   "avgHeight": 975631,
+   "timestamp": 1794543634,
+   "avgRewards": 314182918,
+   "USD": 68889
+  },
+  {
+   "avgHeight": 975633,
+   "timestamp": 1794545279,
+   "avgRewards": 315186254,
+   "USD": 68889
+  },
+  {
+   "avgHeight": 975635,
+   "timestamp": 1794545903,
+   "avgRewards": 313379243,
+   "USD": 68889
+  },
+  {
+   "avgHeight": 975636,
+   "timestamp": 1794548045,
+   "avgRewards": 316317885,
+   "USD": 68524
+  },
+  {
+   "avgHeight": 975637,
+   "timestamp": 1794549020,
+   "avgRewards": 315812864,
+   "USD": 68524
+  },
+  {
+   "avgHeight": 975638,
+   "timestamp": 1794551237,
+   "avgRewards": 317177420,
+   "USD": 68080
+  },
+  {
+   "avgHeight": 975639,
+   "timestamp": 1794552302,
+   "avgRewards": 316539463,
+   "USD": 68080
+  },
+  {
+   "avgHeight": 975640,
+   "timestamp": 1794554277,
+   "avgRewards": 318328196,
+   "USD": 69092
+  },
+  {
+   "avgHeight": 975642,
+   "timestamp": 1794554757,
+   "avgRewards": 315360100,
+   "USD": 69092
+  },
+  {
+   "avgHeight": 975643,
+   "timestamp": 1794555480,
+   "avgRewards": 316006290,
+   "USD": 69092
+  },
+  {
+   "avgHeight": 975644,
+   "timestamp": 1794556019,
+   "avgRewards": 314516722,
+   "USD": 69092
+  },
+  {
+   "avgHeight": 975645,
+   "timestamp": 1794556561,
+   "avgRewards": 314371270,
+   "USD": 69092
+  },
+  {
+   "avgHeight": 975646,
+   "timestamp": 1794556940,
+   "avgRewards": 313848477,
+   "USD": 68550
+  },
+  {
+   "avgHeight": 975647,
+   "timestamp": 1794557620,
+   "avgRewards": 314331820,
+   "USD": 68550
+  },
+  {
+   "avgHeight": 975648,
+   "timestamp": 1794558232,
+   "avgRewards": 314452476,
+   "USD": 68550
+  },
+  {
+   "avgHeight": 975649,
+   "timestamp": 1794559093,
+   "avgRewards": 314995027,
+   "USD": 68550
+  },
+  {
+   "avgHeight": 975650,
+   "timestamp": 1794559436,
+   "avgRewards": 313761756,
+   "USD": 68550
+  },
+  {
+   "avgHeight": 975652,
+   "timestamp": 1794559868,
+   "avgRewards": 313365663,
+   "USD": 68550
+  },
+  {
+   "avgHeight": 975654,
+   "timestamp": 1794561462,
+   "avgRewards": 313291267,
+   "USD": 68670
+  },
+  {
+   "avgHeight": 975655,
+   "timestamp": 1794561681,
+   "avgRewards": 313947001,
+   "USD": 68670
+  },
+  {
+   "avgHeight": 975657,
+   "timestamp": 1794562705,
+   "avgRewards": 314864095,
+   "USD": 68670
+  },
+  {
+   "avgHeight": 975658,
+   "timestamp": 1794563069,
+   "avgRewards": 313264291,
+   "USD": 68670
+  },
+  {
+   "avgHeight": 975659,
+   "timestamp": 1794563145,
+   "avgRewards": 313374222,
+   "USD": 68670
+  },
+  {
+   "avgHeight": 975660,
+   "timestamp": 1794564260,
+   "avgRewards": 314653361,
+   "USD": 68670
+  },
+  {
+   "avgHeight": 975661,
+   "timestamp": 1794564864,
+   "avgRewards": 315048134,
+   "USD": 69050
+  },
+  {
+   "avgHeight": 975662,
+   "timestamp": 1794565817,
+   "avgRewards": 315122960,
+   "USD": 69050
+  },
+  {
+   "avgHeight": 975663,
+   "timestamp": 1794566112,
+   "avgRewards": 313496054,
+   "USD": 69050
+  },
+  {
+   "avgHeight": 975664,
+   "timestamp": 1794567229,
+   "avgRewards": 315792829,
+   "USD": 69050
+  },
+  {
+   "avgHeight": 975665,
+   "timestamp": 1794567409,
+   "avgRewards": 313784878,
+   "USD": 69050
+  },
+  {
+   "avgHeight": 975666,
+   "timestamp": 1794567810,
+   "avgRewards": 313309462,
+   "USD": 69319
+  },
+  {
+   "avgHeight": 975667,
+   "timestamp": 1794568301,
+   "avgRewards": 314230967,
+   "USD": 69319
+  },
+  {
+   "avgHeight": 975668,
+   "timestamp": 1794569643,
+   "avgRewards": 315670148,
+   "USD": 69319
+  },
+  {
+   "avgHeight": 975669,
+   "timestamp": 1794570481,
+   "avgRewards": 315217283,
+   "USD": 69319
+  },
+  {
+   "avgHeight": 975671,
+   "timestamp": 1794572916,
+   "avgRewards": 315796710,
+   "USD": 69278
+  },
+  {
+   "avgHeight": 975672,
+   "timestamp": 1794573830,
+   "avgRewards": 315681665,
+   "USD": 69278
+  },
+  {
+   "avgHeight": 975673,
+   "timestamp": 1794574230,
+   "avgRewards": 314354691,
+   "USD": 69278
+  },
+  {
+   "avgHeight": 975675,
+   "timestamp": 1794575520,
+   "avgRewards": 314945048,
+   "USD": 69135
+  },
+  {
+   "avgHeight": 975677,
+   "timestamp": 1794576119,
+   "avgRewards": 313422212,
+   "USD": 69135
+  },
+  {
+   "avgHeight": 975679,
+   "timestamp": 1794576506,
+   "avgRewards": 313489758,
+   "USD": 69135
+  },
+  {
+   "avgHeight": 975680,
+   "timestamp": 1794577672,
+   "avgRewards": 316050515,
+   "USD": 69135
+  },
+  {
+   "avgHeight": 975681,
+   "timestamp": 1794578290,
+   "avgRewards": 314942034,
+   "USD": 69135
+  },
+  {
+   "avgHeight": 975682,
+   "timestamp": 1794578659,
+   "avgRewards": 314275560,
+   "USD": 69502
+  },
+  {
+   "avgHeight": 975683,
+   "timestamp": 1794579067,
+   "avgRewards": 313451064,
+   "USD": 69502
+  },
+  {
+   "avgHeight": 975684,
+   "timestamp": 1794579370,
+   "avgRewards": 313847883,
+   "USD": 69502
+  },
+  {
+   "avgHeight": 975685,
+   "timestamp": 1794580389,
+   "avgRewards": 315767775,
+   "USD": 69502
+  },
+  {
+   "avgHeight": 975686,
+   "timestamp": 1794580731,
+   "avgRewards": 314037048,
+   "USD": 69502
+  },
+  {
+   "avgHeight": 975688,
+   "timestamp": 1794581195,
+   "avgRewards": 313088673,
+   "USD": 69502
+  },
+  {
+   "avgHeight": 975687,
+   "timestamp": 1794581481,
+   "avgRewards": 313949291,
+   "USD": 69502
+  },
+  {
+   "avgHeight": 975689,
+   "timestamp": 1794581747,
+   "avgRewards": 314294111,
+   "USD": 69502
+  },
+  {
+   "avgHeight": 975690,
+   "timestamp": 1794582077,
+   "avgRewards": 314238818,
+   "USD": 68933
+  },
+  {
+   "avgHeight": 975691,
+   "timestamp": 1794582392,
+   "avgRewards": 313496915,
+   "USD": 68933
+  },
+  {
+   "avgHeight": 975692,
+   "timestamp": 1794584099,
+   "avgRewards": 318439229,
+   "USD": 68933
+  },
+  {
+   "avgHeight": 975693,
+   "timestamp": 1794585816,
+   "avgRewards": 318701186,
+   "USD": 68837
+  },
+  {
+   "avgHeight": 975694,
+   "timestamp": 1794587143,
+   "avgRewards": 318433165,
+   "USD": 68837
+  },
+  {
+   "avgHeight": 975695,
+   "timestamp": 1794587939,
+   "avgRewards": 317069910,
+   "USD": 68837
+  },
+  {
+   "avgHeight": 975696,
+   "timestamp": 1794589633,
+   "avgRewards": 320673539,
+   "USD": 68658
+  },
+  {
+   "avgHeight": 975697,
+   "timestamp": 1794591728,
+   "avgRewards": 321003014,
+   "USD": 68658
+  },
+  {
+   "avgHeight": 975699,
+   "timestamp": 1794593538,
+   "avgRewards": 320313344,
+   "USD": 68892
+  },
+  {
+   "avgHeight": 975702,
+   "timestamp": 1794594721,
+   "avgRewards": 319682401,
+   "USD": 68892
+  },
+  {
+   "avgHeight": 975703,
+   "timestamp": 1794595819,
+   "avgRewards": 318789309,
+   "USD": 68892
+  },
+  {
+   "avgHeight": 975704,
+   "timestamp": 1794598554,
+   "avgRewards": 322174179,
+   "USD": 68925
+  },
+  {
+   "avgHeight": 975705,
+   "timestamp": 1794599021,
+   "avgRewards": 318995147,
+   "USD": 68925
+  },
+  {
+   "avgHeight": 975706,
+   "timestamp": 1794600315,
+   "avgRewards": 320425467,
+   "USD": 68993
+  },
+  {
+   "avgHeight": 975707,
+   "timestamp": 1794600796,
+   "avgRewards": 318418598,
+   "USD": 68993
+  },
+  {
+   "avgHeight": 975708,
+   "timestamp": 1794601091,
+   "avgRewards": 317498435,
+   "USD": 68993
+  },
+  {
+   "avgHeight": 975709,
+   "timestamp": 1794601950,
+   "avgRewards": 318519767,
+   "USD": 68993
+  },
+  {
+   "avgHeight": 975710,
+   "timestamp": 1794602781,
+   "avgRewards": 318445304,
+   "USD": 68993
+  },
+  {
+   "avgHeight": 975711,
+   "timestamp": 1794603213,
+   "avgRewards": 316998953,
+   "USD": 68993
+  },
+  {
+   "avgHeight": 975713,
+   "timestamp": 1794603513,
+   "avgRewards": 315574890,
+   "USD": 68993
+  },
+  {
+   "avgHeight": 975714,
+   "timestamp": 1794604921,
+   "avgRewards": 319564054,
+   "USD": 68844
+  },
+  {
+   "avgHeight": 975715,
+   "timestamp": 1794605399,
+   "avgRewards": 316733729,
+   "USD": 68844
+  },
+  {
+   "avgHeight": 975716,
+   "timestamp": 1794605600,
+   "avgRewards": 315623686,
+   "USD": 68844
+  },
+  {
+   "avgHeight": 975717,
+   "timestamp": 1794605806,
+   "avgRewards": 314657210,
+   "USD": 68844
+  },
+  {
+   "avgHeight": 975718,
+   "timestamp": 1794607802,
+   "avgRewards": 319538601,
+   "USD": 68334
+  },
+  {
+   "avgHeight": 975719,
+   "timestamp": 1794609096,
+   "avgRewards": 319248527,
+   "USD": 68334
+  },
+  {
+   "avgHeight": 975720,
+   "timestamp": 1794609483,
+   "avgRewards": 316054552,
+   "USD": 68334
+  },
+  {
+   "avgHeight": 975721,
+   "timestamp": 1794610187,
+   "avgRewards": 316729592,
+   "USD": 68334
+  },
+  {
+   "avgHeight": 975722,
+   "timestamp": 1794610873,
+   "avgRewards": 316157784,
+   "USD": 68222
+  },
+  {
+   "avgHeight": 975723,
+   "timestamp": 1794611103,
+   "avgRewards": 314114793,
+   "USD": 68222
+  },
+  {
+   "avgHeight": 975724,
+   "timestamp": 1794613352,
+   "avgRewards": 319682850,
+   "USD": 68222
+  },
+  {
+   "avgHeight": 975725,
+   "timestamp": 1794614176,
+   "avgRewards": 317238413,
+   "USD": 68222
+  },
+  {
+   "avgHeight": 975727,
+   "timestamp": 1794617231,
+   "avgRewards": 319053337,
+   "USD": 68244
+  },
+  {
+   "avgHeight": 975729,
+   "timestamp": 1794617550,
+   "avgRewards": 314980215,
+   "USD": 68244
+  },
+  {
+   "avgHeight": 975730,
+   "timestamp": 1794619634,
+   "avgRewards": 318251761,
+   "USD": 68306
+  },
+  {
+   "avgHeight": 975731,
+   "timestamp": 1794622022,
+   "avgRewards": 319130440,
+   "USD": 68240
+  },
+  {
+   "avgHeight": 975732,
+   "timestamp": 1794622332,
+   "avgRewards": 315908037,
+   "USD": 68240
+  },
+  {
+   "avgHeight": 975733,
+   "timestamp": 1794623627,
+   "avgRewards": 316307199,
+   "USD": 68240
+  },
+  {
+   "avgHeight": 975734,
+   "timestamp": 1794623929,
+   "avgRewards": 314799175,
+   "USD": 68240
+  },
+  {
+   "avgHeight": 975736,
+   "timestamp": 1794624514,
+   "avgRewards": 313837776,
+   "USD": 68240
+  },
+  {
+   "avgHeight": 975738,
+   "timestamp": 1794625324,
+   "avgRewards": 313891859,
+   "USD": 67641
+  },
+  {
+   "avgHeight": 975739,
+   "timestamp": 1794626285,
+   "avgRewards": 313746174,
+   "USD": 67641
+  },
+  {
+   "avgHeight": 975740,
+   "timestamp": 1794629017,
+   "avgRewards": 321226167,
+   "USD": 66683
+  },
+  {
+   "avgHeight": 975741,
+   "timestamp": 1794629161,
+   "avgRewards": 315585697,
+   "USD": 66683
+  },
+  {
+   "avgHeight": 975742,
+   "timestamp": 1794631113,
+   "avgRewards": 318772436,
+   "USD": 66683
+  },
+  {
+   "avgHeight": 975743,
+   "timestamp": 1794632383,
+   "avgRewards": 317911727,
+   "USD": 66683
+  },
+  {
+   "avgHeight": 975744,
+   "timestamp": 1794632570,
+   "avgRewards": 314488041,
+   "USD": 67041
+  },
+  {
+   "avgHeight": 975745,
+   "timestamp": 1794633066,
+   "avgRewards": 314983874,
+   "USD": 67041
+  },
+  {
+   "avgHeight": 975746,
+   "timestamp": 1794633750,
+   "avgRewards": 314851730,
+   "USD": 67041
+  },
+  {
+   "avgHeight": 975747,
+   "timestamp": 1794634187,
+   "avgRewards": 314094212,
+   "USD": 67041
+  },
+  {
+   "avgHeight": 975749,
+   "timestamp": 1794635273,
+   "avgRewards": 314502776,
+   "USD": 67041
+  },
+  {
+   "avgHeight": 975750,
+   "timestamp": 1794636235,
+   "avgRewards": 315437847,
+   "USD": 67166
+  },
+  {
+   "avgHeight": 975751,
+   "timestamp": 1794637049,
+   "avgRewards": 314533906,
+   "USD": 67166
+  },
+  {
+   "avgHeight": 975752,
+   "timestamp": 1794637952,
+   "avgRewards": 314887410,
+   "USD": 67166
+  },
+  {
+   "avgHeight": 975754,
+   "timestamp": 1794639478,
+   "avgRewards": 314630153,
+   "USD": 67166
+  },
+  {
+   "avgHeight": 975756,
+   "timestamp": 1794640031,
+   "avgRewards": 313144528,
+   "USD": 67355
+  },
+  {
+   "avgHeight": 975757,
+   "timestamp": 1794640245,
+   "avgRewards": 313204672,
+   "USD": 67355
+  },
+  {
+   "avgHeight": 975760,
+   "timestamp": 1794640669,
+   "avgRewards": 312975810,
+   "USD": 67355
+  },
+  {
+   "avgHeight": 975764,
+   "timestamp": 1794641564,
+   "avgRewards": 313196639,
+   "USD": 67355
+  },
+  {
+   "avgHeight": 975766,
+   "timestamp": 1794642965,
+   "avgRewards": 315717734,
+   "USD": 67355
+  },
+  {
+   "avgHeight": 975768,
+   "timestamp": 1794643333,
+   "avgRewards": 313228882,
+   "USD": 67141
+  },
+  {
+   "avgHeight": 975769,
+   "timestamp": 1794643941,
+   "avgRewards": 313972414,
+   "USD": 67141
+  },
+  {
+   "avgHeight": 975771,
+   "timestamp": 1794646035,
+   "avgRewards": 314214408,
+   "USD": 67141
+  },
+  {
+   "avgHeight": 975773,
+   "timestamp": 1794646352,
+   "avgRewards": 313153555,
+   "USD": 67141
+  },
+  {
+   "avgHeight": 975774,
+   "timestamp": 1794646972,
+   "avgRewards": 313566570,
+   "USD": 67141
+  },
+  {
+   "avgHeight": 975775,
+   "timestamp": 1794647697,
+   "avgRewards": 315366428,
+   "USD": 66970
+  },
+  {
+   "avgHeight": 975777,
+   "timestamp": 1794647856,
+   "avgRewards": 312975973,
+   "USD": 66970
+  },
+  {
+   "avgHeight": 975779,
+   "timestamp": 1794648776,
+   "avgRewards": 313513460,
+   "USD": 66970
+  },
+  {
+   "avgHeight": 975780,
+   "timestamp": 1794649465,
+   "avgRewards": 314005166,
+   "USD": 66970
+  },
+  {
+   "avgHeight": 975781,
+   "timestamp": 1794651093,
+   "avgRewards": 315739392,
+   "USD": 67355
+  },
+  {
+   "avgHeight": 975782,
+   "timestamp": 1794652629,
+   "avgRewards": 317608887,
+   "USD": 67355
+  },
+  {
+   "avgHeight": 975783,
+   "timestamp": 1794653356,
+   "avgRewards": 314325036,
+   "USD": 67355
+  },
+  {
+   "avgHeight": 975785,
+   "timestamp": 1794654073,
+   "avgRewards": 313519267,
+   "USD": 67241
+  },
+  {
+   "avgHeight": 975786,
+   "timestamp": 1794654358,
+   "avgRewards": 313323425,
+   "USD": 67241
+  },
+  {
+   "avgHeight": 975787,
+   "timestamp": 1794654814,
+   "avgRewards": 313630154,
+   "USD": 67241
+  },
+  {
+   "avgHeight": 975788,
+   "timestamp": 1794655488,
+   "avgRewards": 315187161,
+   "USD": 67241
+  },
+  {
+   "avgHeight": 975789,
+   "timestamp": 1794657258,
+   "avgRewards": 316595760,
+   "USD": 67241
+  },
+  {
+   "avgHeight": 975790,
+   "timestamp": 1794657895,
+   "avgRewards": 314589429,
+   "USD": 67227
+  },
+  {
+   "avgHeight": 975791,
+   "timestamp": 1794658266,
+   "avgRewards": 314230763,
+   "USD": 67227
+  },
+  {
+   "avgHeight": 975792,
+   "timestamp": 1794658912,
+   "avgRewards": 313978669,
+   "USD": 67227
+  },
+  {
+   "avgHeight": 975793,
+   "timestamp": 1794660168,
+   "avgRewards": 316056633,
+   "USD": 67227
+  },
+  {
+   "avgHeight": 975794,
+   "timestamp": 1794660660,
+   "avgRewards": 314132031,
+   "USD": 67227
+  },
+  {
+   "avgHeight": 975795,
+   "timestamp": 1794661183,
+   "avgRewards": 313737814,
+   "USD": 66954
+  },
+  {
+   "avgHeight": 975797,
+   "timestamp": 1794661713,
+   "avgRewards": 313373704,
+   "USD": 66954
+  },
+  {
+   "avgHeight": 975798,
+   "timestamp": 1794662338,
+   "avgRewards": 314021278,
+   "USD": 66954
+  },
+  {
+   "avgHeight": 975800,
+   "timestamp": 1794662506,
+   "avgRewards": 313051099,
+   "USD": 66954
+  },
+  {
+   "avgHeight": 975801,
+   "timestamp": 1794663146,
+   "avgRewards": 313874521,
+   "USD": 66954
+  },
+  {
+   "avgHeight": 975802,
+   "timestamp": 1794663903,
+   "avgRewards": 314256634,
+   "USD": 66954
+  },
+  {
+   "avgHeight": 975803,
+   "timestamp": 1794664457,
+   "avgRewards": 313777555,
+   "USD": 66954
+  },
+  {
+   "avgHeight": 975805,
+   "timestamp": 1794665334,
+   "avgRewards": 313993504,
+   "USD": 66797
+  },
+  {
+   "avgHeight": 975806,
+   "timestamp": 1794665787,
+   "avgRewards": 314143812,
+   "USD": 66797
+  },
+  {
+   "avgHeight": 975807,
+   "timestamp": 1794666174,
+   "avgRewards": 313562044,
+   "USD": 66797
+  },
+  {
+   "avgHeight": 975808,
+   "timestamp": 1794667162,
+   "avgRewards": 314931340,
+   "USD": 66797
+  },
+  {
+   "avgHeight": 975809,
+   "timestamp": 1794667534,
+   "avgRewards": 315015753,
+   "USD": 66797
+  },
+  {
+   "avgHeight": 975810,
+   "timestamp": 1794668141,
+   "avgRewards": 314211419,
+   "USD": 66797
+  },
+  {
+   "avgHeight": 975811,
+   "timestamp": 1794668910,
+   "avgRewards": 314797621,
+   "USD": 65883
+  },
+  {
+   "avgHeight": 975812,
+   "timestamp": 1794670438,
+   "avgRewards": 318151675,
+   "USD": 65883
+  },
+  {
+   "avgHeight": 975813,
+   "timestamp": 1794670628,
+   "avgRewards": 314398905,
+   "USD": 65883
+  },
+  {
+   "avgHeight": 975815,
+   "timestamp": 1794671567,
+   "avgRewards": 315638141,
+   "USD": 65883
+  },
+  {
+   "avgHeight": 975816,
+   "timestamp": 1794674324,
+   "avgRewards": 319680200,
+   "USD": 65686
+  },
+  {
+   "avgHeight": 975817,
+   "timestamp": 1794675105,
+   "avgRewards": 317082387,
+   "USD": 65686
+  },
+  {
+   "avgHeight": 975819,
+   "timestamp": 1794675441,
+   "avgRewards": 314836197,
+   "USD": 65686
+  },
+  {
+   "avgHeight": 975820,
+   "timestamp": 1794676174,
+   "avgRewards": 315293865,
+   "USD": 65308
+  },
+  {
+   "avgHeight": 975822,
+   "timestamp": 1794676979,
+   "avgRewards": 314419248,
+   "USD": 65308
+  },
+  {
+   "avgHeight": 975823,
+   "timestamp": 1794677580,
+   "avgRewards": 314388090,
+   "USD": 65308
+  },
+  {
+   "avgHeight": 975824,
+   "timestamp": 1794678422,
+   "avgRewards": 314988621,
+   "USD": 65308
+  },
+  {
+   "avgHeight": 975826,
+   "timestamp": 1794679223,
+   "avgRewards": 314012248,
+   "USD": 65865
+  },
+  {
+   "avgHeight": 975827,
+   "timestamp": 1794681384,
+   "avgRewards": 317196074,
+   "USD": 65865
+  },
+  {
+   "avgHeight": 975828,
+   "timestamp": 1794681771,
+   "avgRewards": 315707755,
+   "USD": 65865
+  },
+  {
+   "avgHeight": 975829,
+   "timestamp": 1794682428,
+   "avgRewards": 314367683,
+   "USD": 65865
+  },
+  {
+   "avgHeight": 975830,
+   "timestamp": 1794682858,
+   "avgRewards": 314546228,
+   "USD": 65506
+  },
+  {
+   "avgHeight": 975831,
+   "timestamp": 1794683872,
+   "avgRewards": 317083601,
+   "USD": 65506
+  },
+  {
+   "avgHeight": 975833,
+   "timestamp": 1794684719,
+   "avgRewards": 313353866,
+   "USD": 65506
+  },
+  {
+   "avgHeight": 975835,
+   "timestamp": 1794685262,
+   "avgRewards": 314335755,
+   "USD": 65506
+  },
+  {
+   "avgHeight": 975836,
+   "timestamp": 1794686031,
+   "avgRewards": 314245752,
+   "USD": 65506
+  },
+  {
+   "avgHeight": 975838,
+   "timestamp": 1794686753,
+   "avgRewards": 314090242,
+   "USD": 65506
+  },
+  {
+   "avgHeight": 975839,
+   "timestamp": 1794687593,
+   "avgRewards": 314430850,
+   "USD": 65672
+  },
+  {
+   "avgHeight": 975840,
+   "timestamp": 1794687990,
+   "avgRewards": 313620835,
+   "USD": 65672
+  },
+  {
+   "avgHeight": 975841,
+   "timestamp": 1794688220,
+   "avgRewards": 314604166,
+   "USD": 65672
+  },
+  {
+   "avgHeight": 975843,
+   "timestamp": 1794689558,
+   "avgRewards": 314442702,
+   "USD": 65672
+  },
+  {
+   "avgHeight": 975844,
+   "timestamp": 1794689822,
+   "avgRewards": 313279767,
+   "USD": 65672
+  },
+  {
+   "avgHeight": 975847,
+   "timestamp": 1794690544,
+   "avgRewards": 312725477,
+   "USD": 64738
+  },
+  {
+   "avgHeight": 975845,
+   "timestamp": 1794690756,
+   "avgRewards": 314404792,
+   "USD": 64738
+  },
+  {
+   "avgHeight": 975848,
+   "timestamp": 1794691333,
+   "avgRewards": 315099181,
+   "USD": 64738
+  },
+  {
+   "avgHeight": 975849,
+   "timestamp": 1794692182,
+   "avgRewards": 315367548,
+   "USD": 64738
+  },
+  {
+   "avgHeight": 975850,
+   "timestamp": 1794692732,
+   "avgRewards": 313925921,
+   "USD": 64738
+  },
+  {
+   "avgHeight": 975851,
+   "timestamp": 1794694732,
+   "avgRewards": 317394194,
+   "USD": 64424
+  },
+  {
+   "avgHeight": 975852,
+   "timestamp": 1794694919,
+   "avgRewards": 314466985,
+   "USD": 64424
+  },
+  {
+   "avgHeight": 975854,
+   "timestamp": 1794695111,
+   "avgRewards": 313143568,
+   "USD": 64424
+  },
+  {
+   "avgHeight": 975855,
+   "timestamp": 1794696011,
+   "avgRewards": 315309890,
+   "USD": 64424
+  },
+  {
+   "avgHeight": 975856,
+   "timestamp": 1794697673,
+   "avgRewards": 319607467,
+   "USD": 63501
+  },
+  {
+   "avgHeight": 975857,
+   "timestamp": 1794699261,
+   "avgRewards": 317365889,
+   "USD": 63501
+  },
+  {
+   "avgHeight": 975859,
+   "timestamp": 1794699506,
+   "avgRewards": 314261682,
+   "USD": 63501
+  },
+  {
+   "avgHeight": 975860,
+   "timestamp": 1794700103,
+   "avgRewards": 314190956,
+   "USD": 63501
+  },
+  {
+   "avgHeight": 975861,
+   "timestamp": 1794700375,
+   "avgRewards": 313908766,
+   "USD": 63501
+  },
+  {
+   "avgHeight": 975862,
+   "timestamp": 1794701300,
+   "avgRewards": 314696699,
+   "USD": 64126
+  },
+  {
+   "avgHeight": 975863,
+   "timestamp": 1794702570,
+   "avgRewards": 315005832,
+   "USD": 64126
+  },
+  {
+   "avgHeight": 975865,
+   "timestamp": 1794703049,
+   "avgRewards": 313363641,
+   "USD": 64126
+  },
+  {
+   "avgHeight": 975866,
+   "timestamp": 1794703507,
+   "avgRewards": 313181063,
+   "USD": 64126
+  },
+  {
+   "avgHeight": 975868,
+   "timestamp": 1794704252,
+   "avgRewards": 313950217,
+   "USD": 64126
+  },
+  {
+   "avgHeight": 975869,
+   "timestamp": 1794704409,
+   "avgRewards": 312744700,
+   "USD": 63481
+  },
+  {
+   "avgHeight": 975870,
+   "timestamp": 1794704906,
+   "avgRewards": 313073989,
+   "USD": 63481
+  },
+  {
+   "avgHeight": 975872,
+   "timestamp": 1794706688,
+   "avgRewards": 314329081,
+   "USD": 63481
+  },
+  {
+   "avgHeight": 975874,
+   "timestamp": 1794707012,
+   "avgRewards": 313461799,
+   "USD": 63481
+  },
+  {
+   "avgHeight": 975875,
+   "timestamp": 1794707974,
+   "avgRewards": 315659047,
+   "USD": 63481
+  },
+  {
+   "avgHeight": 975876,
+   "timestamp": 1794708298,
+   "avgRewards": 313765290,
+   "USD": 62609
+  },
+  {
+   "avgHeight": 975877,
+   "timestamp": 1794708625,
+   "avgRewards": 313501827,
+   "USD": 62609
+  },
+  {
+   "avgHeight": 975878,
+   "timestamp": 1794708977,
+   "avgRewards": 314654010,
+   "USD": 62609
+  },
+  {
+   "avgHeight": 975880,
+   "timestamp": 1794709361,
+   "avgRewards": 313044066,
+   "USD": 62609
+  },
+  {
+   "avgHeight": 975880,
+   "timestamp": 1794709703,
+   "avgRewards": 313150459,
+   "USD": 62609
+  },
+  {
+   "avgHeight": 975882,
+   "timestamp": 1794711067,
+   "avgRewards": 316327747,
+   "USD": 62609
+  },
+  {
+   "avgHeight": 975884,
+   "timestamp": 1794711475,
+   "avgRewards": 313313803,
+   "USD": 62609
+  },
+  {
+   "avgHeight": 975885,
+   "timestamp": 1794711998,
+   "avgRewards": 313636448,
+   "USD": 64984
+  },
+  {
+   "avgHeight": 975888,
+   "timestamp": 1794713283,
+   "avgRewards": 313315869,
+   "USD": 64984
+  },
+  {
+   "avgHeight": 975891,
+   "timestamp": 1794713557,
+   "avgRewards": 312891324,
+   "USD": 64984
+  },
+  {
+   "avgHeight": 975892,
+   "timestamp": 1794714118,
+   "avgRewards": 313277479,
+   "USD": 64984
+  },
+  {
+   "avgHeight": 975894,
+   "timestamp": 1794715261,
+   "avgRewards": 314246932,
+   "USD": 64792
+  },
+  {
+   "avgHeight": 975896,
+   "timestamp": 1794716016,
+   "avgRewards": 313317618,
+   "USD": 64792
+  },
+  {
+   "avgHeight": 975896,
+   "timestamp": 1794716447,
+   "avgRewards": 312899971,
+   "USD": 64792
+  },
+  {
+   "avgHeight": 975898,
+   "timestamp": 1794717142,
+   "avgRewards": 313985857,
+   "USD": 64792
+  },
+  {
+   "avgHeight": 975900,
+   "timestamp": 1794717387,
+   "avgRewards": 313008253,
+   "USD": 64792
+  },
+  {
+   "avgHeight": 975901,
+   "timestamp": 1794717601,
+   "avgRewards": 312789227,
+   "USD": 64792
+  },
+  {
+   "avgHeight": 975902,
+   "timestamp": 1794719552,
+   "avgRewards": 316001393,
+   "USD": 64926
+  },
+  {
+   "avgHeight": 975905,
+   "timestamp": 1794720350,
+   "avgRewards": 314244754,
+   "USD": 64926
+  },
+  {
+   "avgHeight": 975907,
+   "timestamp": 1794722360,
+   "avgRewards": 315441003,
+   "USD": 64926
+  },
+  {
+   "avgHeight": 975909,
+   "timestamp": 1794722543,
+   "avgRewards": 313032064,
+   "USD": 64478
+  },
+  {
+   "avgHeight": 975911,
+   "timestamp": 1794723404,
+   "avgRewards": 313134451,
+   "USD": 64478
+  },
+  {
+   "avgHeight": 975912,
+   "timestamp": 1794724007,
+   "avgRewards": 313796878,
+   "USD": 64478
+  },
+  {
+   "avgHeight": 975913,
+   "timestamp": 1794724266,
+   "avgRewards": 313079916,
+   "USD": 64478
+  },
+  {
+   "avgHeight": 975915,
+   "timestamp": 1794724906,
+   "avgRewards": 313408906,
+   "USD": 64478
+  },
+  {
+   "avgHeight": 975917,
+   "timestamp": 1794725396,
+   "avgRewards": 313202661,
+   "USD": 64478
+  },
+  {
+   "avgHeight": 975918,
+   "timestamp": 1794725697,
+   "avgRewards": 314587758,
+   "USD": 64478
+  },
+  {
+   "avgHeight": 975920,
+   "timestamp": 1794725789,
+   "avgRewards": 313045880,
+   "USD": 64478
+  },
+  {
+   "avgHeight": 975921,
+   "timestamp": 1794727257,
+   "avgRewards": 316254849,
+   "USD": 64470
+  },
+  {
+   "avgHeight": 975922,
+   "timestamp": 1794728007,
+   "avgRewards": 314089989,
+   "USD": 64470
+  },
+  {
+   "avgHeight": 975923,
+   "timestamp": 1794728272,
+   "avgRewards": 313089704,
+   "USD": 64470
+  },
+  {
+   "avgHeight": 975924,
+   "timestamp": 1794729708,
+   "avgRewards": 314977764,
+   "USD": 64014
+  },
+  {
+   "avgHeight": 975925,
+   "timestamp": 1794730015,
+   "avgRewards": 313561921,
+   "USD": 64014
+  },
+  {
+   "avgHeight": 975926,
+   "timestamp": 1794730511,
+   "avgRewards": 313396622,
+   "USD": 64014
+  },
+  {
+   "avgHeight": 975927,
+   "timestamp": 1794732109,
+   "avgRewards": 315298655,
+   "USD": 64014
+  },
+  {
+   "avgHeight": 975928,
+   "timestamp": 1794733400,
+   "avgRewards": 315273032,
+   "USD": 65155
+  },
+  {
+   "avgHeight": 975930,
+   "timestamp": 1794733943,
+   "avgRewards": 313201298,
+   "USD": 65155
+  },
+  {
+   "avgHeight": 975932,
+   "timestamp": 1794734219,
+   "avgRewards": 312958009,
+   "USD": 65155
+  },
+  {
+   "avgHeight": 975934,
+   "timestamp": 1794734870,
+   "avgRewards": 313049845,
+   "USD": 65155
+  },
+  {
+   "avgHeight": 975936,
+   "timestamp": 1794735169,
+   "avgRewards": 313079376,
+   "USD": 65155
+  },
+  {
+   "avgHeight": 975938,
+   "timestamp": 1794735380,
+   "avgRewards": 312828028,
+   "USD": 65155
+  },
+  {
+   "avgHeight": 975940,
+   "timestamp": 1794735630,
+   "avgRewards": 312754522,
+   "USD": 65155
+  },
+  {
+   "avgHeight": 975941,
+   "timestamp": 1794736682,
+   "avgRewards": 314294776,
+   "USD": 65155
+  },
+  {
+   "avgHeight": 975943,
+   "timestamp": 1794736908,
+   "avgRewards": 312903901,
+   "USD": 65323
+  },
+  {
+   "avgHeight": 975944,
+   "timestamp": 1794737740,
+   "avgRewards": 313816778,
+   "USD": 65323
+  },
+  {
+   "avgHeight": 975945,
+   "timestamp": 1794738292,
+   "avgRewards": 313486108,
+   "USD": 65323
+  },
+  {
+   "avgHeight": 975946,
+   "timestamp": 1794738477,
+   "avgRewards": 312969777,
+   "USD": 65323
+  },
+  {
+   "avgHeight": 975947,
+   "timestamp": 1794739940,
+   "avgRewards": 314973137,
+   "USD": 65323
+  },
+  {
+   "avgHeight": 975949,
+   "timestamp": 1794740617,
+   "avgRewards": 313001727,
+   "USD": 65551
+  },
+  {
+   "avgHeight": 975951,
+   "timestamp": 1794741069,
+   "avgRewards": 313427486,
+   "USD": 65551
+  },
+  {
+   "avgHeight": 975952,
+   "timestamp": 1794741519,
+   "avgRewards": 313410505,
+   "USD": 65551
+  },
+  {
+   "avgHeight": 975953,
+   "timestamp": 1794741719,
+   "avgRewards": 313052362,
+   "USD": 65551
+  },
+  {
+   "avgHeight": 975954,
+   "timestamp": 1794742698,
+   "avgRewards": 314444629,
+   "USD": 65551
+  },
+  {
+   "avgHeight": 975955,
+   "timestamp": 1794743008,
+   "avgRewards": 313225977,
+   "USD": 65551
+  },
+  {
+   "avgHeight": 975956,
+   "timestamp": 1794743617,
+   "avgRewards": 313097479,
+   "USD": 65551
+  },
+  {
+   "avgHeight": 975958,
+   "timestamp": 1794743948,
+   "avgRewards": 313196707,
+   "USD": 65551
+  },
+  {
+   "avgHeight": 975959,
+   "timestamp": 1794744052,
+   "avgRewards": 312971086,
+   "USD": 65370
+  },
+  {
+   "avgHeight": 975960,
+   "timestamp": 1794744383,
+   "avgRewards": 313239351,
+   "USD": 65370
+  },
+  {
+   "avgHeight": 975961,
+   "timestamp": 1794745331,
+   "avgRewards": 314035607,
+   "USD": 65370
+  },
+  {
+   "avgHeight": 975963,
+   "timestamp": 1794746910,
+   "avgRewards": 314074504,
+   "USD": 65370
+  },
+  {
+   "avgHeight": 975964,
+   "timestamp": 1794747105,
+   "avgRewards": 313352643,
+   "USD": 65370
+  },
+  {
+   "avgHeight": 975965,
+   "timestamp": 1794747991,
+   "avgRewards": 314040159,
+   "USD": 65484
+  },
+  {
+   "avgHeight": 975967,
+   "timestamp": 1794749596,
+   "avgRewards": 314056772,
+   "USD": 65484
+  },
+  {
+   "avgHeight": 975969,
+   "timestamp": 1794750794,
+   "avgRewards": 313822336,
+   "USD": 65484
+  },
+  {
+   "avgHeight": 975970,
+   "timestamp": 1794751715,
+   "avgRewards": 314739907,
+   "USD": 65418
+  },
+  {
+   "avgHeight": 975971,
+   "timestamp": 1794753208,
+   "avgRewards": 315409606,
+   "USD": 65418
+  },
+  {
+   "avgHeight": 975972,
+   "timestamp": 1794753527,
+   "avgRewards": 313256125,
+   "USD": 65418
+  },
+  {
+   "avgHeight": 975973,
+   "timestamp": 1794754182,
+   "avgRewards": 314072111,
+   "USD": 65418
+  },
+  {
+   "avgHeight": 975975,
+   "timestamp": 1794754609,
+   "avgRewards": 312977311,
+   "USD": 65418
+  },
+  {
+   "avgHeight": 975977,
+   "timestamp": 1794754812,
+   "avgRewards": 312850309,
+   "USD": 64758
+  },
+  {
+   "avgHeight": 975979,
+   "timestamp": 1794755320,
+   "avgRewards": 313284090,
+   "USD": 64758
+  },
+  {
+   "avgHeight": 975980,
+   "timestamp": 1794755443,
+   "avgRewards": 312825925,
+   "USD": 64758
+  },
+  {
+   "avgHeight": 975981,
+   "timestamp": 1794757191,
+   "avgRewards": 317888962,
+   "USD": 64758
+  },
+  {
+   "avgHeight": 975982,
+   "timestamp": 1794757741,
+   "avgRewards": 314163573,
+   "USD": 64758
+  },
+  {
+   "avgHeight": 975983,
+   "timestamp": 1794758596,
+   "avgRewards": 314374960,
+   "USD": 64727
+  },
+  {
+   "avgHeight": 975984,
+   "timestamp": 1794759484,
+   "avgRewards": 314520291,
+   "USD": 64727
+  },
+  {
+   "avgHeight": 975985,
+   "timestamp": 1794759830,
+   "avgRewards": 313374093,
+   "USD": 64727
+  },
+  {
+   "avgHeight": 975987,
+   "timestamp": 1794760418,
+   "avgRewards": 313313205,
+   "USD": 64727
+  },
+  {
+   "avgHeight": 975988,
+   "timestamp": 1794760905,
+   "avgRewards": 314123572,
+   "USD": 64727
+  },
+  {
+   "avgHeight": 975989,
+   "timestamp": 1794761214,
+   "avgRewards": 313167289,
+   "USD": 64727
+  },
+  {
+   "avgHeight": 975990,
+   "timestamp": 1794761463,
+   "avgRewards": 313118062,
+   "USD": 64727
+  },
+  {
+   "avgHeight": 975992,
+   "timestamp": 1794761809,
+   "avgRewards": 313044440,
+   "USD": 64727
+  },
+  {
+   "avgHeight": 975993,
+   "timestamp": 1794762118,
+   "avgRewards": 313264857,
+   "USD": 64676
+  },
+  {
+   "avgHeight": 975994,
+   "timestamp": 1794762980,
+   "avgRewards": 314239611,
+   "USD": 64676
+  },
+  {
+   "avgHeight": 975996,
+   "timestamp": 1794763319,
+   "avgRewards": 313016394,
+   "USD": 64676
+  },
+  {
+   "avgHeight": 975997,
+   "timestamp": 1794764117,
+   "avgRewards": 313715954,
+   "USD": 64676
+  },
+  {
+   "avgHeight": 975999,
+   "timestamp": 1794764877,
+   "avgRewards": 313959468,
+   "USD": 64676
+  },
+  {
+   "avgHeight": 976000,
+   "timestamp": 1794767156,
+   "avgRewards": 316985484,
+   "USD": 64540
+  },
+  {
+   "avgHeight": 976001,
+   "timestamp": 1794768232,
+   "avgRewards": 315556556,
+   "USD": 64540
+  },
+  {
+   "avgHeight": 976002,
+   "timestamp": 1794769128,
+   "avgRewards": 314734656,
+   "USD": 64540
+  },
+  {
+   "avgHeight": 976004,
+   "timestamp": 1794769359,
+   "avgRewards": 313329640,
+   "USD": 64697
+  },
+  {
+   "avgHeight": 976005,
+   "timestamp": 1794769659,
+   "avgRewards": 313558571,
+   "USD": 64697
+  },
+  {
+   "avgHeight": 976006,
+   "timestamp": 1794770591,
+   "avgRewards": 314593040,
+   "USD": 64697
+  },
+  {
+   "avgHeight": 976007,
+   "timestamp": 1794771387,
+   "avgRewards": 314750668,
+   "USD": 64697
+  },
+  {
+   "avgHeight": 976009,
+   "timestamp": 1794772601,
+   "avgRewards": 314610777,
+   "USD": 64697
+  },
+  {
+   "avgHeight": 976010,
+   "timestamp": 1794772800,
+   "avgRewards": 313859517,
+   "USD": 64919
+  },
+  {
+   "avgHeight": 976011,
+   "timestamp": 1794773334,
+   "avgRewards": 313596507,
+   "USD": 64919
+  },
+  {
+   "avgHeight": 976013,
+   "timestamp": 1794775353,
+   "avgRewards": 314831659,
+   "USD": 64919
+  },
+  {
+   "avgHeight": 976014,
+   "timestamp": 1794775863,
+   "avgRewards": 313685311,
+   "USD": 64919
+  },
+  {
+   "avgHeight": 976015,
+   "timestamp": 1794777091,
+   "avgRewards": 315565341,
+   "USD": 65111
+  },
+  {
+   "avgHeight": 976016,
+   "timestamp": 1794778851,
+   "avgRewards": 315778191,
+   "USD": 65111
+  },
+  {
+   "avgHeight": 976017,
+   "timestamp": 1794779376,
+   "avgRewards": 314256181,
+   "USD": 65111
+  },
+  {
+   "avgHeight": 976018,
+   "timestamp": 1794779551,
+   "avgRewards": 313425621,
+   "USD": 65111
+  },
+  {
+   "avgHeight": 976020,
+   "timestamp": 1794779788,
+   "avgRewards": 312867847,
+   "USD": 65111
+  },
+  {
+   "avgHeight": 976023,
+   "timestamp": 1794781031,
+   "avgRewards": 314005165,
+   "USD": 64986
+  },
+  {
+   "avgHeight": 976024,
+   "timestamp": 1794781539,
+   "avgRewards": 313192770,
+   "USD": 64986
+  },
+  {
+   "avgHeight": 976025,
+   "timestamp": 1794781982,
+   "avgRewards": 313749389,
+   "USD": 64986
+  },
+  {
+   "avgHeight": 976026,
+   "timestamp": 1794782258,
+   "avgRewards": 313209968,
+   "USD": 64986
+  },
+  {
+   "avgHeight": 976027,
+   "timestamp": 1794782487,
+   "avgRewards": 313119960,
+   "USD": 64986
+  },
+  {
+   "avgHeight": 976028,
+   "timestamp": 1794782884,
+   "avgRewards": 313424009,
+   "USD": 64986
+  },
+  {
+   "avgHeight": 976029,
+   "timestamp": 1794783240,
+   "avgRewards": 313360333,
+   "USD": 64986
+  },
+  {
+   "avgHeight": 976030,
+   "timestamp": 1794783994,
+   "avgRewards": 314198852,
+   "USD": 65247
+  },
+  {
+   "avgHeight": 976031,
+   "timestamp": 1794786233,
+   "avgRewards": 316818358,
+   "USD": 65247
+  },
+  {
+   "avgHeight": 976032,
+   "timestamp": 1794786802,
+   "avgRewards": 314168038,
+   "USD": 65247
+  },
+  {
+   "avgHeight": 976033,
+   "timestamp": 1794787175,
+   "avgRewards": 313615135,
+   "USD": 65339
+  },
+  {
+   "avgHeight": 976035,
+   "timestamp": 1794787641,
+   "avgRewards": 313107002,
+   "USD": 65339
+  },
+  {
+   "avgHeight": 976037,
+   "timestamp": 1794788718,
+   "avgRewards": 314497349,
+   "USD": 65339
+  },
+  {
+   "avgHeight": 976039,
+   "timestamp": 1794789148,
+   "avgRewards": 313051336,
+   "USD": 65339
+  },
+  {
+   "avgHeight": 976040,
+   "timestamp": 1794789895,
+   "avgRewards": 313888550,
+   "USD": 65339
+  },
+  {
+   "avgHeight": 976041,
+   "timestamp": 1794790147,
+   "avgRewards": 313057163,
+   "USD": 65339
+  },
+  {
+   "avgHeight": 976042,
+   "timestamp": 1794790934,
+   "avgRewards": 313824738,
+   "USD": 64929
+  },
+  {
+   "avgHeight": 976043,
+   "timestamp": 1794791676,
+   "avgRewards": 313938413,
+   "USD": 64929
+  },
+  {
+   "avgHeight": 976045,
+   "timestamp": 1794791843,
+   "avgRewards": 312763744,
+   "USD": 64929
+  },
+  {
+   "avgHeight": 976047,
+   "timestamp": 1794792488,
+   "avgRewards": 313282355,
+   "USD": 64929
+  },
+  {
+   "avgHeight": 976049,
+   "timestamp": 1794792842,
+   "avgRewards": 312961066,
+   "USD": 64929
+  },
+  {
+   "avgHeight": 976050,
+   "timestamp": 1794792927,
+   "avgRewards": 312711479,
+   "USD": 64929
+  },
+  {
+   "avgHeight": 976051,
+   "timestamp": 1794794203,
+   "avgRewards": 316081090,
+   "USD": 64929
+  },
+  {
+   "avgHeight": 976052,
+   "timestamp": 1794794610,
+   "avgRewards": 313293994,
+   "USD": 64601
+  },
+  {
+   "avgHeight": 976053,
+   "timestamp": 1794794901,
+   "avgRewards": 313004410,
+   "USD": 64601
+  },
+  {
+   "avgHeight": 976054,
+   "timestamp": 1794795019,
+   "avgRewards": 312861110,
+   "USD": 64601
+  },
+  {
+   "avgHeight": 976056,
+   "timestamp": 1794795984,
+   "avgRewards": 313364521,
+   "USD": 64601
+  },
+  {
+   "avgHeight": 976057,
+   "timestamp": 1794796462,
+   "avgRewards": 313374312,
+   "USD": 64601
+  },
+  {
+   "avgHeight": 976058,
+   "timestamp": 1794796800,
+   "avgRewards": 313288295,
+   "USD": 64601
+  },
+  {
+   "avgHeight": 976060,
+   "timestamp": 1794797842,
+   "avgRewards": 313330669,
+   "USD": 64601
+  },
+  {
+   "avgHeight": 976062,
+   "timestamp": 1794798135,
+   "avgRewards": 312963501,
+   "USD": 64601
+  },
+  {
+   "avgHeight": 976063,
+   "timestamp": 1794798693,
+   "avgRewards": 313277769,
+   "USD": 65140
+  },
+  {
+   "avgHeight": 976064,
+   "timestamp": 1794799206,
+   "avgRewards": 313324296,
+   "USD": 65140
+  },
+  {
+   "avgHeight": 976065,
+   "timestamp": 1794799838,
+   "avgRewards": 313708877,
+   "USD": 65140
+  },
+  {
+   "avgHeight": 976067,
+   "timestamp": 1794801512,
+   "avgRewards": 313794634,
+   "USD": 65140
+  },
+  {
+   "avgHeight": 976069,
+   "timestamp": 1794801815,
+   "avgRewards": 313123928,
+   "USD": 65061
+  },
+  {
+   "avgHeight": 976070,
+   "timestamp": 1794802131,
+   "avgRewards": 313064392,
+   "USD": 65061
+  },
+  {
+   "avgHeight": 976071,
+   "timestamp": 1794803326,
+   "avgRewards": 313772667,
+   "USD": 65061
+  },
+  {
+   "avgHeight": 976073,
+   "timestamp": 1794804216,
+   "avgRewards": 313236020,
+   "USD": 65061
+  },
+  {
+   "avgHeight": 976072,
+   "timestamp": 1794804421,
+   "avgRewards": 313846425,
+   "USD": 65061
+  },
+  {
+   "avgHeight": 976074,
+   "timestamp": 1794804868,
+   "avgRewards": 313477167,
+   "USD": 65061
+  },
+  {
+   "avgHeight": 976075,
+   "timestamp": 1794805143,
+   "avgRewards": 313672117,
+   "USD": 65061
+  },
+  {
+   "avgHeight": 976076,
+   "timestamp": 1794807084,
+   "avgRewards": 316290146,
+   "USD": 64758
+  },
+  {
+   "avgHeight": 976077,
+   "timestamp": 1794807376,
+   "avgRewards": 313742662,
+   "USD": 64758
+  },
+  {
+   "avgHeight": 976078,
+   "timestamp": 1794807606,
+   "avgRewards": 312971215,
+   "USD": 64758
+  },
+  {
+   "avgHeight": 976080,
+   "timestamp": 1794808100,
+   "avgRewards": 313173035,
+   "USD": 64758
+  },
+  {
+   "avgHeight": 976082,
+   "timestamp": 1794808301,
+   "avgRewards": 312943415,
+   "USD": 64758
+  },
+  {
+   "avgHeight": 976083,
+   "timestamp": 1794809992,
+   "avgRewards": 314868524,
+   "USD": 64434
+  },
+  {
+   "avgHeight": 976085,
+   "timestamp": 1794810353,
+   "avgRewards": 312902793,
+   "USD": 64434
+  },
+  {
+   "avgHeight": 976087,
+   "timestamp": 1794810731,
+   "avgRewards": 313066756,
+   "USD": 64434
+  },
+  {
+   "avgHeight": 976089,
+   "timestamp": 1794811296,
+   "avgRewards": 313112733,
+   "USD": 64434
+  },
+  {
+   "avgHeight": 976090,
+   "timestamp": 1794812322,
+   "avgRewards": 313955476,
+   "USD": 64434
+  },
+  {
+   "avgHeight": 976091,
+   "timestamp": 1794812843,
+   "avgRewards": 313411777,
+   "USD": 64679
+  },
+  {
+   "avgHeight": 976092,
+   "timestamp": 1794813391,
+   "avgRewards": 313526263,
+   "USD": 64679
+  },
+  {
+   "avgHeight": 976093,
+   "timestamp": 1794815070,
+   "avgRewards": 315193460,
+   "USD": 64679
+  },
+  {
+   "avgHeight": 976094,
+   "timestamp": 1794815420,
+   "avgRewards": 313866626,
+   "USD": 64679
+  },
+  {
+   "avgHeight": 976095,
+   "timestamp": 1794815769,
+   "avgRewards": 313428669,
+   "USD": 64679
+  },
+  {
+   "avgHeight": 976096,
+   "timestamp": 1794816289,
+   "avgRewards": 313982350,
+   "USD": 64938
+  },
+  {
+   "avgHeight": 976097,
+   "timestamp": 1794817038,
+   "avgRewards": 314090808,
+   "USD": 64938
+  },
+  {
+   "avgHeight": 976099,
+   "timestamp": 1794817705,
+   "avgRewards": 313666231,
+   "USD": 64938
+  },
+  {
+   "avgHeight": 976100,
+   "timestamp": 1794817836,
+   "avgRewards": 312691077,
+   "USD": 64938
+  },
+  {
+   "avgHeight": 976101,
+   "timestamp": 1794820196,
+   "avgRewards": 316787768,
+   "USD": 64426
+  },
+  {
+   "avgHeight": 976102,
+   "timestamp": 1794820323,
+   "avgRewards": 314775692,
+   "USD": 64426
+  },
+  {
+   "avgHeight": 976103,
+   "timestamp": 1794821836,
+   "avgRewards": 315788593,
+   "USD": 64426
+  },
+  {
+   "avgHeight": 976104,
+   "timestamp": 1794822264,
+   "avgRewards": 314899057,
+   "USD": 64426
+  },
+  {
+   "avgHeight": 976105,
+   "timestamp": 1794823189,
+   "avgRewards": 314632477,
+   "USD": 64300
+  },
+  {
+   "avgHeight": 976106,
+   "timestamp": 1794825083,
+   "avgRewards": 315929260,
+   "USD": 64300
+  },
+  {
+   "avgHeight": 976107,
+   "timestamp": 1794825714,
+   "avgRewards": 314507797,
+   "USD": 64300
+  },
+  {
+   "avgHeight": 976109,
+   "timestamp": 1794826714,
+   "avgRewards": 313605944,
+   "USD": 64300
+  },
+  {
+   "avgHeight": 976110,
+   "timestamp": 1794826811,
+   "avgRewards": 312972313,
+   "USD": 64529
+  },
+  {
+   "avgHeight": 976112,
+   "timestamp": 1794827496,
+   "avgRewards": 313171565,
+   "USD": 64529
+  },
+  {
+   "avgHeight": 976115,
+   "timestamp": 1794827896,
+   "avgRewards": 312959996,
+   "USD": 64529
+  },
+  {
+   "avgHeight": 976116,
+   "timestamp": 1794828167,
+   "avgRewards": 313136428,
+   "USD": 64529
+  },
+  {
+   "avgHeight": 976117,
+   "timestamp": 1794828504,
+   "avgRewards": 313405918,
+   "USD": 64529
+  },
+  {
+   "avgHeight": 976119,
+   "timestamp": 1794829041,
+   "avgRewards": 313293638,
+   "USD": 64529
+  },
+  {
+   "avgHeight": 976120,
+   "timestamp": 1794830172,
+   "avgRewards": 314803014,
+   "USD": 64529
+  },
+  {
+   "avgHeight": 976122,
+   "timestamp": 1794830643,
+   "avgRewards": 313317182,
+   "USD": 64387
+  },
+  {
+   "avgHeight": 976124,
+   "timestamp": 1794831195,
+   "avgRewards": 313540658,
+   "USD": 64387
+  },
+  {
+   "avgHeight": 976125,
+   "timestamp": 1794831303,
+   "avgRewards": 312626679,
+   "USD": 64387
+  },
+  {
+   "avgHeight": 976126,
+   "timestamp": 1794832092,
+   "avgRewards": 314425791,
+   "USD": 64387
+  },
+  {
+   "avgHeight": 976128,
+   "timestamp": 1794833236,
+   "avgRewards": 313408981,
+   "USD": 64387
+  },
+  {
+   "avgHeight": 976130,
+   "timestamp": 1794833963,
+   "avgRewards": 314062062,
+   "USD": 64387
+  },
+  {
+   "avgHeight": 976131,
+   "timestamp": 1794834163,
+   "avgRewards": 313540160,
+   "USD": 64100
+  },
+  {
+   "avgHeight": 976133,
+   "timestamp": 1794835126,
+   "avgRewards": 313810126,
+   "USD": 64100
+  },
+  {
+   "avgHeight": 976135,
+   "timestamp": 1794835418,
+   "avgRewards": 313005435,
+   "USD": 64100
+  },
+  {
+   "avgHeight": 976137,
+   "timestamp": 1794836640,
+   "avgRewards": 317361119,
+   "USD": 64100
+  },
+  {
+   "avgHeight": 976139,
+   "timestamp": 1794838566,
+   "avgRewards": 315547792,
+   "USD": 64117
+  },
+  {
+   "avgHeight": 976140,
+   "timestamp": 1794839417,
+   "avgRewards": 322510392,
+   "USD": 64117
+  },
+  {
+   "avgHeight": 976141,
+   "timestamp": 1794839757,
+   "avgRewards": 314219622,
+   "USD": 64117
+  },
+  {
+   "avgHeight": 976142,
+   "timestamp": 1794840306,
+   "avgRewards": 315674464,
+   "USD": 64117
+  },
+  {
+   "avgHeight": 976143,
+   "timestamp": 1794841795,
+   "avgRewards": 316578385,
+   "USD": 65156
+  },
+  {
+   "avgHeight": 976144,
+   "timestamp": 1794842822,
+   "avgRewards": 316334352,
+   "USD": 65156
+  },
+  {
+   "avgHeight": 976146,
+   "timestamp": 1794843156,
+   "avgRewards": 313832706,
+   "USD": 65156
+  },
+  {
+   "avgHeight": 976147,
+   "timestamp": 1794845472,
+   "avgRewards": 318467594,
+   "USD": 64425
+  },
+  {
+   "avgHeight": 976148,
+   "timestamp": 1794846121,
+   "avgRewards": 316762637,
+   "USD": 64425
+  },
+  {
+   "avgHeight": 976150,
+   "timestamp": 1794846359,
+   "avgRewards": 313945639,
+   "USD": 64425
+  },
+  {
+   "avgHeight": 976152,
+   "timestamp": 1794847250,
+   "avgRewards": 314858269,
+   "USD": 64425
+  },
+  {
+   "avgHeight": 976154,
+   "timestamp": 1794847886,
+   "avgRewards": 313736274,
+   "USD": 64425
+  },
+  {
+   "avgHeight": 976156,
+   "timestamp": 1794849209,
+   "avgRewards": 314749204,
+   "USD": 64857
+  },
+  {
+   "avgHeight": 976157,
+   "timestamp": 1794849341,
+   "avgRewards": 313200447,
+   "USD": 64857
+  },
+  {
+   "avgHeight": 976158,
+   "timestamp": 1794849656,
+   "avgRewards": 313802932,
+   "USD": 64857
+  },
+  {
+   "avgHeight": 976160,
+   "timestamp": 1794849967,
+   "avgRewards": 313092347,
+   "USD": 64857
+  },
+  {
+   "avgHeight": 976163,
+   "timestamp": 1794850581,
+   "avgRewards": 313256042,
+   "USD": 64857
+  },
+  {
+   "avgHeight": 976165,
+   "timestamp": 1794852453,
+   "avgRewards": 316856142,
+   "USD": 64844
+  },
+  {
+   "avgHeight": 976167,
+   "timestamp": 1794852793,
+   "avgRewards": 314050610,
+   "USD": 64844
+  },
+  {
+   "avgHeight": 976168,
+   "timestamp": 1794853036,
+   "avgRewards": 313345385,
+   "USD": 64844
+  },
+  {
+   "avgHeight": 976170,
+   "timestamp": 1794854160,
+   "avgRewards": 314187163,
+   "USD": 64844
+  },
+  {
+   "avgHeight": 976172,
+   "timestamp": 1794854929,
+   "avgRewards": 313964147,
+   "USD": 64844
+  },
+  {
+   "avgHeight": 976173,
+   "timestamp": 1794855201,
+   "avgRewards": 313247020,
+   "USD": 64844
+  },
+  {
+   "avgHeight": 976175,
+   "timestamp": 1794855652,
+   "avgRewards": 313385382,
+   "USD": 64983
+  },
+  {
+   "avgHeight": 976176,
+   "timestamp": 1794856896,
+   "avgRewards": 316002886,
+   "USD": 64983
+  },
+  {
+   "avgHeight": 976177,
+   "timestamp": 1794857121,
+   "avgRewards": 313888629,
+   "USD": 64983
+  },
+  {
+   "avgHeight": 976179,
+   "timestamp": 1794857871,
+   "avgRewards": 313613553,
+   "USD": 64983
+  },
+  {
+   "avgHeight": 976180,
+   "timestamp": 1794859026,
+   "avgRewards": 316910981,
+   "USD": 64983
+  },
+  {
+   "avgHeight": 976181,
+   "timestamp": 1794861005,
+   "avgRewards": 317211328,
+   "USD": 65005
+  },
+  {
+   "avgHeight": 976182,
+   "timestamp": 1794861344,
+   "avgRewards": 314806112,
+   "USD": 65005
+  },
+  {
+   "avgHeight": 976183,
+   "timestamp": 1794862079,
+   "avgRewards": 314895199,
+   "USD": 65005
+  },
+  {
+   "avgHeight": 976184,
+   "timestamp": 1794862599,
+   "avgRewards": 314689934,
+   "USD": 65005
+  },
+  {
+   "avgHeight": 976185,
+   "timestamp": 1794863029,
+   "avgRewards": 314244921,
+   "USD": 64993
+  },
+  {
+   "avgHeight": 976186,
+   "timestamp": 1794864195,
+   "avgRewards": 315560335,
+   "USD": 64993
+  },
+  {
+   "avgHeight": 976187,
+   "timestamp": 1794864357,
+   "avgRewards": 313876143,
+   "USD": 64993
+  },
+  {
+   "avgHeight": 976189,
+   "timestamp": 1794866005,
+   "avgRewards": 315223008,
+   "USD": 64993
+  },
+  {
+   "avgHeight": 976190,
+   "timestamp": 1794866908,
+   "avgRewards": 315074665,
+   "USD": 65259
+  },
+  {
+   "avgHeight": 976191,
+   "timestamp": 1794867230,
+   "avgRewards": 314169998,
+   "USD": 65259
+  },
+  {
+   "avgHeight": 976192,
+   "timestamp": 1794868127,
+   "avgRewards": 315394941,
+   "USD": 65259
+  },
+  {
+   "avgHeight": 976193,
+   "timestamp": 1794868387,
+   "avgRewards": 313013443,
+   "USD": 65259
+  },
+  {
+   "avgHeight": 976195,
+   "timestamp": 1794870687,
+   "avgRewards": 316185362,
+   "USD": 65255
+  },
+  {
+   "avgHeight": 976196,
+   "timestamp": 1794872156,
+   "avgRewards": 316167241,
+   "USD": 65255
+  },
+  {
+   "avgHeight": 976197,
+   "timestamp": 1794873329,
+   "avgRewards": 315894832,
+   "USD": 65255
+  },
+  {
+   "avgHeight": 976198,
+   "timestamp": 1794873995,
+   "avgRewards": 315006763,
+   "USD": 64817
+  },
+  {
+   "avgHeight": 976199,
+   "timestamp": 1794874453,
+   "avgRewards": 314436096,
+   "USD": 64817
+  },
+  {
+   "avgHeight": 976200,
+   "timestamp": 1794875390,
+   "avgRewards": 315150903,
+   "USD": 64817
+  },
+  {
+   "avgHeight": 976201,
+   "timestamp": 1794877490,
+   "avgRewards": 316427449,
+   "USD": 64572
+  },
+  {
+   "avgHeight": 976202,
+   "timestamp": 1794877710,
+   "avgRewards": 314305105,
+   "USD": 64572
+  },
+  {
+   "avgHeight": 976203,
+   "timestamp": 1794878211,
+   "avgRewards": 313621938,
+   "USD": 64572
+  },
+  {
+   "avgHeight": 976204,
+   "timestamp": 1794879677,
+   "avgRewards": 315502684,
+   "USD": 64572
+  },
+  {
+   "avgHeight": 976205,
+   "timestamp": 1794880128,
+   "avgRewards": 313934872,
+   "USD": 64572
+  },
+  {
+   "avgHeight": 976207,
+   "timestamp": 1794881562,
+   "avgRewards": 314148881,
+   "USD": 64704
+  },
+  {
+   "avgHeight": 976209,
+   "timestamp": 1794883910,
+   "avgRewards": 314763764,
+   "USD": 64704
+  },
+  {
+   "avgHeight": 976211,
+   "timestamp": 1794884304,
+   "avgRewards": 312924536,
+   "USD": 64704
+  },
+  {
+   "avgHeight": 976213,
+   "timestamp": 1794884921,
+   "avgRewards": 314131290,
+   "USD": 64445
+  },
+  {
+   "avgHeight": 976215,
+   "timestamp": 1794886995,
+   "avgRewards": 314474297,
+   "USD": 64445
+  },
+  {
+   "avgHeight": 976216,
+   "timestamp": 1794887386,
+   "avgRewards": 313395373,
+   "USD": 64445
+  },
+  {
+   "avgHeight": 976217,
+   "timestamp": 1794887400,
+   "avgRewards": 312663085,
+   "USD": 64445
+  },
+  {
+   "avgHeight": 976218,
+   "timestamp": 1794887756,
+   "avgRewards": 313289711,
+   "USD": 64445
+  },
+  {
+   "avgHeight": 976219,
+   "timestamp": 1794888059,
+   "avgRewards": 312910751,
+   "USD": 64445
+  },
+  {
+   "avgHeight": 976220,
+   "timestamp": 1794888492,
+   "avgRewards": 313640562,
+   "USD": 64996
+  },
+  {
+   "avgHeight": 976222,
+   "timestamp": 1794889061,
+   "avgRewards": 313094884,
+   "USD": 64996
+  },
+  {
+   "avgHeight": 976223,
+   "timestamp": 1794889672,
+   "avgRewards": 314333205,
+   "USD": 64996
+  },
+  {
+   "avgHeight": 976225,
+   "timestamp": 1794889865,
+   "avgRewards": 312720358,
+   "USD": 64996
+  },
+  {
+   "avgHeight": 976226,
+   "timestamp": 1794890134,
+   "avgRewards": 312660402,
+   "USD": 64996
+  },
+  {
+   "avgHeight": 976228,
+   "timestamp": 1794890583,
+   "avgRewards": 314041134,
+   "USD": 64996
+  },
+  {
+   "avgHeight": 976230,
+   "timestamp": 1794891448,
+   "avgRewards": 313523576,
+   "USD": 64996
+  },
+  {
+   "avgHeight": 976231,
+   "timestamp": 1794892091,
+   "avgRewards": 313957825,
+   "USD": 65005
+  },
+  {
+   "avgHeight": 976233,
+   "timestamp": 1794892695,
+   "avgRewards": 313227562,
+   "USD": 65005
+  },
+  {
+   "avgHeight": 976234,
+   "timestamp": 1794893988,
+   "avgRewards": 315543923,
+   "USD": 65005
+  },
+  {
+   "avgHeight": 976235,
+   "timestamp": 1794894195,
+   "avgRewards": 313391911,
+   "USD": 65005
+  },
+  {
+   "avgHeight": 976237,
+   "timestamp": 1794894329,
+   "avgRewards": 312825531,
+   "USD": 65005
+  },
+  {
+   "avgHeight": 976238,
+   "timestamp": 1794895867,
+   "avgRewards": 314289146,
+   "USD": 64760
+  },
+  {
+   "avgHeight": 976239,
+   "timestamp": 1794896269,
+   "avgRewards": 313799603,
+   "USD": 64760
+  },
+  {
+   "avgHeight": 976240,
+   "timestamp": 1794896571,
+   "avgRewards": 313124107,
+   "USD": 64760
+  },
+  {
+   "avgHeight": 976241,
+   "timestamp": 1794897108,
+   "avgRewards": 312703160,
+   "USD": 64760
+  },
+  {
+   "avgHeight": 976242,
+   "timestamp": 1794897621,
+   "avgRewards": 313922193,
+   "USD": 64760
+  },
+  {
+   "avgHeight": 976243,
+   "timestamp": 1794900691,
+   "avgRewards": 316691503,
+   "USD": 64494
+  },
+  {
+   "avgHeight": 976244,
+   "timestamp": 1794901364,
+   "avgRewards": 314776637,
+   "USD": 64494
+  },
+  {
+   "avgHeight": 976245,
+   "timestamp": 1794902065,
+   "avgRewards": 314464847,
+   "USD": 64494
+  },
+  {
+   "avgHeight": 976246,
+   "timestamp": 1794902188,
+   "avgRewards": 313586321,
+   "USD": 64494
+  },
+  {
+   "avgHeight": 976248,
+   "timestamp": 1794902605,
+   "avgRewards": 313205925,
+   "USD": 64676
+  },
+  {
+   "avgHeight": 976250,
+   "timestamp": 1794905311,
+   "avgRewards": 315925780,
+   "USD": 64676
+  },
+  {
+   "avgHeight": 976251,
+   "timestamp": 1794905617,
+   "avgRewards": 313473845,
+   "USD": 64676
+  },
+  {
+   "avgHeight": 976252,
+   "timestamp": 1794906129,
+   "avgRewards": 313687361,
+   "USD": 64269
+  },
+  {
+   "avgHeight": 976253,
+   "timestamp": 1794908522,
+   "avgRewards": 317230661,
+   "USD": 64269
+  },
+  {
+   "avgHeight": 976254,
+   "timestamp": 1794908814,
+   "avgRewards": 314231143,
+   "USD": 64269
+  },
+  {
+   "avgHeight": 976255,
+   "timestamp": 1794909300,
+   "avgRewards": 314472943,
+   "USD": 64269
+  },
+  {
+   "avgHeight": 976256,
+   "timestamp": 1794910662,
+   "avgRewards": 315750656,
+   "USD": 64301
+  },
+  {
+   "avgHeight": 976257,
+   "timestamp": 1794911181,
+   "avgRewards": 313792740,
+   "USD": 64301
+  },
+  {
+   "avgHeight": 976258,
+   "timestamp": 1794911868,
+   "avgRewards": 314869647,
+   "USD": 64301
+  },
+  {
+   "avgHeight": 976259,
+   "timestamp": 1794912165,
+   "avgRewards": 313735681,
+   "USD": 64301
+  },
+  {
+   "avgHeight": 976260,
+   "timestamp": 1794912320,
+   "avgRewards": 313128956,
+   "USD": 64301
+  },
+  {
+   "avgHeight": 976261,
+   "timestamp": 1794912751,
+   "avgRewards": 312840054,
+   "USD": 64301
+  },
+  {
+   "avgHeight": 976263,
+   "timestamp": 1794913439,
+   "avgRewards": 313523336,
+   "USD": 64033
+  },
+  {
+   "avgHeight": 976265,
+   "timestamp": 1794914021,
+   "avgRewards": 314355244,
+   "USD": 64033
+  },
+  {
+   "avgHeight": 976266,
+   "timestamp": 1794914201,
+   "avgRewards": 313228752,
+   "USD": 64033
+  },
+  {
+   "avgHeight": 976267,
+   "timestamp": 1794914784,
+   "avgRewards": 314130276,
+   "USD": 64033
+  },
+  {
+   "avgHeight": 976268,
+   "timestamp": 1794915635,
+   "avgRewards": 315294947,
+   "USD": 64033
+  },
+  {
+   "avgHeight": 976269,
+   "timestamp": 1794916011,
+   "avgRewards": 314879693,
+   "USD": 64033
+  },
+  {
+   "avgHeight": 976270,
+   "timestamp": 1794916352,
+   "avgRewards": 313227980,
+   "USD": 64033
+  },
+  {
+   "avgHeight": 976271,
+   "timestamp": 1794917063,
+   "avgRewards": 314388502,
+   "USD": 64919
+  },
+  {
+   "avgHeight": 976272,
+   "timestamp": 1794917436,
+   "avgRewards": 313443166,
+   "USD": 64919
+  },
+  {
+   "avgHeight": 976273,
+   "timestamp": 1794918048,
+   "avgRewards": 313898335,
+   "USD": 64919
+  },
+  {
+   "avgHeight": 976274,
+   "timestamp": 1794919326,
+   "avgRewards": 315808441,
+   "USD": 64919
+  },
+  {
+   "avgHeight": 976275,
+   "timestamp": 1794920362,
+   "avgRewards": 315017857,
+   "USD": 64919
+  },
+  {
+   "avgHeight": 976276,
+   "timestamp": 1794921202,
+   "avgRewards": 314917837,
+   "USD": 64993
+  },
+  {
+   "avgHeight": 976278,
+   "timestamp": 1794921508,
+   "avgRewards": 313148935,
+   "USD": 64993
+  },
+  {
+   "avgHeight": 976280,
+   "timestamp": 1794923991,
+   "avgRewards": 317300983,
+   "USD": 64993
+  },
+  {
+   "avgHeight": 976281,
+   "timestamp": 1794924539,
+   "avgRewards": 314320303,
+   "USD": 65076
+  },
+  {
+   "avgHeight": 976283,
+   "timestamp": 1794925123,
+   "avgRewards": 314099852,
+   "USD": 65076
+  },
+  {
+   "avgHeight": 976285,
+   "timestamp": 1794925607,
+   "avgRewards": 313853181,
+   "USD": 65076
+  },
+  {
+   "avgHeight": 976287,
+   "timestamp": 1794926848,
+   "avgRewards": 315032006,
+   "USD": 65076
+  },
+  {
+   "avgHeight": 976288,
+   "timestamp": 1794927574,
+   "avgRewards": 314963012,
+   "USD": 65076
+  },
+  {
+   "avgHeight": 976290,
+   "timestamp": 1794927736,
+   "avgRewards": 313216798,
+   "USD": 64948
+  },
+  {
+   "avgHeight": 976291,
+   "timestamp": 1794928135,
+   "avgRewards": 314209343,
+   "USD": 64948
+  },
+  {
+   "avgHeight": 976293,
+   "timestamp": 1794928715,
+   "avgRewards": 313905263,
+   "USD": 64948
+  },
+  {
+   "avgHeight": 976294,
+   "timestamp": 1794929057,
+   "avgRewards": 313975298,
+   "USD": 64948
+  },
+  {
+   "avgHeight": 976295,
+   "timestamp": 1794929508,
+   "avgRewards": 314002600,
+   "USD": 64948
+  },
+  {
+   "avgHeight": 976296,
+   "timestamp": 1794929857,
+   "avgRewards": 314889549,
+   "USD": 64948
+  },
+  {
+   "avgHeight": 976297,
+   "timestamp": 1794931134,
+   "avgRewards": 316031778,
+   "USD": 64948
+  },
+  {
+   "avgHeight": 976299,
+   "timestamp": 1794931682,
+   "avgRewards": 313949182,
+   "USD": 64018
+  },
+  {
+   "avgHeight": 976301,
+   "timestamp": 1794932927,
+   "avgRewards": 313028422,
+   "USD": 64018
+  },
+  {
+   "avgHeight": 976300,
+   "timestamp": 1794933013,
+   "avgRewards": 315742554,
+   "USD": 64018
+  },
+  {
+   "avgHeight": 976303,
+   "timestamp": 1794933590,
+   "avgRewards": 314260095,
+   "USD": 64018
+  },
+  {
+   "avgHeight": 976304,
+   "timestamp": 1794933979,
+   "avgRewards": 314245270,
+   "USD": 64018
+  },
+  {
+   "avgHeight": 976305,
+   "timestamp": 1794934804,
+   "avgRewards": 315657679,
+   "USD": 63696
+  },
+  {
+   "avgHeight": 976306,
+   "timestamp": 1794935419,
+   "avgRewards": 315326425,
+   "USD": 63696
+  },
+  {
+   "avgHeight": 976307,
+   "timestamp": 1794937469,
+   "avgRewards": 317740418,
+   "USD": 63696
+  },
+  {
+   "avgHeight": 976309,
+   "timestamp": 1794938487,
+   "avgRewards": 315869416,
+   "USD": 63764
+  },
+  {
+   "avgHeight": 976310,
+   "timestamp": 1794939403,
+   "avgRewards": 316340711,
+   "USD": 63764
+  },
+  {
+   "avgHeight": 976311,
+   "timestamp": 1794940389,
+   "avgRewards": 316599754,
+   "USD": 63764
+  },
+  {
+   "avgHeight": 976312,
+   "timestamp": 1794942041,
+   "avgRewards": 319065412,
+   "USD": 63703
+  },
+  {
+   "avgHeight": 976313,
+   "timestamp": 1794942727,
+   "avgRewards": 317295125,
+   "USD": 63703
+  },
+  {
+   "avgHeight": 976314,
+   "timestamp": 1794945493,
+   "avgRewards": 320675713,
+   "USD": 63703
+  },
+  {
+   "avgHeight": 976315,
+   "timestamp": 1794945770,
+   "avgRewards": 317427611,
+   "USD": 63686
+  },
+  {
+   "avgHeight": 976316,
+   "timestamp": 1794946026,
+   "avgRewards": 316376089,
+   "USD": 63686
+  },
+  {
+   "avgHeight": 976317,
+   "timestamp": 1794946749,
+   "avgRewards": 315346433,
+   "USD": 63686
+  },
+  {
+   "avgHeight": 976318,
+   "timestamp": 1794947193,
+   "avgRewards": 316814043,
+   "USD": 63686
+  },
+  {
+   "avgHeight": 976319,
+   "timestamp": 1794947997,
+   "avgRewards": 316669179,
+   "USD": 63686
+  },
+  {
+   "avgHeight": 976320,
+   "timestamp": 1794948493,
+   "avgRewards": 315979075,
+   "USD": 63686
+  },
+  {
+   "avgHeight": 976321,
+   "timestamp": 1794949689,
+   "avgRewards": 317385285,
+   "USD": 63911
+  },
+  {
+   "avgHeight": 976322,
+   "timestamp": 1794950296,
+   "avgRewards": 316703893,
+   "USD": 63911
+  },
+  {
+   "avgHeight": 976324,
+   "timestamp": 1794951483,
+   "avgRewards": 316773876,
+   "USD": 63911
+  },
+  {
+   "avgHeight": 976325,
+   "timestamp": 1794951696,
+   "avgRewards": 314879222,
+   "USD": 63911
+  },
+  {
+   "avgHeight": 976326,
+   "timestamp": 1794952187,
+   "avgRewards": 316022495,
+   "USD": 63911
+  },
+  {
+   "avgHeight": 976327,
+   "timestamp": 1794952481,
+   "avgRewards": 314638735,
+   "USD": 63911
+  },
+  {
+   "avgHeight": 976328,
+   "timestamp": 1794952581,
+   "avgRewards": 313934930,
+   "USD": 63911
+  },
+  {
+   "avgHeight": 976329,
+   "timestamp": 1794953062,
+   "avgRewards": 315081258,
+   "USD": 64284
+  },
+  {
+   "avgHeight": 976331,
+   "timestamp": 1794953299,
+   "avgRewards": 313156223,
+   "USD": 64284
+  },
+  {
+   "avgHeight": 976332,
+   "timestamp": 1794953663,
+   "avgRewards": 313319760,
+   "USD": 64284
+  },
+  {
+   "avgHeight": 976333,
+   "timestamp": 1794953716,
+   "avgRewards": 313580955,
+   "USD": 64284
+  },
+  {
+   "avgHeight": 976335,
+   "timestamp": 1794954759,
+   "avgRewards": 315038572,
+   "USD": 64284
+  },
+  {
+   "avgHeight": 976336,
+   "timestamp": 1794955039,
+   "avgRewards": 313836183,
+   "USD": 64284
+  },
+  {
+   "avgHeight": 976337,
+   "timestamp": 1794955338,
+   "avgRewards": 314059099,
+   "USD": 64284
+  },
+  {
+   "avgHeight": 976338,
+   "timestamp": 1794955871,
+   "avgRewards": 314251553,
+   "USD": 64284
+  },
+  {
+   "avgHeight": 976340,
+   "timestamp": 1794956240,
+   "avgRewards": 313231752,
+   "USD": 64284
+  },
+  {
+   "avgHeight": 976342,
+   "timestamp": 1794956581,
+   "avgRewards": 313571096,
+   "USD": 64669
+  },
+  {
+   "avgHeight": 976343,
+   "timestamp": 1794957458,
+   "avgRewards": 313647563,
+   "USD": 64669
+  },
+  {
+   "avgHeight": 976344,
+   "timestamp": 1794957851,
+   "avgRewards": 314915616,
+   "USD": 64669
+  },
+  {
+   "avgHeight": 976345,
+   "timestamp": 1794958121,
+   "avgRewards": 313572705,
+   "USD": 64669
+  },
+  {
+   "avgHeight": 976346,
+   "timestamp": 1794958771,
+   "avgRewards": 315389099,
+   "USD": 64669
+  },
+  {
+   "avgHeight": 976347,
+   "timestamp": 1794960717,
+   "avgRewards": 316852817,
+   "USD": 64877
+  },
+  {
+   "avgHeight": 976348,
+   "timestamp": 1794961385,
+   "avgRewards": 315788804,
+   "USD": 64877
+  },
+  {
+   "avgHeight": 976350,
+   "timestamp": 1794961761,
+   "avgRewards": 313349854,
+   "USD": 64877
+  },
+  {
+   "avgHeight": 976353,
+   "timestamp": 1794961947,
+   "avgRewards": 312981051,
+   "USD": 64877
+  },
+  {
+   "avgHeight": 976354,
+   "timestamp": 1794963257,
+   "avgRewards": 316152635,
+   "USD": 64877
+  },
+  {
+   "avgHeight": 976355,
+   "timestamp": 1794963543,
+   "avgRewards": 313598016,
+   "USD": 64877
+  },
+  {
+   "avgHeight": 976356,
+   "timestamp": 1794963752,
+   "avgRewards": 313687513,
+   "USD": 64689
+  },
+  {
+   "avgHeight": 976358,
+   "timestamp": 1794964063,
+   "avgRewards": 313246342,
+   "USD": 64689
+  },
+  {
+   "avgHeight": 976359,
+   "timestamp": 1794964648,
+   "avgRewards": 314149585,
+   "USD": 64689
+  },
+  {
+   "avgHeight": 976360,
+   "timestamp": 1794965477,
+   "avgRewards": 315294763,
+   "USD": 64689
+  },
+  {
+   "avgHeight": 976361,
+   "timestamp": 1794966305,
+   "avgRewards": 314805058,
+   "USD": 64689
+  },
+  {
+   "avgHeight": 976363,
+   "timestamp": 1794967070,
+   "avgRewards": 313398369,
+   "USD": 64689
+  },
+  {
+   "avgHeight": 976365,
+   "timestamp": 1794967414,
+   "avgRewards": 313705320,
+   "USD": 64256
+  },
+  {
+   "avgHeight": 976366,
+   "timestamp": 1794968566,
+   "avgRewards": 316174243,
+   "USD": 64256
+  },
+  {
+   "avgHeight": 976367,
+   "timestamp": 1794968905,
+   "avgRewards": 313561877,
+   "USD": 64256
+  },
+  {
+   "avgHeight": 976369,
+   "timestamp": 1794969801,
+   "avgRewards": 313979029,
+   "USD": 64256
+  },
+  {
+   "avgHeight": 976370,
+   "timestamp": 1794970000,
+   "avgRewards": 313047495,
+   "USD": 64256
+  },
+  {
+   "avgHeight": 976372,
+   "timestamp": 1794970932,
+   "avgRewards": 313750189,
+   "USD": 64260
+  },
+  {
+   "avgHeight": 976373,
+   "timestamp": 1794971881,
+   "avgRewards": 315167811,
+   "USD": 64260
+  },
+  {
+   "avgHeight": 976374,
+   "timestamp": 1794973960,
+   "avgRewards": 318785800,
+   "USD": 64260
+  },
+  {
+   "avgHeight": 976375,
+   "timestamp": 1794975118,
+   "avgRewards": 316365295,
+   "USD": 64395
+  },
+  {
+   "avgHeight": 976376,
+   "timestamp": 1794975385,
+   "avgRewards": 314084450,
+   "USD": 64395
+  },
+  {
+   "avgHeight": 976377,
+   "timestamp": 1794976030,
+   "avgRewards": 314710734,
+   "USD": 64395
+  },
+  {
+   "avgHeight": 976378,
+   "timestamp": 1794976280,
+   "avgRewards": 313223636,
+   "USD": 64395
+  },
+  {
+   "avgHeight": 976379,
+   "timestamp": 1794976853,
+   "avgRewards": 314124133,
+   "USD": 64395
+  },
+  {
+   "avgHeight": 976380,
+   "timestamp": 1794977134,
+   "avgRewards": 313695447,
+   "USD": 64395
+  },
+  {
+   "avgHeight": 976381,
+   "timestamp": 1794977562,
+   "avgRewards": 314548540,
+   "USD": 64395
+  },
+  {
+   "avgHeight": 976382,
+   "timestamp": 1794978067,
+   "avgRewards": 314499473,
+   "USD": 64368
+  },
+  {
+   "avgHeight": 976384,
+   "timestamp": 1794979089,
+   "avgRewards": 313832197,
+   "USD": 64368
+  },
+  {
+   "avgHeight": 976385,
+   "timestamp": 1794979222,
+   "avgRewards": 313093067,
+   "USD": 64368
+  },
+  {
+   "avgHeight": 976387,
+   "timestamp": 1794981221,
+   "avgRewards": 317308323,
+   "USD": 64368
+  },
+  {
+   "avgHeight": 976386,
+   "timestamp": 1794981430,
+   "avgRewards": 321194967,
+   "USD": 64368
+  },
+  {
+   "avgHeight": 976388,
+   "timestamp": 1794982149,
+   "avgRewards": 315039369,
+   "USD": 64608
+  },
+  {
+   "avgHeight": 976390,
+   "timestamp": 1794983218,
+   "avgRewards": 313692196,
+   "USD": 64608
+  },
+  {
+   "avgHeight": 976392,
+   "timestamp": 1794984120,
+   "avgRewards": 312965804,
+   "USD": 64608
+  },
+  {
+   "avgHeight": 976391,
+   "timestamp": 1794984374,
+   "avgRewards": 314720208,
+   "USD": 64608
+  },
+  {
+   "avgHeight": 976394,
+   "timestamp": 1794984880,
+   "avgRewards": 313439855,
+   "USD": 64608
+  },
+  {
+   "avgHeight": 976395,
+   "timestamp": 1794985154,
+   "avgRewards": 313028198,
+   "USD": 64608
+  },
+  {
+   "avgHeight": 976397,
+   "timestamp": 1794986558,
+   "avgRewards": 313948499,
+   "USD": 64548
+  },
+  {
+   "avgHeight": 976399,
+   "timestamp": 1794986721,
+   "avgRewards": 312903016,
+   "USD": 64548
+  },
+  {
+   "avgHeight": 976401,
+   "timestamp": 1794987513,
+   "avgRewards": 313728908,
+   "USD": 64548
+  },
+  {
+   "avgHeight": 976402,
+   "timestamp": 1794988701,
+   "avgRewards": 316586074,
+   "USD": 64548
+  },
+  {
+   "avgHeight": 976403,
+   "timestamp": 1794989075,
+   "avgRewards": 314242779,
+   "USD": 64806
+  },
+  {
+   "avgHeight": 976404,
+   "timestamp": 1794989198,
+   "avgRewards": 312995830,
+   "USD": 64806
+  },
+  {
+   "avgHeight": 976405,
+   "timestamp": 1794989893,
+   "avgRewards": 314012267,
+   "USD": 64806
+  },
+  {
+   "avgHeight": 976406,
+   "timestamp": 1794991562,
+   "avgRewards": 316071032,
+   "USD": 64806
+  },
+  {
+   "avgHeight": 976407,
+   "timestamp": 1794992099,
+   "avgRewards": 314986503,
+   "USD": 64806
+  },
+  {
+   "avgHeight": 976408,
+   "timestamp": 1794992526,
+   "avgRewards": 314839734,
+   "USD": 64608
+  },
+  {
+   "avgHeight": 976409,
+   "timestamp": 1794993241,
+   "avgRewards": 314803179,
+   "USD": 64608
+  },
+  {
+   "avgHeight": 976410,
+   "timestamp": 1794994025,
+   "avgRewards": 314332177,
+   "USD": 64608
+  },
+  {
+   "avgHeight": 976411,
+   "timestamp": 1794994908,
+   "avgRewards": 314954274,
+   "USD": 64608
+  },
+  {
+   "avgHeight": 976412,
+   "timestamp": 1794997083,
+   "avgRewards": 317487525,
+   "USD": 64574
+  },
+  {
+   "avgHeight": 976414,
+   "timestamp": 1794997693,
+   "avgRewards": 314228121,
+   "USD": 64574
+  },
+  {
+   "avgHeight": 976415,
+   "timestamp": 1794998052,
+   "avgRewards": 313635368,
+   "USD": 64574
+  },
+  {
+   "avgHeight": 976416,
+   "timestamp": 1794998512,
+   "avgRewards": 314311109,
+   "USD": 64574
+  },
+  {
+   "avgHeight": 976417,
+   "timestamp": 1794998896,
+   "avgRewards": 313776646,
+   "USD": 64574
+  },
+  {
+   "avgHeight": 976418,
+   "timestamp": 1794999045,
+   "avgRewards": 312948625,
+   "USD": 64574
+  },
+  {
+   "avgHeight": 976420,
+   "timestamp": 1794999685,
+   "avgRewards": 313755239,
+   "USD": 64295
+  },
+  {
+   "avgHeight": 976421,
+   "timestamp": 1795001012,
+   "avgRewards": 316142854,
+   "USD": 64295
+  },
+  {
+   "avgHeight": 976423,
+   "timestamp": 1795001226,
+   "avgRewards": 313143686,
+   "USD": 64295
+  },
+  {
+   "avgHeight": 976425,
+   "timestamp": 1795001435,
+   "avgRewards": 312919360,
+   "USD": 64295
+  },
+  {
+   "avgHeight": 976426,
+   "timestamp": 1795002360,
+   "avgRewards": 318196791,
+   "USD": 64295
+  },
+  {
+   "avgHeight": 976428,
+   "timestamp": 1795002703,
+   "avgRewards": 313229605,
+   "USD": 64295
+  },
+  {
+   "avgHeight": 976430,
+   "timestamp": 1795004596,
+   "avgRewards": 316866398,
+   "USD": 64210
+  },
+  {
+   "avgHeight": 976431,
+   "timestamp": 1795005682,
+   "avgRewards": 316519825,
+   "USD": 64210
+  },
+  {
+   "avgHeight": 976432,
+   "timestamp": 1795006428,
+   "avgRewards": 316026147,
+   "USD": 64210
+  },
+  {
+   "avgHeight": 976433,
+   "timestamp": 1795007634,
+   "avgRewards": 316689450,
+   "USD": 64048
+  },
+  {
+   "avgHeight": 976434,
+   "timestamp": 1795007861,
+   "avgRewards": 314184845,
+   "USD": 64048
+  },
+  {
+   "avgHeight": 976435,
+   "timestamp": 1795008011,
+   "avgRewards": 313825135,
+   "USD": 64048
+  },
+  {
+   "avgHeight": 976436,
+   "timestamp": 1795008482,
+   "avgRewards": 315033120,
+   "USD": 64048
+  },
+  {
+   "avgHeight": 976437,
+   "timestamp": 1795008812,
+   "avgRewards": 313792046,
+   "USD": 64048
+  },
+  {
+   "avgHeight": 976438,
+   "timestamp": 1795008950,
+   "avgRewards": 313124760,
+   "USD": 64048
+  },
+  {
+   "avgHeight": 976440,
+   "timestamp": 1795009659,
+   "avgRewards": 313938962,
+   "USD": 64048
+  },
+  {
+   "avgHeight": 976441,
+   "timestamp": 1795010033,
+   "avgRewards": 312722121,
+   "USD": 64048
+  },
+  {
+   "avgHeight": 976443,
+   "timestamp": 1795010311,
+   "avgRewards": 314366949,
+   "USD": 64048
+  },
+  {
+   "avgHeight": 976445,
+   "timestamp": 1795010783,
+   "avgRewards": 313567649,
+   "USD": 63889
+  },
+  {
+   "avgHeight": 976447,
+   "timestamp": 1795011663,
+   "avgRewards": 317228378,
+   "USD": 63889
+  },
+  {
+   "avgHeight": 976449,
+   "timestamp": 1795012310,
+   "avgRewards": 313760816,
+   "USD": 63889
+  },
+  {
+   "avgHeight": 976451,
+   "timestamp": 1795014514,
+   "avgRewards": 316979651,
+   "USD": 63609
+  },
+  {
+   "avgHeight": 976452,
+   "timestamp": 1795014807,
+   "avgRewards": 314392892,
+   "USD": 63609
+  },
+  {
+   "avgHeight": 976453,
+   "timestamp": 1795015810,
+   "avgRewards": 315735994,
+   "USD": 63609
+  },
+  {
+   "avgHeight": 976454,
+   "timestamp": 1795016186,
+   "avgRewards": 314607194,
+   "USD": 63609
+  },
+  {
+   "avgHeight": 976455,
+   "timestamp": 1795017284,
+   "avgRewards": 315906945,
+   "USD": 63609
+  },
+  {
+   "avgHeight": 976456,
+   "timestamp": 1795020525,
+   "avgRewards": 321475647,
+   "USD": 63097
+  },
+  {
+   "avgHeight": 976457,
+   "timestamp": 1795020794,
+   "avgRewards": 317809188,
+   "USD": 63097
+  },
+  {
+   "avgHeight": 976458,
+   "timestamp": 1795021626,
+   "avgRewards": 317608700,
+   "USD": 62696
+  },
+  {
+   "avgHeight": 976459,
+   "timestamp": 1795023358,
+   "avgRewards": 321577541,
+   "USD": 62696
+  },
+  {
+   "avgHeight": 976461,
+   "timestamp": 1795024013,
+   "avgRewards": 316569529,
+   "USD": 62696
+  },
+  {
+   "avgHeight": 976463,
+   "timestamp": 1795024620,
+   "avgRewards": 317362632,
+   "USD": 62696
+  },
+  {
+   "avgHeight": 976464,
+   "timestamp": 1795025030,
+   "avgRewards": 316200924,
+   "USD": 63073
+  },
+  {
+   "avgHeight": 976465,
+   "timestamp": 1795026650,
+   "avgRewards": 319178518,
+   "USD": 63073
+  },
+  {
+   "avgHeight": 976468,
+   "timestamp": 1795029449,
+   "avgRewards": 315937800,
+   "USD": 63115
+  },
+  {
+   "avgHeight": 976468,
+   "timestamp": 1795029754,
+   "avgRewards": 319325336,
+   "USD": 63115
+  },
+  {
+   "avgHeight": 976471,
+   "timestamp": 1795031018,
+   "avgRewards": 318264064,
+   "USD": 63115
+  },
+  {
+   "avgHeight": 976473,
+   "timestamp": 1795031825,
+   "avgRewards": 315158428,
+   "USD": 63115
+  },
+  {
+   "avgHeight": 976476,
+   "timestamp": 1795032153,
+   "avgRewards": 313161533,
+   "USD": 62676
+  },
+  {
+   "avgHeight": 976476,
+   "timestamp": 1795032384,
+   "avgRewards": 313416190,
+   "USD": 62676
+  },
+  {
+   "avgHeight": 976478,
+   "timestamp": 1795034269,
+   "avgRewards": 319670455,
+   "USD": 62676
+  },
+  {
+   "avgHeight": 976480,
+   "timestamp": 1795034627,
+   "avgRewards": 314939719,
+   "USD": 62676
+  },
+  {
+   "avgHeight": 976482,
+   "timestamp": 1795035259,
+   "avgRewards": 314211871,
+   "USD": 62676
+  },
+  {
+   "avgHeight": 976483,
+   "timestamp": 1795035303,
+   "avgRewards": 312673979,
+   "USD": 62676
+  },
+  {
+   "avgHeight": 976484,
+   "timestamp": 1795035672,
+   "avgRewards": 314805271,
+   "USD": 62541
+  },
+  {
+   "avgHeight": 976486,
+   "timestamp": 1795035923,
+   "avgRewards": 314117769,
+   "USD": 62541
+  },
+  {
+   "avgHeight": 976488,
+   "timestamp": 1795036635,
+   "avgRewards": 313491107,
+   "USD": 62541
+  },
+  {
+   "avgHeight": 976490,
+   "timestamp": 1795038799,
+   "avgRewards": 316226751,
+   "USD": 62541
+  },
+  {
+   "avgHeight": 976492,
+   "timestamp": 1795038989,
+   "avgRewards": 312972003,
+   "USD": 62541
+  },
+  {
+   "avgHeight": 976493,
+   "timestamp": 1795040162,
+   "avgRewards": 316618448,
+   "USD": 62257
+  },
+  {
+   "avgHeight": 976495,
+   "timestamp": 1795040792,
+   "avgRewards": 314021648,
+   "USD": 62257
+  },
+  {
+   "avgHeight": 976496,
+   "timestamp": 1795041505,
+   "avgRewards": 314746694,
+   "USD": 62257
+  },
+  {
+   "avgHeight": 976498,
+   "timestamp": 1795041650,
+   "avgRewards": 313138968,
+   "USD": 62257
+  },
+  {
+   "avgHeight": 976499,
+   "timestamp": 1795042488,
+   "avgRewards": 314794151,
+   "USD": 62257
+  },
+  {
+   "avgHeight": 976500,
+   "timestamp": 1795042750,
+   "avgRewards": 313672982,
+   "USD": 62257
+  },
+  {
+   "avgHeight": 976502,
+   "timestamp": 1795044177,
+   "avgRewards": 313790184,
+   "USD": 62211
+  },
+  {
+   "avgHeight": 976501,
+   "timestamp": 1795044301,
+   "avgRewards": 316031360,
+   "USD": 62211
+  },
+  {
+   "avgHeight": 976503,
+   "timestamp": 1795045268,
+   "avgRewards": 315308398,
+   "USD": 62211
+  },
+  {
+   "avgHeight": 976504,
+   "timestamp": 1795046514,
+   "avgRewards": 316433093,
+   "USD": 62977
+  },
+  {
+   "avgHeight": 976505,
+   "timestamp": 1795047291,
+   "avgRewards": 315435602,
+   "USD": 62977
+  },
+  {
+   "avgHeight": 976506,
+   "timestamp": 1795047656,
+   "avgRewards": 313790068,
+   "USD": 62977
+  },
+  {
+   "avgHeight": 976508,
+   "timestamp": 1795048682,
+   "avgRewards": 314035994,
+   "USD": 62977
+  },
+  {
+   "avgHeight": 976509,
+   "timestamp": 1795051492,
+   "avgRewards": 318555928,
+   "USD": 63121
+  },
+  {
+   "avgHeight": 976510,
+   "timestamp": 1795051781,
+   "avgRewards": 314709198,
+   "USD": 63121
+  },
+  {
+   "avgHeight": 976511,
+   "timestamp": 1795052017,
+   "avgRewards": 313567639,
+   "USD": 63121
+  },
+  {
+   "avgHeight": 976512,
+   "timestamp": 1795052144,
+   "avgRewards": 313186218,
+   "USD": 63121
+  },
+  {
+   "avgHeight": 976514,
+   "timestamp": 1795052549,
+   "avgRewards": 313482222,
+   "USD": 63121
+  },
+  {
+   "avgHeight": 976515,
+   "timestamp": 1795053058,
+   "avgRewards": 313789417,
+   "USD": 63121
+  },
+  {
+   "avgHeight": 976516,
+   "timestamp": 1795053394,
+   "avgRewards": 313323319,
+   "USD": 63121
+  },
+  {
+   "avgHeight": 976517,
+   "timestamp": 1795055535,
+   "avgRewards": 316591598,
+   "USD": 62785
+  },
+  {
+   "avgHeight": 976519,
+   "timestamp": 1795057316,
+   "avgRewards": 315937684,
+   "USD": 62548
+  },
+  {
+   "avgHeight": 976520,
+   "timestamp": 1795057854,
+   "avgRewards": 314332343,
+   "USD": 62548
+  },
+  {
+   "avgHeight": 976522,
+   "timestamp": 1795058177,
+   "avgRewards": 312732975,
+   "USD": 62548
+  },
+  {
+   "avgHeight": 976522,
+   "timestamp": 1795058532,
+   "avgRewards": 313546968,
+   "USD": 62548
+  },
+  {
+   "avgHeight": 976524,
+   "timestamp": 1795059333,
+   "avgRewards": 314118345,
+   "USD": 62548
+  },
+  {
+   "avgHeight": 976525,
+   "timestamp": 1795060372,
+   "avgRewards": 314983799,
+   "USD": 62548
+  },
+  {
+   "avgHeight": 976526,
+   "timestamp": 1795060604,
+   "avgRewards": 313285394,
+   "USD": 62548
+  },
+  {
+   "avgHeight": 976527,
+   "timestamp": 1795060941,
+   "avgRewards": 313609646,
+   "USD": 63135
+  },
+  {
+   "avgHeight": 976528,
+   "timestamp": 1795061393,
+   "avgRewards": 313620297,
+   "USD": 63135
+  },
+  {
+   "avgHeight": 976529,
+   "timestamp": 1795061653,
+   "avgRewards": 313112933,
+   "USD": 63135
+  },
+  {
+   "avgHeight": 976530,
+   "timestamp": 1795062075,
+   "avgRewards": 313702275,
+   "USD": 63135
+  },
+  {
+   "avgHeight": 976531,
+   "timestamp": 1795062373,
+   "avgRewards": 313265566,
+   "USD": 63135
+  },
+  {
+   "avgHeight": 976533,
+   "timestamp": 1795063645,
+   "avgRewards": 314712754,
+   "USD": 63135
+  },
+  {
+   "avgHeight": 976534,
+   "timestamp": 1795065866,
+   "avgRewards": 316271680,
+   "USD": 63517
+  },
+  {
+   "avgHeight": 976536,
+   "timestamp": 1795066357,
+   "avgRewards": 313811634,
+   "USD": 63517
+  },
+  {
+   "avgHeight": 976537,
+   "timestamp": 1795066533,
+   "avgRewards": 312924558,
+   "USD": 63517
+  },
+  {
+   "avgHeight": 976539,
+   "timestamp": 1795066857,
+   "avgRewards": 313159481,
+   "USD": 63517
+  },
+  {
+   "avgHeight": 976540,
+   "timestamp": 1795068765,
+   "avgRewards": 316436876,
+   "USD": 63290
+  },
+  {
+   "avgHeight": 976541,
+   "timestamp": 1795068938,
+   "avgRewards": 313623558,
+   "USD": 63290
+  },
+  {
+   "avgHeight": 976542,
+   "timestamp": 1795070079,
+   "avgRewards": 314961979,
+   "USD": 63290
+  },
+  {
+   "avgHeight": 976544,
+   "timestamp": 1795070489,
+   "avgRewards": 313497961,
+   "USD": 63290
+  },
+  {
+   "avgHeight": 976545,
+   "timestamp": 1795071479,
+   "avgRewards": 314932706,
+   "USD": 63290
+  },
+  {
+   "avgHeight": 976546,
+   "timestamp": 1795072199,
+   "avgRewards": 314774436,
+   "USD": 63674
+  },
+  {
+   "avgHeight": 976548,
+   "timestamp": 1795072345,
+   "avgRewards": 312901604,
+   "USD": 63674
+  },
+  {
+   "avgHeight": 976549,
+   "timestamp": 1795073381,
+   "avgRewards": 314347977,
+   "USD": 63674
+  },
+  {
+   "avgHeight": 976550,
+   "timestamp": 1795073783,
+   "avgRewards": 314053464,
+   "USD": 63674
+  },
+  {
+   "avgHeight": 976551,
+   "timestamp": 1795074154,
+   "avgRewards": 313412651,
+   "USD": 63674
+  },
+  {
+   "avgHeight": 976552,
+   "timestamp": 1795075140,
+   "avgRewards": 314740924,
+   "USD": 63674
+  },
+  {
+   "avgHeight": 976554,
+   "timestamp": 1795075337,
+   "avgRewards": 312853872,
+   "USD": 63669
+  },
+  {
+   "avgHeight": 976556,
+   "timestamp": 1795076204,
+   "avgRewards": 314520995,
+   "USD": 63669
+  },
+  {
+   "avgHeight": 976558,
+   "timestamp": 1795077105,
+   "avgRewards": 313984838,
+   "USD": 63669
+  },
+  {
+   "avgHeight": 976560,
+   "timestamp": 1795077348,
+   "avgRewards": 312977419,
+   "USD": 63669
+  },
+  {
+   "avgHeight": 976561,
+   "timestamp": 1795079102,
+   "avgRewards": 316456396,
+   "USD": 63667
+  },
+  {
+   "avgHeight": 976562,
+   "timestamp": 1795080860,
+   "avgRewards": 316563972,
+   "USD": 63667
+  },
+  {
+   "avgHeight": 976563,
+   "timestamp": 1795081141,
+   "avgRewards": 314343685,
+   "USD": 63667
+  },
+  {
+   "avgHeight": 976564,
+   "timestamp": 1795081766,
+   "avgRewards": 315066450,
+   "USD": 63667
+  },
+  {
+   "avgHeight": 976565,
+   "timestamp": 1795082252,
+   "avgRewards": 314761271,
+   "USD": 63667
+  },
+  {
+   "avgHeight": 976566,
+   "timestamp": 1795083812,
+   "avgRewards": 316573224,
+   "USD": 63800
+  },
+  {
+   "avgHeight": 976568,
+   "timestamp": 1795084700,
+   "avgRewards": 314610633,
+   "USD": 63800
+  },
+  {
+   "avgHeight": 976570,
+   "timestamp": 1795085235,
+   "avgRewards": 313581676,
+   "USD": 63800
+  },
+  {
+   "avgHeight": 976571,
+   "timestamp": 1795085632,
+   "avgRewards": 313587351,
+   "USD": 63800
+  },
+  {
+   "avgHeight": 976573,
+   "timestamp": 1795086228,
+   "avgRewards": 313286347,
+   "USD": 63721
+  },
+  {
+   "avgHeight": 976575,
+   "timestamp": 1795086433,
+   "avgRewards": 312772167,
+   "USD": 63721
+  },
+  {
+   "avgHeight": 976576,
+   "timestamp": 1795087535,
+   "avgRewards": 315761328,
+   "USD": 63721
+  },
+  {
+   "avgHeight": 976578,
+   "timestamp": 1795087968,
+   "avgRewards": 313571913,
+   "USD": 63721
+  },
+  {
+   "avgHeight": 976579,
+   "timestamp": 1795088369,
+   "avgRewards": 313384292,
+   "USD": 63721
+  },
+  {
+   "avgHeight": 976580,
+   "timestamp": 1795088977,
+   "avgRewards": 315122179,
+   "USD": 63721
+  },
+  {
+   "avgHeight": 976581,
+   "timestamp": 1795089572,
+   "avgRewards": 314502132,
+   "USD": 63721
+  },
+  {
+   "avgHeight": 976582,
+   "timestamp": 1795089966,
+   "avgRewards": 314258146,
+   "USD": 63878
+  },
+  {
+   "avgHeight": 976584,
+   "timestamp": 1795090323,
+   "avgRewards": 313367811,
+   "USD": 63878
+  },
+  {
+   "avgHeight": 976585,
+   "timestamp": 1795090723,
+   "avgRewards": 314357330,
+   "USD": 63878
+  },
+  {
+   "avgHeight": 976586,
+   "timestamp": 1795091161,
+   "avgRewards": 313777193,
+   "USD": 63878
+  },
+  {
+   "avgHeight": 976587,
+   "timestamp": 1795091723,
+   "avgRewards": 314495843,
+   "USD": 63878
+  },
+  {
+   "avgHeight": 976588,
+   "timestamp": 1795092406,
+   "avgRewards": 314555998,
+   "USD": 63878
+  },
+  {
+   "avgHeight": 976590,
+   "timestamp": 1795095786,
+   "avgRewards": 317528686,
+   "USD": 63808
+  },
+  {
+   "avgHeight": 976591,
+   "timestamp": 1795098590,
+   "avgRewards": 321977188,
+   "USD": 63982
+  },
+  {
+   "avgHeight": 976592,
+   "timestamp": 1795099543,
+   "avgRewards": 317540135,
+   "USD": 63982
+  },
+  {
+   "avgHeight": 976593,
+   "timestamp": 1795099967,
+   "avgRewards": 316789001,
+   "USD": 63982
+  },
+  {
+   "avgHeight": 976594,
+   "timestamp": 1795100489,
+   "avgRewards": 315804593,
+   "USD": 63982
+  },
+  {
+   "avgHeight": 976595,
+   "timestamp": 1795100802,
+   "avgRewards": 315666043,
+   "USD": 63459
+  },
+  {
+   "avgHeight": 976596,
+   "timestamp": 1795101176,
+   "avgRewards": 315254546,
+   "USD": 63459
+  },
+  {
+   "avgHeight": 976598,
+   "timestamp": 1795102045,
+   "avgRewards": 314721069,
+   "USD": 63459
+  },
+  {
+   "avgHeight": 976600,
+   "timestamp": 1795102857,
+   "avgRewards": 316002768,
+   "USD": 63459
+  },
+  {
+   "avgHeight": 976601,
+   "timestamp": 1795103200,
+   "avgRewards": 314228557,
+   "USD": 63459
+  },
+  {
+   "avgHeight": 976602,
+   "timestamp": 1795103523,
+   "avgRewards": 313891509,
+   "USD": 63459
+  },
+  {
+   "avgHeight": 976603,
+   "timestamp": 1795104094,
+   "avgRewards": 315284250,
+   "USD": 63042
+  },
+  {
+   "avgHeight": 976604,
+   "timestamp": 1795104837,
+   "avgRewards": 316013587,
+   "USD": 63042
+  },
+  {
+   "avgHeight": 976606,
+   "timestamp": 1795105007,
+   "avgRewards": 313100061,
+   "USD": 63042
+  },
+  {
+   "avgHeight": 976607,
+   "timestamp": 1795105296,
+   "avgRewards": 314193858,
+   "USD": 63042
+  },
+  {
+   "avgHeight": 976608,
+   "timestamp": 1795105962,
+   "avgRewards": 315276216,
+   "USD": 63042
+  },
+  {
+   "avgHeight": 976611,
+   "timestamp": 1795107434,
+   "avgRewards": 314048137,
+   "USD": 63042
+  },
+  {
+   "avgHeight": 976613,
+   "timestamp": 1795108063,
+   "avgRewards": 315403961,
+   "USD": 62732
+  },
+  {
+   "avgHeight": 976614,
+   "timestamp": 1795108498,
+   "avgRewards": 314503712,
+   "USD": 62732
+  },
+  {
+   "avgHeight": 976615,
+   "timestamp": 1795108799,
+   "avgRewards": 313788682,
+   "USD": 62732
+  },
+  {
+   "avgHeight": 976616,
+   "timestamp": 1795108965,
+   "avgRewards": 313573304,
+   "USD": 62732
+  },
+  {
+   "avgHeight": 976617,
+   "timestamp": 1795109342,
+   "avgRewards": 314150955,
+   "USD": 62732
+  },
+  {
+   "avgHeight": 976618,
+   "timestamp": 1795109489,
+   "avgRewards": 313255911,
+   "USD": 62732
+  },
+  {
+   "avgHeight": 976619,
+   "timestamp": 1795112223,
+   "avgRewards": 319688846,
+   "USD": 62686
+  },
+  {
+   "avgHeight": 976620,
+   "timestamp": 1795112418,
+   "avgRewards": 315843006,
+   "USD": 62686
+  },
+  {
+   "avgHeight": 976621,
+   "timestamp": 1795113007,
+   "avgRewards": 315069927,
+   "USD": 62686
+  },
+  {
+   "avgHeight": 976622,
+   "timestamp": 1795113635,
+   "avgRewards": 316366180,
+   "USD": 62686
+  },
+  {
+   "avgHeight": 976624,
+   "timestamp": 1795114145,
+   "avgRewards": 315454736,
+   "USD": 62686
+  },
+  {
+   "avgHeight": 976625,
+   "timestamp": 1795115975,
+   "avgRewards": 318391894,
+   "USD": 62817
+  },
+  {
+   "avgHeight": 976626,
+   "timestamp": 1795116739,
+   "avgRewards": 317052356,
+   "USD": 62817
+  },
+  {
+   "avgHeight": 976627,
+   "timestamp": 1795117140,
+   "avgRewards": 315881862,
+   "USD": 62817
+  },
+  {
+   "avgHeight": 976629,
+   "timestamp": 1795118581,
+   "avgRewards": 316483830,
+   "USD": 62817
+  },
+  {
+   "avgHeight": 976630,
+   "timestamp": 1795119301,
+   "avgRewards": 315576603,
+   "USD": 62298
+  },
+  {
+   "avgHeight": 976631,
+   "timestamp": 1795119841,
+   "avgRewards": 315263048,
+   "USD": 62298
+  },
+  {
+   "avgHeight": 976632,
+   "timestamp": 1795120641,
+   "avgRewards": 315498610,
+   "USD": 62298
+  },
+  {
+   "avgHeight": 976633,
+   "timestamp": 1795121044,
+   "avgRewards": 315295877,
+   "USD": 62298
+  },
+  {
+   "avgHeight": 976634,
+   "timestamp": 1795121239,
+   "avgRewards": 313498807,
+   "USD": 62298
+  },
+  {
+   "avgHeight": 976635,
+   "timestamp": 1795121474,
+   "avgRewards": 313617815,
+   "USD": 62298
+  },
+  {
+   "avgHeight": 976636,
+   "timestamp": 1795123349,
+   "avgRewards": 317613583,
+   "USD": 62056
+  },
+  {
+   "avgHeight": 976637,
+   "timestamp": 1795124733,
+   "avgRewards": 318282104,
+   "USD": 62056
+  },
+  {
+   "avgHeight": 976639,
+   "timestamp": 1795125343,
+   "avgRewards": 315567089,
+   "USD": 62056
+  },
+  {
+   "avgHeight": 976641,
+   "timestamp": 1795125748,
+   "avgRewards": 313825815,
+   "USD": 61488
+  },
+  {
+   "avgHeight": 976643,
+   "timestamp": 1795126332,
+   "avgRewards": 314820525,
+   "USD": 61488
+  },
+  {
+   "avgHeight": 976644,
+   "timestamp": 1795127136,
+   "avgRewards": 315784161,
+   "USD": 61488
+  },
+  {
+   "avgHeight": 976645,
+   "timestamp": 1795127691,
+   "avgRewards": 314332143,
+   "USD": 61488
+  },
+  {
+   "avgHeight": 976646,
+   "timestamp": 1795127751,
+   "avgRewards": 312925133,
+   "USD": 61488
+  },
+  {
+   "avgHeight": 976648,
+   "timestamp": 1795128484,
+   "avgRewards": 313956987,
+   "USD": 61488
+  },
+  {
+   "avgHeight": 976649,
+   "timestamp": 1795128741,
+   "avgRewards": 313561538,
+   "USD": 61488
+  },
+  {
+   "avgHeight": 976650,
+   "timestamp": 1795129982,
+   "avgRewards": 316084788,
+   "USD": 62121
+  },
+  {
+   "avgHeight": 976652,
+   "timestamp": 1795130572,
+   "avgRewards": 313402099,
+   "USD": 62121
+  },
+  {
+   "avgHeight": 976653,
+   "timestamp": 1795130808,
+   "avgRewards": 313165988,
+   "USD": 62121
+  },
+  {
+   "avgHeight": 976655,
+   "timestamp": 1795131964,
+   "avgRewards": 316096988,
+   "USD": 62121
+  },
+  {
+   "avgHeight": 976656,
+   "timestamp": 1795132444,
+   "avgRewards": 314009652,
+   "USD": 62121
+  },
+  {
+   "avgHeight": 976657,
+   "timestamp": 1795134253,
+   "avgRewards": 316446842,
+   "USD": 61913
+  },
+  {
+   "avgHeight": 976658,
+   "timestamp": 1795134333,
+   "avgRewards": 313211870,
+   "USD": 61913
+  },
+  {
+   "avgHeight": 976659,
+   "timestamp": 1795134615,
+   "avgRewards": 313706666,
+   "USD": 61913
+  },
+  {
+   "avgHeight": 976660,
+   "timestamp": 1795134909,
+   "avgRewards": 314098782,
+   "USD": 61913
+  },
+  {
+   "avgHeight": 976661,
+   "timestamp": 1795136673,
+   "avgRewards": 315987224,
+   "USD": 62084
+  },
+  {
+   "avgHeight": 976662,
+   "timestamp": 1795137004,
+   "avgRewards": 313985160,
+   "USD": 62084
+  },
+  {
+   "avgHeight": 976663,
+   "timestamp": 1795138296,
+   "avgRewards": 315872116,
+   "USD": 62084
+  },
+  {
+   "avgHeight": 976664,
+   "timestamp": 1795139650,
+   "avgRewards": 315551058,
+   "USD": 62084
+  },
+  {
+   "avgHeight": 976667,
+   "timestamp": 1795141976,
+   "avgRewards": 314874625,
+   "USD": 61516
+  },
+  {
+   "avgHeight": 976666,
+   "timestamp": 1795142185,
+   "avgRewards": 314031759,
+   "USD": 61516
+  },
+  {
+   "avgHeight": 976669,
+   "timestamp": 1795142570,
+   "avgRewards": 316370389,
+   "USD": 61516
+  },
+  {
+   "avgHeight": 976671,
+   "timestamp": 1795142866,
+   "avgRewards": 313030834,
+   "USD": 61516
+  },
+  {
+   "avgHeight": 976673,
+   "timestamp": 1795144160,
+   "avgRewards": 316258056,
+   "USD": 62164
+  },
+  {
+   "avgHeight": 976675,
+   "timestamp": 1795144438,
+   "avgRewards": 313116640,
+   "USD": 62164
+  },
+  {
+   "avgHeight": 976676,
+   "timestamp": 1795144921,
+   "avgRewards": 314374371,
+   "USD": 62164
+  }
+ ],
+ "hashrate": {
+  "hashrates": [
+   {
+    "timestamp": 1794614400,
+    "avgHashrate": 810872104980435000000
+   },
+   {
+    "timestamp": 1794700800,
+    "avgHashrate": 925773422368779800000
+   },
+   {
+    "timestamp": 1794787200,
+    "avgHashrate": 1.147471462806631e+21
+   },
+   {
+    "timestamp": 1794873600,
+    "avgHashrate": 1.10230448392204e+21
+   },
+   {
+    "timestamp": 1794960000,
+    "avgHashrate": 1.009829456101236e+21
+   },
+   {
+    "timestamp": 1795046400,
+    "avgHashrate": 1.051070335988507e+21
+   },
+   {
+    "timestamp": 1795132800,
+    "avgHashrate": 1.016313430532484e+21
+   }
+  ],
+  "difficulty": [
+   {
+    "time": 1794632570,
+    "height": 975744,
+    "difficulty": 134823837323272.7,
+    "adjustment": 0.9087330102920532
+   }
+  ],
+  "currentHashrate": 1.020801135920549e+21,
+  "currentDifficulty": 134823837323272.7
+ }
+}

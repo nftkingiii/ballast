@@ -1,0 +1,458 @@
+{
+ "fetchedAt": "2026-11-20T03:25:48.785Z",
+ "node": "HB_HOUSTON",
+ "market": "real-time",
+ "urlPattern": "https://assize.up.railway.app/ercot/price?node_or_zone=HB_HOUSTON&market=real-time&interval_start=<hour start ISO>",
+ "rows": [
+  {
+   "intervalStart": "2026-11-16T00:00:00.000Z",
+   "lmp": 41.68,
+   "source": "ERCOT public MIS archive, NP6-905-CD"
+  },
+  {
+   "intervalStart": "2026-11-16T01:00:00.000Z",
+   "lmp": 42.08,
+   "source": "ERCOT public MIS archive, NP6-905-CD"
+  },
+  {
+   "intervalStart": "2026-11-16T02:00:00.000Z",
+   "lmp": 40.75,
+   "source": "ERCOT public MIS archive, NP6-905-CD"
+  },
+  {
+   "intervalStart": "2026-11-16T03:00:00.000Z",
+   "lmp": 43.34,
+   "source": "ERCOT public MIS archive, NP6-905-CD"
+  },
+  {
+   "intervalStart": "2026-11-16T04:00:00.000Z",
+   "lmp": 42.94,
+   "source": "ERCOT public MIS archive, NP6-905-CD"
+  },
+  {
+   "intervalStart": "2026-11-16T05:00:00.000Z",
+   "lmp": 38.11,
+   "source": "ERCOT public MIS archive, NP6-905-CD"
+  },
+  {
+   "intervalStart": "2026-11-16T06:00:00.000Z",
+   "lmp": 37.9,
+   "source": "ERCOT public MIS archive, NP6-905-CD"
+  },
+  {
+   "intervalStart": "2026-11-16T07:00:00.000Z",
+   "lmp": 31.77,
+   "source": "ERCOT public MIS archive, NP6-905-CD"
+  },
+  {
+   "intervalStart": "2026-11-16T08:00:00.000Z",
+   "lmp": 38.5,
+   "source": "ERCOT public MIS archive, NP6-905-CD"
+  },
+  {
+   "intervalStart": "2026-11-16T09:00:00.000Z",
+   "lmp": 30.49,
+   "source": "ERCOT public MIS archive, NP6-905-CD"
+  },
+  {
+   "intervalStart": "2026-11-16T10:00:00.000Z",
+   "lmp": 42.61,
+   "source": "ERCOT public MIS archive, NP6-905-CD"
+  },
+  {
+   "intervalStart": "2026-11-16T11:00:00.000Z",
+   "lmp": 44.19,
+   "source": "ERCOT public MIS archive, NP6-905-CD"
+  },
+  {
+   "intervalStart": "2026-11-16T12:00:00.000Z",
+   "lmp": 41.06,
+   "source": "ERCOT public MIS archive, NP6-905-CD"
+  },
+  {
+   "intervalStart": "2026-11-16T13:00:00.000Z",
+   "lmp": 41.64,
+   "source": "ERCOT public MIS archive, NP6-905-CD"
+  },
+  {
+   "intervalStart": "2026-11-16T14:00:00.000Z",
+   "lmp": 36.39,
+   "source": "ERCOT public MIS archive, NP6-905-CD"
+  },
+  {
+   "intervalStart": "2026-11-16T15:00:00.000Z",
+   "lmp": 25.08,
+   "source": "ERCOT public MIS archive, NP6-905-CD"
+  },
+  {
+   "intervalStart": "2026-11-16T16:00:00.000Z",
+   "lmp": 13.41,
+   "source": "ERCOT public MIS archive, NP6-905-CD"
+  },
+  {
+   "intervalStart": "2026-11-16T17:00:00.000Z",
+   "lmp": 23.01,
+   "source": "ERCOT public MIS archive, NP6-905-CD"
+  },
+  {
+   "intervalStart": "2026-11-16T18:00:00.000Z",
+   "lmp": 23.91,
+   "source": "ERCOT public MIS archive, NP6-905-CD"
+  },
+  {
+   "intervalStart": "2026-11-16T19:00:00.000Z",
+   "lmp": 15.26,
+   "source": "ERCOT public MIS archive, NP6-905-CD"
+  },
+  {
+   "intervalStart": "2026-11-16T20:00:00.000Z",
+   "lmp": 11.55,
+   "source": "ERCOT public MIS archive, NP6-905-CD"
+  },
+  {
+   "intervalStart": "2026-11-16T21:00:00.000Z",
+   "lmp": 13.17,
+   "source": "ERCOT public MIS archive, NP6-905-CD"
+  },
+  {
+   "intervalStart": "2026-11-16T22:00:00.000Z",
+   "lmp": 31.2,
+   "source": "ERCOT public MIS archive, NP6-905-CD"
+  },
+  {
+   "intervalStart": "2026-11-16T23:00:00.000Z",
+   "lmp": 63.56,
+   "source": "ERCOT public MIS archive, NP6-905-CD"
+  },
+  {
+   "intervalStart": "2026-11-17T00:00:00.000Z",
+   "lmp": 59.39,
+   "source": "ERCOT public MIS archive, NP6-905-CD"
+  },
+  {
+   "intervalStart": "2026-11-17T01:00:00.000Z",
+   "lmp": 47.18,
+   "source": "ERCOT public MIS archive, NP6-905-CD"
+  },
+  {
+   "intervalStart": "2026-11-17T02:00:00.000Z",
+   "lmp": 43.22,
+   "source": "ERCOT public MIS archive, NP6-905-CD"
+  },
+  {
+   "intervalStart": "2026-11-17T03:00:00.000Z",
+   "lmp": 42.23,
+   "source": "ERCOT public MIS archive, NP6-905-CD"
+  },
+  {
+   "intervalStart": "2026-11-17T04:00:00.000Z",
+   "lmp": 35.94,
+   "source": "ERCOT public MIS archive, NP6-905-CD"
+  },
+  {
+   "intervalStart": "2026-11-17T05:00:00.000Z",
+   "lmp": 32.14,
+   "source": "ERCOT public MIS archive, NP6-905-CD"
+  },
+  {
+   "intervalStart": "2026-11-17T06:00:00.000Z",
+   "lmp": 30.51,
+   "source": "ERCOT public MIS archive, NP6-905-CD"
+  },
+  {
+   "intervalStart": "2026-11-17T07:00:00.000Z",
+   "lmp": 36.71,
+   "source": "ERCOT public MIS archive, NP6-905-CD"
+  },
+  {
+   "intervalStart": "2026-11-17T08:00:00.000Z",
+   "lmp": 38.09,
+   "source": "ERCOT public MIS archive, NP6-905-CD"
+  },
+  {
+   "intervalStart": "2026-11-17T09:00:00.000Z",
+   "lmp": 37.4,
+   "source": "ERCOT public MIS archive, NP6-905-CD"
+  },
+  {
+   "intervalStart": "2026-11-17T10:00:00.000Z",
+   "lmp": 36.33,
+   "source": "ERCOT public MIS archive, NP6-905-CD"
+  },
+  {
+   "intervalStart": "2026-11-17T11:00:00.000Z",
+   "lmp": 40.58,
+   "source": "ERCOT public MIS archive, NP6-905-CD"
+  },
+  {
+   "intervalStart": "2026-11-17T12:00:00.000Z",
+   "lmp": 39.42,
+   "source": "ERCOT public MIS archive, NP6-905-CD"
+  },
+  {
+   "intervalStart": "2026-11-17T13:00:00.000Z",
+   "lmp": 116.54,
+   "source": "ERCOT public MIS archive, NP6-905-CD"
+  },
+  {
+   "intervalStart": "2026-11-17T14:00:00.000Z",
+   "lmp": 18.51,
+   "source": "ERCOT public MIS archive, NP6-905-CD"
+  },
+  {
+   "intervalStart": "2026-11-17T15:00:00.000Z",
+   "lmp": 12.92,
+   "source": "ERCOT public MIS archive, NP6-905-CD"
+  },
+  {
+   "intervalStart": "2026-11-17T16:00:00.000Z",
+   "lmp": 13.42,
+   "source": "ERCOT public MIS archive, NP6-905-CD"
+  },
+  {
+   "intervalStart": "2026-11-17T17:00:00.000Z",
+   "lmp": 16.04,
+   "source": "ERCOT public MIS archive, NP6-905-CD"
+  },
+  {
+   "intervalStart": "2026-11-17T18:00:00.000Z",
+   "lmp": 15.35,
+   "source": "ERCOT public MIS archive, NP6-905-CD"
+  },
+  {
+   "intervalStart": "2026-11-17T19:00:00.000Z",
+   "lmp": 14.73,
+   "source": "ERCOT public MIS archive, NP6-905-CD"
+  },
+  {
+   "intervalStart": "2026-11-17T20:00:00.000Z",
+   "lmp": 17.87,
+   "source": "ERCOT public MIS archive, NP6-905-CD"
+  },
+  {
+   "intervalStart": "2026-11-17T21:00:00.000Z",
+   "lmp": 20.64,
+   "source": "ERCOT public MIS archive, NP6-905-CD"
+  },
+  {
+   "intervalStart": "2026-11-17T22:00:00.000Z",
+   "lmp": 17.46,
+   "source": "ERCOT public MIS archive, NP6-905-CD"
+  },
+  {
+   "intervalStart": "2026-11-17T23:00:00.000Z",
+   "lmp": 27.97,
+   "source": "ERCOT public MIS archive, NP6-905-CD"
+  },
+  {
+   "intervalStart": "2026-11-18T00:00:00.000Z",
+   "lmp": 28.92,
+   "source": "ERCOT public MIS archive, NP6-905-CD"
+  },
+  {
+   "intervalStart": "2026-11-18T01:00:00.000Z",
+   "lmp": 26.73,
+   "source": "ERCOT public MIS archive, NP6-905-CD"
+  },
+  {
+   "intervalStart": "2026-11-18T02:00:00.000Z",
+   "lmp": 24.54,
+   "source": "ERCOT public MIS archive, NP6-905-CD"
+  },
+  {
+   "intervalStart": "2026-11-18T03:00:00.000Z",
+   "lmp": 23.17,
+   "source": "ERCOT public MIS archive, NP6-905-CD"
+  },
+  {
+   "intervalStart": "2026-11-18T04:00:00.000Z",
+   "lmp": 19.38,
+   "source": "ERCOT public MIS archive, NP6-905-CD"
+  },
+  {
+   "intervalStart": "2026-11-18T05:00:00.000Z",
+   "lmp": 19.91,
+   "source": "ERCOT public MIS archive, NP6-905-CD"
+  },
+  {
+   "intervalStart": "2026-11-18T06:00:00.000Z",
+   "lmp": 18.78,
+   "source": "ERCOT public MIS archive, NP6-905-CD"
+  },
+  {
+   "intervalStart": "2026-11-18T07:00:00.000Z",
+   "lmp": 22.26,
+   "source": "ERCOT public MIS archive, NP6-905-CD"
+  },
+  {
+   "intervalStart": "2026-11-18T08:00:00.000Z",
+   "lmp": 19.93,
+   "source": "ERCOT public MIS archive, NP6-905-CD"
+  },
+  {
+   "intervalStart": "2026-11-18T09:00:00.000Z",
+   "lmp": 18.32,
+   "source": "ERCOT public MIS archive, NP6-905-CD"
+  },
+  {
+   "intervalStart": "2026-11-18T10:00:00.000Z",
+   "lmp": 17.59,
+   "source": "ERCOT public MIS archive, NP6-905-CD"
+  },
+  {
+   "intervalStart": "2026-11-18T11:00:00.000Z",
+   "lmp": 21.32,
+   "source": "ERCOT public MIS archive, NP6-905-CD"
+  },
+  {
+   "intervalStart": "2026-11-18T12:00:00.000Z",
+   "lmp": 23.5,
+   "source": "ERCOT public MIS archive, NP6-905-CD"
+  },
+  {
+   "intervalStart": "2026-11-18T13:00:00.000Z",
+   "lmp": 23.52,
+   "source": "ERCOT public MIS archive, NP6-905-CD"
+  },
+  {
+   "intervalStart": "2026-11-18T14:00:00.000Z",
+   "lmp": 15.82,
+   "source": "ERCOT public MIS archive, NP6-905-CD"
+  },
+  {
+   "intervalStart": "2026-11-18T15:00:00.000Z",
+   "lmp": 8.04,
+   "source": "ERCOT public MIS archive, NP6-905-CD"
+  },
+  {
+   "intervalStart": "2026-11-18T16:00:00.000Z",
+   "lmp": 7.5,
+   "source": "ERCOT public MIS archive, NP6-905-CD"
+  },
+  {
+   "intervalStart": "2026-11-18T17:00:00.000Z",
+   "lmp": 9.04,
+   "source": "ERCOT public MIS archive, NP6-905-CD"
+  },
+  {
+   "intervalStart": "2026-11-18T18:00:00.000Z",
+   "lmp": 13.54,
+   "source": "ERCOT public MIS archive, NP6-905-CD"
+  },
+  {
+   "intervalStart": "2026-11-18T19:00:00.000Z",
+   "lmp": 14.16,
+   "source": "ERCOT public MIS archive, NP6-905-CD"
+  },
+  {
+   "intervalStart": "2026-11-18T20:00:00.000Z",
+   "lmp": 16.29,
+   "source": "ERCOT public MIS archive, NP6-905-CD"
+  },
+  {
+   "intervalStart": "2026-11-18T21:00:00.000Z",
+   "lmp": 13.78,
+   "source": "ERCOT public MIS archive, NP6-905-CD"
+  },
+  {
+   "intervalStart": "2026-11-18T22:00:00.000Z",
+   "lmp": 23.45,
+   "source": "ERCOT public MIS archive, NP6-905-CD"
+  },
+  {
+   "intervalStart": "2026-11-18T23:00:00.000Z",
+   "lmp": 41.82,
+   "source": "ERCOT public MIS archive, NP6-905-CD"
+  },
+  {
+   "intervalStart": "2026-11-19T00:00:00.000Z",
+   "lmp": 40.52,
+   "source": "ERCOT public MIS archive, NP6-905-CD"
+  },
+  {
+   "intervalStart": "2026-11-19T01:00:00.000Z",
+   "lmp": 46.66,
+   "source": "ERCOT public MIS archive, NP6-905-CD"
+  },
+  {
+   "intervalStart": "2026-11-19T02:00:00.000Z",
+   "lmp": 47.17,
+   "source": "ERCOT public MIS archive, NP6-905-CD"
+  },
+  {
+   "intervalStart": "2026-11-19T03:00:00.000Z",
+   "lmp": 34.78,
+   "source": "ERCOT public MIS archive, NP6-905-CD"
+  },
+  {
+   "intervalStart": "2026-11-19T04:00:00.000Z",
+   "lmp": 30.69,
+   "source": "ERCOT public MIS archive, NP6-905-CD"
+  },
+  {
+   "intervalStart": "2026-11-19T05:00:00.000Z",
+   "lmp": 28.33,
+   "source": "ERCOT public MIS archive, NP6-905-CD"
+  },
+  {
+   "intervalStart": "2026-11-19T06:00:00.000Z",
+   "lmp": 27.15,
+   "source": "ERCOT public MIS archive, NP6-905-CD"
+  },
+  {
+   "intervalStart": "2026-11-19T07:00:00.000Z",
+   "lmp": 30.57,
+   "source": "ERCOT public MIS archive, NP6-905-CD"
+  },
+  {
+   "intervalStart": "2026-11-19T08:00:00.000Z",
+   "lmp": 29.95,
+   "source": "ERCOT public MIS archive, NP6-905-CD"
+  },
+  {
+   "intervalStart": "2026-11-19T09:00:00.000Z",
+   "lmp": 28.11,
+   "source": "ERCOT public MIS archive, NP6-905-CD"
+  },
+  {
+   "intervalStart": "2026-11-19T10:00:00.000Z",
+   "lmp": 28.46,
+   "source": "ERCOT public MIS archive, NP6-905-CD"
+  },
+  {
+   "intervalStart": "2026-11-19T11:00:00.000Z",
+   "lmp": 37.74,
+   "source": "ERCOT public MIS archive, NP6-905-CD"
+  },
+  {
+   "intervalStart": "2026-11-19T12:00:00.000Z",
+   "lmp": 36.39,
+   "source": "ERCOT public MIS archive, NP6-905-CD"
+  },
+  {
+   "intervalStart": "2026-11-19T13:00:00.000Z",
+   "lmp": 47.7,
+   "source": "ERCOT public MIS archive, NP6-905-CD"
+  },
+  {
+   "intervalStart": "2026-11-19T14:00:00.000Z",
+   "lmp": 33.61,
+   "source": "ERCOT public MIS archive, NP6-905-CD"
+  },
+  {
+   "intervalStart": "2026-11-19T15:00:00.000Z",
+   "lmp": 25.54,
+   "source": "ERCOT public MIS archive, NP6-905-CD"
+  },
+  {
+   "intervalStart": "2026-11-19T16:00:00.000Z",
+   "lmp": 22.93,
+   "source": "ERCOT public MIS archive, NP6-905-CD"
+  },
+  {
+   "intervalStart": "2026-11-19T17:00:00.000Z",
+   "lmp": 19.75,
+   "source": "ERCOT public MIS archive, NP6-905-CD"
+  }
+ ]
+}

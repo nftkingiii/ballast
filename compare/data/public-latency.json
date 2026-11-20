@@ -1,0 +1,54 @@
+{
+ "measuredAt": "2026-11-20T03:30:26.353Z",
+ "note": "Wall-clock latency of the free public calls, measured from the machine that fetched the data (a developer laptop on an ordinary home connection). Real Minds run elsewhere, so treat these as an order of magnitude.",
+ "samplesMs": {
+  "assize ercot real-time price": [
+   445,
+   463,
+   468,
+   431,
+   483,
+   449
+  ],
+  "assize ercot day-ahead price": [
+   1924,
+   453,
+   556,
+   549,
+   786,
+   435
+  ],
+  "mempool.space tip height": [
+   2450,
+   187,
+   345,
+   180,
+   181,
+   301
+  ],
+  "mempool.space reward-stats(144)": [
+   191,
+   213,
+   183,
+   188,
+   231,
+   178
+  ],
+  "mempool.space prices": [
+   240,
+   201,
+   208,
+   199,
+   270,
+   192
+  ],
+  "mempool.space hashrate(3d)": [
+   215,
+   309,
+   304,
+   176,
+   184,
+   182
+  ]
+ }
+}

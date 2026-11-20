@@ -97,3 +97,7 @@ Node 22, `tsx`, no other runtime dependency. Tests inject `fetch` and replay rec
 ## Limits
 
 One site, ERCOT only. Power cost model is marginal (no demand charges, ramp costs, or take-or-pay). Hashprice is a single network-wide number held for all hours. Heat uses a linear efficiency penalty. Day-ahead price is the forward estimate for future hours. Not financial advice.
+
+## With and without Telegraph
+
+`npm run compare` replays 89 real ERCOT hours (HB_WEST, saved under `compare/data/`) through a modelled web-only Mind and through Ballast's own planner, with and without six synthetic bad inputs, and writes `compare/results.md` and `compare/results.json`. It makes no network call, buys nothing and signs nothing. Provider answers in the replay are public-data stand-ins except the two recorded 2026-11-19 paid answers, and the results say so on every table.

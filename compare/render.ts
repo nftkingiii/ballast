@@ -1,0 +1,192 @@
+import type { runAll } from "./compare.ts";
+
+type Results = Awaited<ReturnType<typeof runAll>>;
+type Policy = Results["scenarios"][string]["policies"][number];
+
+const usd = (n: number, d = 2) => `${n < 0 ? "-" : ""}$${Math.abs(n).toFixed(d)}`;
+const numeric = (c: string) => c === "n/a" || /^-?\$?-?[\d.,]+( ms| s|%| to [\d.]+|\/\d+)?( \(.*\))?$/.test(c);
+const table = (rows: string[][]) => {
+  const right = rows[0]!.map((_, i) => i > 0 && rows.slice(1).every((r) => numeric(r[i] ?? "")));
+  return [`| ${rows[0]!.join(" | ")} |`, `| ${right.map((x) => (x ? "---:" : "---")).join(" | ")} |`, ...rows.slice(1).map((r) => `| ${r.join(" | ")} |`)].join("\n");
+};
+const pol = (r: Results, sc: string, id: string): Policy => r.scenarios[sc]!.policies.find((p) => p.id === id)!;
+const range = (a: [number, number], d = 1) => (a[0] === a[1] ? a[0].toFixed(d) : `${a[0].toFixed(d)} to ${a[1].toFixed(d)}`);
+
+export function findings(r: Results): string[] {
+  const aC = pol(r, "clean", "A").metrics, bC = pol(r, "clean", "B").metrics, daC = pol(r, "clean", "A-DA").metrics;
+  const a = pol(r, "injected", "A").metrics, b = pol(r, "injected", "B").metrics;
+  const out: string[] = [];
+  out.push(
+    `**On clean data Telegraph changes almost nothing in the decision.** Over ${r.window.hours} real hours, web-only A (latest ERCOT interval) and Ballast B made ${aC.correct} and ${bC.correct} correct decisions out of ${aC.decisions}, realizing ${usd(aC.realizedUsd, 0)} and ${usd(bC.realizedUsd, 0)}. The provider answers in B are stand-ins for the same ERCOT report, so B cannot be more accurate than the data both read; ` +
+      `the hindsight ceiling is ${usd(aC.hindsightBestUsd, 0)}. The shortfall in both comes from using one 15-minute interval as a proxy for an hourly settlement (the oracle itself throttles or curtails in ${r.truthSummary.hoursOracleNotRun} of ${r.window.hours} hours, so the price moves enough inside an hour to matter), not from bad data.`,
+  );
+  out.push(
+    `**Reading the wrong table is the cheapest way to lose money on clean data.** A-DA (a Mind that reads the day-ahead table) got ${daC.correct}/${daC.decisions} right and realized ${usd(daC.realizedUsd, 0)}, ${usd(aC.realizedUsd - daC.realizedUsd, 0)} less than reading the real-time interval; its mean price error was ${usd(daC.meanAbsPriceErrorUsdPerMwh)}/MWh against ${usd(aC.meanAbsPriceErrorUsdPerMwh)} for A.`,
+  );
+  out.push(
+    `**The difference appears when inputs go bad.** With 24 identical synthetic injections (20 of them bad inputs, 4 negative prices), A used ${a.badInputsUsedSilently} of ${a.badInputHours} bad inputs without any warning and realized ${usd(a.realizedUsd, 0)} (${usd(a.shortfallVsBestUsd, 0)} below hindsight-best, ${usd(a.lostOnWrongActionsUsd, 0)} of it on wrong actions). ` +
+      `B flagged ${b.badInputsCaught} of ${b.badInputHours}, held on ${b.holds}, fell back to day-ahead on ${b.fallbackToDayAhead}, realized ${usd(b.realizedUsd, 0)} (${usd(b.shortfallVsBestUsd, 0)} below hindsight-best, ${usd(b.lostOnWrongActionsUsd, 0)} on wrong actions, ${usd(b.lostToHoldsUsd, 0)} given up by holding) and had ${b.falseAlarms} false alarms on clean hours.`,
+  );
+  const k = (kind: string) => r.perKind.find((x) => x.kind === kind)!;
+  const recovered = ["stale-price", "wrong-node", "disagreement"].map(k);
+  out.push(
+    `**B's recovery path is thin, and it shows.** Its only fallback is the day-ahead number. That rescued the stale-price, wrong-node and disagreement hours (B lost ${usd(recovered.reduce((s, x) => s + x.B.shortfallUsd, 0), 0)} on them, A ${usd(recovered.reduce((s, x) => s + x.A.shortfallUsd, 0), 0)}), but not the wrong-market hours: B flagged all ${k("wrong-market").hours.length} and then decided on the same day-ahead figure that was the error, losing ${usd(k("wrong-market").B.shortfallUsd, 0)} against A's ${usd(k("wrong-market").A.shortfallUsd, 0)}. ` +
+      `And the fail-closed HOLD on a missing hashprice gave up ${usd(k("missing-hashprice").B.shortfallUsd, 0)} over ${k("missing-hashprice").hours.length} hours while A's silent carry-forward lost ${usd(k("missing-hashprice").A.shortfallUsd, 0)}: the HOLDs were justified (an input really was missing) but not cheap, because Ballast keeps no memory between runs and cannot reuse a hashprice it accepted minutes earlier.`,
+  );
+  out.push(
+    `**Net of the intelligence cost, B ${b.netOfIntelligenceCostUsd >= a.netOfIntelligenceCostUsd ? "comes out ahead" : "does not come out ahead"} in the injected window**: ${usd(b.netOfIntelligenceCostUsd, 2)} against ${usd(a.netOfIntelligenceCostUsd, 2)} (B paid ${usd(b.telegraphCostUsd, 2)} for ${b.paidAnswers} answers at $0.01). ` +
+      `That result depends on where the failures landed: they were placed where they hurt a trusting policy most, so it is a worst-case-placement figure. On the clean window the cost bought no extra profit (${usd(bC.realizedUsd - aC.realizedUsd, 2)} difference before a ${usd(bC.telegraphCostUsd, 2)} bill).`,
+  );
+  out.push(
+    `**Evidence and speed are where the tools differ without any bad data.** Every B decision carries provider, as-of time and a receipt for both inputs (${bC.evidenceCompletenessPct!.toFixed(0)}% of the six fields, modelled receipts here and two real ones in the anchor); the modelled web-only Mind cites a page at best (${aC.evidenceCompletenessPct!.toFixed(1)}%). ` +
+      `The price is time: about ${range(bC.liveSecondsPerDecisionMean, 0)} s per decision live for B (${bC.codeMsMean.toFixed(2)} ms of that is Ballast's own code, answers replayed) against about ${range(aC.liveSecondsPerDecisionMean, 1)} s for the web-only calls.`,
+  );
+  return out;
+}
+
+export function renderMarkdown(r: Results): string {
+  const L: string[] = [];
+  const clean = r.scenarios.clean!, inj = r.scenarios.injected!;
+  const A = pol(r, "clean", "A").metrics, B = pol(r, "clean", "B").metrics, Ai = pol(r, "injected", "A").metrics, Bi = pol(r, "injected", "B").metrics;
+
+  L.push("# Ballast with and without Telegraph", "");
+  L.push(
+    `Question from the organisers: what changes in accuracy, completeness, capabilities, cost and execution time when an agent is tested with and without Telegraph. This is Ballast's answer on ${r.window.hours} real ERCOT hours (${r.window.firstHour} to ${r.window.lastHour}, node ${r.window.node}), one policy that reads one unchecked price (A) against Ballast's own planner with provider answers, public cross-checks, holds, a spend cap and receipts (B).`,
+    "",
+    "Reproduce with `npm run compare` (reads `compare/data/`, no network, no Telegraph call, nothing paid). Everything below is generated by that script into `results.md` and `results.json`.",
+    "",
+    "## Where each number comes from",
+    "",
+    table([
+      ["Label", "What it is"],
+      ["public data", `ERCOT HB_WEST settlement prices (real-time 15-minute ${r.fetchedAt.ercotRealTime.slice(0, 16)}Z, day-ahead hourly ${r.fetchedAt.ercotDayAhead.slice(0, 16)}Z) read through Assize's keyless ERCOT archive endpoint, and a daily hashprice from mempool.space (${r.fetchedAt.mempool.slice(0, 16)}Z). The ground truth for every score.`],
+      ["recorded Telegraph answer", "Only the two answers bought on 2026-11-19 (Gauge hashprice and Pecos real-time price, receipts below). No other Telegraph answer exists in this study."],
+      ["stand-in", "For every other hour, B's provider answers are built from the same public data and returned in the shapes the live miners use. They carry `fixture:` receipts, not Telegraph ones. B's code is real; the answers are replayed."],
+      ["modelled", "Policy A is a model of a Mind with generic web tools, not an observed Mind. Its assumptions are listed under Policies."],
+      ["synthetic injection", "The 24 bad-input hours in the injected scenario. They never happened."],
+    ]),
+    "",
+    "## Policies",
+    "",
+    "- **A, web-only (modelled).** One price per hour from one source (the latest 15-minute real-time interval, which is the best case for a web-only Mind), one hashprice from one page, no staleness, interval, node or market check, no cross-check, no receipt, never holds. If the hashprice page fails it silently reuses the last value. It uses Ballast's own margin arithmetic and thresholds, so any difference comes from input handling, not from different math. Assumed evidence: it can name the page it read, but scraped values carry no as-of time and there is no receipt.",
+    "- **B, with Telegraph (Ballast).** `planSite` and `decideHour` unchanged: buy hashprice and the real-time price from named miners, reject an answer that is stale, for another node, another market or another interval, or that disagrees with the free public archive beyond tolerance, fall back to the day-ahead price when real-time is unusable, hold when no usable input remains, and record provider, time and receipt per input. Decisions run at H:16 UTC.",
+    "- **Oracle.** Knows ERCOT's settled hourly price (mean of the four 15-minute intervals) and the true daily hashprice, and applies Ballast's thresholds (RUN at margin of $8/MWh or more, THROTTLE 50% between $0 and $8, CURTAIL below $0). A decision is correct when its action equals the oracle's.",
+    `- **Site.** ${r.site.fleetMw} MW fleet (500,000 TH/s at 21 J/TH), $${r.site.adderUsdPerMwh}/MWh adder, real-time power exposure, heat limits removed (November, and A has no weather check to compare).`,
+    "- **A HOLD** is counted as the site sitting idle that hour. Its opportunity cost is reported separately so it cannot hide.",
+    "",
+    `Real prices in the window: hourly settled real-time between ${usd(r.truthSummary.rtHourMin)} and ${usd(r.truthSummary.rtHourMax)}/MWh, hashprice ${usd(r.truthSummary.hashpriceRange[0]!)} to ${usd(r.truthSummary.hashpriceRange[1]!)}/PH/day, ${r.truthSummary.hoursOracleNotRun} of ${r.window.hours} hours where the oracle does not plain-RUN.`,
+    "",
+  );
+
+  const row = (label: string, f: (m: Policy["metrics"]) => string) => [label, f(A), f(B), f(Ai), f(Bi)];
+  L.push(
+    "## Headline",
+    "",
+    table([
+      ["Metric (whole window)", "A clean", "B clean", "A injected", "B injected"],
+      row("Decisions correct vs oracle", (m) => `${m.correct}/${m.decisions} (${m.correctPct}%)`),
+      row("Wrong actions (not HOLD)", (m) => String(m.wrongActions)),
+      row("Realized margin", (m) => usd(m.realizedUsd, 0)),
+      row("Hindsight-best margin", (m) => usd(m.hindsightBestUsd, 0)),
+      row("Lost to wrong decisions", (m) => usd(m.lostOnWrongActionsUsd, 0)),
+      row("Given up by HOLDs", (m) => usd(m.lostToHoldsUsd, 0)),
+      row("HOLDs raised (justified / unjustified)", (m) => `${m.holds} (${m.holdsJustified} / ${m.holdsUnjustified})`),
+      row("Bad inputs caught / injected", (m) => (m.badInputHours ? `${m.badInputsCaught}/${m.badInputHours}` : "n/a")),
+      row("Bad inputs used silently", (m) => (m.badInputHours ? String(m.badInputsUsedSilently) : "n/a")),
+      row("False alarms on clean hours", (m) => String(m.falseAlarms)),
+      row("Decisions priced from a day-ahead number (A: unknowingly)", (m) => String(m.fallbackToDayAhead)),
+      row("Mean price error vs ERCOT settled hour ($/MWh)", (m) => m.meanAbsPriceErrorUsdPerMwh.toFixed(2)),
+      row("Evidence completeness (provider, time, receipt)", (m) => (m.evidenceCompletenessPct === null ? "n/a" : `${m.evidenceCompletenessPct.toFixed(1)}%`)),
+      row("Telegraph cost, window total", (m) => usd(m.telegraphCostUsd, 2)),
+      row("Telegraph cost per decision", (m) => usd(m.telegraphCostPerDecisionUsd, 3)),
+      row("Realized margin net of that cost", (m) => usd(m.netOfIntelligenceCostUsd, 2)),
+      row("Ballast code time per decision (measured)", (m) => `${m.codeMsMean.toFixed(3)} ms`),
+      row("Live time per decision (modelled, s)", (m) => range(m.liveSecondsPerDecisionMean, 1)),
+    ]),
+    "",
+    "Cost is $0.01 per answered Telegraph ask (the live run paid $0.02 for two answers); A's Telegraph cost is $0, but its own model tokens are not measured here and neither are B's. Live time for B is the free public calls (median measured latency) plus the answers it buys one after another at 8 to 15 s each, from the 2026-11-19 run; the code time is the replayed Ballast code on whichever machine ran `npm run compare` (machine-dependent, well under a millisecond either way; it excludes the network and the paid answers).",
+    "",
+    `Clean means ERCOT's published prices untouched. Injected means the same hours with ${r.injection.hours.length} synthetic failures (below). The injected figures are bounds, not expected rates: ${r.injection.rule}.`,
+    "",
+    "### Other web-only variants (clean window only)",
+    "",
+    table([
+      ["Policy", "Correct", "Realized", "Mean price error $/MWh", "Origin"],
+      ...clean.policies.map((p) => [p.title, `${p.metrics.correct}/${p.metrics.decisions}`, usd(p.metrics.realizedUsd, 0), p.metrics.meanAbsPriceErrorUsdPerMwh.toFixed(2), p.origin]),
+    ]),
+    "",
+    "## The six injected failures (SYNTHETIC)",
+    "",
+    "Each hits the same hours for both policies. Where the failure is a bad provider answer, the free public archive stays correct, which is exactly what B's cross-check uses.",
+    "",
+    table([
+      ["Failure", "Hours", "What was injected", "A correct", "A lost", "B correct", "B held", "B fell back to DA", "B lost"],
+      ...r.perKind.map((k) => [k.kind, String(k.hours.length), k.description, `${k.A.correct}/${k.hours.length}`, usd(k.A.shortfallUsd, 0), `${k.B.correct}/${k.hours.length}`, String(k.B.holds), String(k.B.fellBackToDayAhead), usd(k.B.shortfallUsd, 0)]),
+    ]),
+    "",
+    "\"Lost\" is shortfall against the hindsight-best profit on those hours (it includes the throttle band's conservatism). Hour by hour:",
+    "",
+    table([
+      ["Failure", "Hour (UTC)", "ERCOT settled", "A used", "A action", "B used", "B action", "Oracle"],
+      ...r.perKind.flatMap((k) => k.hours.map((h) => {
+        const a = pol(r, "injected", "A").rows.find((x) => x.hour === h)!, b = pol(r, "injected", "B").rows.find((x) => x.hour === h)!;
+        const p = (x: number | null) => (x === null ? "-" : x.toFixed(2));
+        return [k.kind, h.slice(5, 16).replace("T", " "), p(a.truePrice), p(a.priceUsed), a.action, `${p(b.priceUsed)}${b.basis === "day-ahead" ? " DA" : ""}`, b.action, a.oracleAction];
+      })),
+    ]),
+    "",
+    "## Live anchor: the 2026-11-19 paid run (live paid answer, 2026-11-19)",
+    "",
+    `Replaying the two recorded answers through Ballast's planner gives ${r.anchor.action} ${Math.round(r.anchor.runFraction * 100)}% at margin ${usd(r.anchor.marginUsdPerMwh ?? 0)}/MWh for ${usd(r.anchor.costUsd, 2)}, ${r.anchor.reproducesLiveDecision ? "matching" : "NOT matching"} the live run (${r.anchor.recordedLive.action} ${Math.round(r.anchor.recordedLive.runFraction * 100)}%, ${usd(r.anchor.recordedLive.marginUsdPerMwh)}). The saved ERCOT archive gives ${usd(r.anchor.publicCrossCheckLmp17_45 ?? NaN)}/MWh for the 17:45Z interval that Pecos answered, and Gauge's hashprice was ${r.anchor.gaugeVsPublicHashpricePct}% from the public reference recorded at 17:50Z, inside the 5% tolerance.`,
+    "",
+    table([["Input", "Provider", "Answered (UTC)", "Receipt"], ...r.anchor.receipts.map((x) => [x.check, x.provider, "about 18:14 (run time; per-answer time was not saved)", `\`${x.receipt}\``])]),
+    "",
+    "## Capabilities",
+    "",
+    table([
+      ["Capability", "Without Telegraph (modelled web-only Mind)", "With Telegraph (Ballast)"],
+      ["Named provider per input", "A page it can cite", "Miner id and name per answer (Pecos 7310042, Gauge 4283)"],
+      ["Receipt for each input", "None", "Escrow receipt hash per answer (2 real ones in the anchor)"],
+      ["Interval, node and market checks", "None; takes a number", "Rejects wrong interval, node or market"],
+      ["Second opinion", "None", "Free public ERCOT archive and mempool.space (public, not Telegraph). Telegraph itself has one ERCOT price miner, so no second Telegraph opinion exists"],
+      ["Fail closed", "Never holds; reuses last values", "HOLD with the gap named; no prices bought when hashprice is missing"],
+      ["Spend control", "Not applicable", "Cap per plan; stops buying and holds the rest"],
+      ["Per-decision audit record", "Whatever the chat log kept", "Evidence table with provider, time, cost, receipt, accepted or rejected and why"],
+      ["Day-ahead vs real-time", "Whichever page it opened", "Native `/price` call with `market`, because the generic intent has no market parameter"],
+      ["Weather", "Not compared here", "Weather miner 76001 returned 503 on 2026-11-19; the plan flagged it. Not part of this comparison"],
+    ]),
+    "",
+    "## Findings",
+    "",
+    ...findings(r).map((f) => `- ${f}`),
+    "",
+    "## Failures, shared",
+    "",
+    "- **Weather miner 76001 returned HTTP 503** in the 2026-11-19 paid run (recorded). The plan flagged the missing check; it could not have changed the RUN because the day was cold (forecast under 20 C).",
+    "- **x402 `exact` settlement has been down** since 2026-11-17 (bounty #214), so paid runs use the escrow path. The first escrow attempt was refused until validity bounds were sent as strings (commit d718dcd).",
+    "- **Telegraph adds no second ERCOT opinion.** Pecos is the only ERCOT price miner and it is ours, so the paid-vs-public agreement is two routes to the same ERCOT data, not independent confirmation, and the 2026-11-19 payment was our wallet paying our miner.",
+    "- **The generic power intent cannot say which market.** `market` is an answer field, so Ballast bypasses the intent with Pecos's native call.",
+    "- **Gauge returned no USD hashprice** (only sats per PH/day), so Ballast converts with a public BTC price; its figure was 4% above the public reference on the day, inside tolerance but not equal.",
+    `- **Ballast's own proxy is imperfect.** Deciding on one 15-minute interval gets ${B.wrongActions} of ${B.decisions} clean hours wrong against ERCOT's settled hour (B@:14, which is how the live run actually timed itself, got ${pol(r, "clean", "B@14").metrics.wrongActions}). That error is shared with A and is the main source of loss on clean data.`,
+    "- **Two Ballast weaknesses this exposed (not fixed here).** The day-ahead fallback for the current hour cannot recover from a wrong-market answer, and a missing hashprice holds the whole hour even when a recent accepted value exists. A stale-tolerant hashprice cache and a last-good-interval fallback are the obvious changes.",
+    "- **B only catches crisp mismatches.** A wrong value that is correctly labelled and within the cross-check tolerance, or a wrong value served by both the provider and the public archive, goes through unflagged. The injections here are all crisp.",
+    "",
+    "## What this shows, and what it does not",
+    "",
+    "- It shows that Ballast's checks (interval, node, market, cross-check, hold, spend cap, receipts) turn silent bad inputs into named, costed gaps, and what that costs in dollars and seconds on identical failures.",
+    "- It does not show that Telegraph's data is more accurate than free ERCOT data. In B the provider answers are stand-ins built from that same data, and in the only two live answers Telegraph's miner agreed with the public archive.",
+    "- The six failures are synthetic and placed at their worst-case hours; the real window had none of them. Failure rates in production are unknown.",
+    "- Policy A is a model. A Mind with better prompts, a cross-check habit or its own logging would close part of the gap; the receipts and the fail-closed behaviour are the parts it cannot get from a page.",
+    "- Hashprice is a daily number from mempool.space (the same source A reads), so the hashprice input is not stress-tested beyond the missing-answer case. The recorded Gauge answer is the only independent hashprice.",
+    "- Pecos is our own miner and the only ERCOT price miner; there is one node (HB_WEST), one site, one window of a few days, no demand charges or ramp costs.",
+    "- Latency of paid answers is one run's 8 to 15 s per answer; live B timing is modelled from that, not measured per decision.",
+    "- Token and model costs of either Mind are not measured.",
+    "",
+    "## Files",
+    "",
+    "`compare/data/` raw data with fetch timestamps (`fetch-data.ts`, `fetch-extra.ts` refetch it from free public sources), `compare/compare.ts` the replay, `compare/world.ts` truth and injections, `compare/policies.ts` the two policies, `compare/results.json` all numbers, `test/compare.test.ts` the checks.",
+    "",
+  );
+  void inj;
+  return L.join("\n");
+}

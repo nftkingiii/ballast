@@ -1,0 +1,32 @@
+{
+  "label": "live paid answer, 2026-11-19",
+  "runAt": "2026-11-19T18:14:00Z",
+  "origin": "Telegraph paid run of Ballast (cap $0.05, 1-hour plan, Telegraph escrow). Values copied from the run summary recorded in PROJECT_STATE.md; the raw response bodies were not saved, so only the fields below exist.",
+  "answers": [
+    {
+      "check": "hashprice",
+      "minerId": "4283",
+      "minerName": "Gauge",
+      "subject": "chain tip block (height not recorded)",
+      "result": { "hashprice_usd_per_ph_day": 29.31 },
+      "receiptHash": "0x685ac740498a1850728acbadc62639f9e4e26bf2250bff065ed46c5b9db63218",
+      "costUsd": 0.01
+    },
+    {
+      "check": "power-real-time",
+      "minerId": "7310042",
+      "minerName": "Pecos ERCOT Power Prices",
+      "subject": "HB_WEST real-time 2026-11-19T17:45:00Z",
+      "result": { "lmp_usd_per_mwh": 15.92, "node_or_zone": "HB_WEST", "market": "real-time", "interval_start": "2026-11-19T17:45:00.000Z" },
+      "receiptHash": "0xb21b0c8b8212112ffd49a9564643d066a4d5e7db21f37654b21fd32e11685b94",
+      "costUsd": 0.01
+    }
+  ],
+  "totalCostUsd": 0.02,
+  "decision": { "action": "RUN", "runFraction": 1, "marginUsdPerMwh": 39.23 },
+  "failures": [
+    { "minerId": "76001", "what": "weather miner returned HTTP 503; the plan flagged weather verification as a missing check" }
+  ],
+  "latencyPerPaidAnswerSeconds": [8, 15],
+  "latencyNote": "About 8 to 15 seconds per paid answer, taken from the timestamps of the 2026-11-19 paid run as reported to this task. The per-request timestamps themselves are not stored in the repo."
+}
