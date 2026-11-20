@@ -167,6 +167,14 @@ interface ChatReply {
  * which takes plain language, so the message names the intent, miner and params and asks for one JSON
  * object back. Anything that does not parse is refused rather than guessed at.
  */
+/** The plain-language question each intent answers, built from its canonical parameters. */
+const QUESTION: Record<string, (p: Record<string, unknown>) => string> = {
+  MINING_HASHPRICE_VERIFY_GENERAL: (p) => `What is the Bitcoin hashprice at block height ${p.block_height}?`,
+  GRID_POWER_PRICE_GENERAL: (p) =>
+    `What was the ERCOT ${p.market ?? "real-time"} settlement point price for ${p.node_or_zone} for the interval starting ${p.interval_start}?`,
+  WEATHER_FORECAST_VERIFY_GENERAL: (p) => `What was the daily maximum and minimum temperature and precipitation in ${p.location} on ${p.date}?`,
+};
+
 export function createAnjomanTransport(
   apiKey: string,
   http: Fetch = fetch,
@@ -178,9 +186,14 @@ export function createAnjomanTransport(
   return {
     kind: "anjoman",
     async ask(request) {
-      const call = request.native?.payload ?? request.params;
+      // Canonical params, plus anything only the native payload carries (e.g. the power market).
+      const call: Record<string, unknown> = { ...(request.native?.payload ?? {}), ...(request.params ?? {}) };
+      // Ask a real question and let Anjoman map it to the miner's own inputs: some miners take a plain-language
+      // `question` field, and insisting on "exactly these parameters" made the agent stop with "question not provided".
       const message =
-        `Use Telegraph intent ${request.intent} and ask miner ${request.minerId} directly with exactly these parameters: ${JSON.stringify(call)}. ` +
+        `${QUESTION[request.intent] ? QUESTION[request.intent]!(call) : `Answer Telegraph intent ${request.intent} for ${JSON.stringify(call)}.`} ` +
+        `Use Telegraph intent ${request.intent} and buy the answer from miner ${request.minerId}; these are the intent parameters: ${JSON.stringify(call)}. ` +
+        `If the miner needs a plain-language question, ask it this question. ` +
         `Reply with only the miner's answer fields as one JSON object, no commentary.`;
       const res = await http(`${base}/agent/chat`, {
         method: "POST",
@@ -201,14 +214,18 @@ export function createAnjomanTransport(
       if (reply.status === "running") throw new TransportError(`job ${reply.jobId} still running after ${waitMs / 1000}s`);
       const text = reply.answer ?? reply.reply ?? "";
       const match = /\{[\s\S]*\}/.exec(text);
-      if (!match) throw new TransportError(`job ${reply.jobId ?? "?"} returned no JSON answer (${reply.status})`);
+      // Keep Anjoman's own words on failure, so a missing input or empty balance explains itself.
+      const said = text.replace(/\s+/g, " ").trim().slice(0, 200);
+      if (!match) throw new TransportError(`job ${reply.jobId ?? "?"} returned no JSON answer (${reply.status})${said ? `: "${said}"` : ""}`);
       let result: Record<string, unknown>;
       try {
         result = JSON.parse(match[0]) as Record<string, unknown>;
       } catch {
         throw new TransportError(`job ${reply.jobId ?? "?"} returned unparseable JSON`);
       }
-      if (reply.costUsd === null || reply.costUsd === undefined) throw new TransportError(`job ${reply.jobId ?? "?"} reported no cost`);
+      if (reply.costUsd === null || reply.costUsd === undefined) {
+        throw new TransportError(`job ${reply.jobId ?? "?"} reported no cost (${reply.status})${said ? `: "${said}"` : ""}`);
+      }
       return {
         minerId: reply.sources?.[0]?.miner?.id ?? request.minerId,
         result,
