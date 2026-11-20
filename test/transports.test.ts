@@ -170,3 +170,18 @@ test("anjoman transport: a gateway 5xx says the job may still have run", async (
   const http = (async () => new Response("bad gateway", { status: 504 })) as unknown as typeof fetch;
   await assert.rejects(() => createAnjomanTransport("k", http).ask(request), /504 \(the job may still have run/);
 });
+
+test("anjoman transport: keeps the stream's job id when the poll response omits or nests it", async () => {
+  const sse = 'event: job\ndata: {"jobId":"j7"}\n\n';
+  let polls = 0;
+  const http = (async (url: string) => {
+    if (url.endsWith("/agent/chat")) return new Response(sse, { status: 200, headers: { "content-type": "text/event-stream" } });
+    polls++;
+    if (polls < 2) return new Response(JSON.stringify({ status: "running" }), { status: 200 });
+    return new Response(JSON.stringify({ job: { status: "complete", answer: '{"hashprice_sats_per_ph_day": 47000}', costUsd: 0.01, sources: [{ receiptHash: "0xr7" }] } }), { status: 200 });
+  }) as unknown as typeof fetch;
+  const answer = await createAnjomanTransport("k", http, () => Date.now()).ask(request);
+  assert.equal(answer.receipt.jobId, "j7");
+  assert.equal(answer.receipt.receiptHash, "0xr7");
+  assert.equal(answer.result.hashprice_sats_per_ph_day, 47000);
+});

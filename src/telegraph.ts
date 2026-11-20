@@ -263,9 +263,12 @@ export function createAnjomanTransport(
       const started = now();
       while (reply.jobId && reply.status === "running" && now() - started < waitMs) {
         await new Promise((r) => setTimeout(r, 2_000));
-        const poll = await http(`${base}/agent/jobs/${encodeURIComponent(reply.jobId)}`, { headers, signal: AbortSignal.timeout(30_000) });
-        if (!poll.ok) throw new TransportError(`job poll answered ${poll.status}`, poll.status);
-        reply = (await poll.json()) as ChatReply;
+        const jobId = reply.jobId;
+        const poll = await http(`${base}/agent/jobs/${encodeURIComponent(jobId)}`, { headers, signal: AbortSignal.timeout(30_000) });
+        if (!poll.ok) throw new TransportError(`job ${jobId} poll answered ${poll.status}`, poll.status);
+        // The job endpoint may return the job at the top level or under `job`, with or without its id: keep ours.
+        const body = (await poll.json()) as ChatReply & { job?: ChatReply };
+        reply = { ...(body.job ?? body), jobId };
         if (reply.status !== "running") break;
       }
       if (reply.status === "running") throw new TransportError(`job ${reply.jobId} still running after ${waitMs / 1000}s`);
