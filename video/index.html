@@ -1,0 +1,407 @@
+<!doctype html>
+<!-- Ballast judge demo. A seek(t) film: every frame is a pure function of t. No transitions, timers, Math.random or carried state. -->
+<html><head><meta charset="utf-8"><title>Ballast demo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;700&display=block" rel="stylesheet">
+<style>html,body{margin:0;background:#0A1016}canvas{display:block;max-width:100vw;max-height:100vh;margin:auto}</style>
+</head><body>
+<canvas id="c"></canvas>
+<script src="lib/motion.js"></script>
+<script src="assets/cli.js"></script>
+<script>
+const Q = new URLSearchParams(location.search);
+const W = +(Q.get('w') || 1920), H = +(Q.get('h') || 1080);
+const L = layout(W, H), u = L.u, P = L.portrait;
+// 16:9 master is 120 s. The 9:16 cut re-uses four shots as segments: [shot, from, to] in that shot's own time.
+const VSEG = [['s01', 0, 4.8], ['s03', 0, 14.0], ['s04', 0, 8.4], ['s09', 2.8, 7.2]];
+const VDUR = VSEG.reduce((a, s) => a + s[2] - s[1], 0);
+window.FILM = { w: W, h: H, dur: P ? VDUR : 120, fps: 30 };
+const BEAT = { bpm: 100, offset: 0 };   // 1 bar = 2.4 s
+
+const C = { bg: '#0A1016', panel: '#111A23', panel2: '#17232F', line: '#26394A', ink: '#E8F0F6', mute: '#8497A8',
+  amber: '#FFB224', cyan: '#38D6F0', red: '#FF5C50' };
+const F = { d: '"Space Grotesk", system-ui, sans-serif', m: '"JetBrains Mono", ui-monospace, monospace' };
+
+const cv = document.getElementById('c'); cv.width = W; cv.height = H;
+const g = cv.getContext('2d');
+
+const IMG = {};
+function img(name, src) { const i = new Image(); i.src = src; IMG[name] = i; return i.decode().catch(() => { IMG[name] = null; console.warn('missing asset: ' + src); }); }
+const SEQ = {};
+function seq(name, dir, fps, frames) { SEQ[name] = { dir, fps, frames, cache: new Map() }; }
+async function seqFrame(name, t) {
+  const s = SEQ[name]; const n = Math.min(s.frames, Math.max(1, Math.floor(t * s.fps + 1e-6) + 1)), key = String(n).padStart(5, '0');
+  if (!s.cache.has(key)) { const i = new Image(); i.src = `${s.dir}/${key}.jpg`; s.cache.set(key, i.decode().then(() => i, () => null)); if (s.cache.size > 60) s.cache.delete(s.cache.keys().next().value); }
+  return s.cache.get(key);
+}
+seq('ask', 'assets/tg/ask', 30, 255);     // refs/telegram-ask.mp4 from 5.0 s
+seq('rep', 'assets/tg/rep', 30, 390);     // refs/telegram-ask.mp4 from 201.0 s
+window.ready = Promise.all([
+  ...[400, 500, 700].map(w => document.fonts.load(`${w} 100px "Space Grotesk"`)),
+  ...[400, 700].map(w => document.fonts.load(`${w} 100px "JetBrains Mono"`)),
+  img('end', 'assets/tg/still-216.5.jpg'), img('top', 'assets/tg/still-209.4.jpg'), img('holdB', 'assets/tg/holdB-17.jpg'),
+]);
+
+// ---------- helpers
+function text(str, x, y, size, o = {}) {
+  g.save(); g.font = `${o.weight || 500} ${size}px ${o.font || F.d}`; g.fillStyle = o.color || C.ink;
+  g.textAlign = o.align || 'left'; g.textBaseline = o.base || 'middle'; g.globalAlpha *= o.alpha ?? 1;
+  if (o.track) g.letterSpacing = o.track + 'px';
+  g.fillText(str, x, y); g.restore();
+}
+function tw(str, size, font = F.d, weight = 500) { g.save(); g.font = `${weight} ${size}px ${font}`; const w = g.measureText(str).width; g.restore(); return w; }
+function wrap(str, size, maxW, font = F.d, weight = 500) {
+  g.save(); g.font = `${weight} ${size}px ${font}`; const out = []; let cur = '';
+  for (const w of str.split(' ')) { const t = cur ? cur + ' ' + w : w; if (g.measureText(t).width > maxW && cur) { out.push(cur); cur = w; } else cur = t; }
+  if (cur) out.push(cur); g.restore(); return out;
+}
+function para(str, x, y, size, maxW, o = {}) { const ls = wrap(str, size, maxW, o.font, o.weight); ls.forEach((l, i) => text(l, x, y + i * size * (o.lh || 1.28), size, o)); return ls.length * size * (o.lh || 1.28); }
+function rr(x, y, w, h, r) { g.beginPath(); g.roundRect(x, y, w, h, r); }
+function card(x, y, w, h, o = {}) { g.save(); g.globalAlpha *= o.alpha ?? 1; rr(x, y, w, h, (o.r ?? 18) * u); g.fillStyle = o.fill || C.panel; g.fill(); if (o.stroke) { g.strokeStyle = o.stroke; g.lineWidth = 2 * u; g.stroke(); } g.restore(); }
+function chip(str, x, y, color, o = {}) {  // honesty label; x,y = left, centre
+  const s = (o.size || 21) * u; const w = tw(str, s, F.m, 700) + 30 * u, h = s * 1.9;
+  g.save(); g.globalAlpha *= o.alpha ?? 1; rr(x, y - h / 2, w, h, h / 2); g.fillStyle = o.fill || 'rgba(10,16,22,.92)'; g.fill(); g.strokeStyle = color; g.lineWidth = 2 * u; g.stroke(); g.restore();
+  text(str, x + 15 * u, y + 1 * u, s, { font: F.m, weight: 700, color, alpha: o.alpha }); return w;
+}
+const ap = (lt, t0, d = .35) => easeOut(seg(lt, t0, t0 + d));            // 0..1 entrance
+const out = (lt, t1, d = .2) => 1 - seg(lt, t1, t1 + d);                    // 1..0 exit
+const win = (lt, a, b) => Math.min(ap(lt, a), out(lt, b));                  // in then out
+function caption(str, lt, a, b, o = {}) {
+  const k = win(lt, a, b); if (k <= 0) return;
+  const size = (o.size || (P ? 46 : 40)) * u, maxW = P ? W - 2 * L.safe.side : Math.min(W * .8, 1500 * u);
+  const ls = wrap(str, size, maxW - 70 * u, F.d, 500), lh = size * 1.25, w = Math.max(...ls.map(l => tw(l, size))) + 60 * u, h = ls.length * lh + 34 * u;
+  const y = (o.y ?? (P ? H - L.safe.bottom - h : H - 52 * u - h)) + (1 - k) * 24 * u;
+  g.save(); g.globalAlpha = k; rr(W / 2 - w / 2, y, w, h, 18 * u); g.fillStyle = 'rgba(10,16,22,.94)'; g.fill(); g.restore();
+  ls.forEach((l, i) => text(l, W / 2, y + 17 * u + lh * (i + .5), size, { align: 'center', alpha: k, color: o.color || C.ink }));
+}
+// Telegram recording panel. dest = {x,y,w,h}; crop = source rect; z/fx/fy = camera zoom about a source point; fn draws in SOURCE px
+function tgPanel(im, dest, crop, z, fx, fy, fn, o = {}) {
+  g.save(); rr(dest.x, dest.y, dest.w, dest.h, 18 * u); g.clip(); g.fillStyle = '#0d1218'; g.fillRect(dest.x, dest.y, dest.w, dest.h);
+  const base = dest.w / crop.w, s = base * z;
+  const cx = dest.x + dest.w / 2, cy = dest.y + dest.h / 2;
+  const sx = fx ?? (crop.x + crop.w / 2), sy = fy ?? (crop.y + crop.h / 2);
+  g.translate(cx - sx * s, cy - sy * s); g.scale(s, s);
+  if (im) g.drawImage(im, 0, 0);
+  if (o.dim) { g.fillStyle = `rgba(10,16,22,${o.dim})`; g.fillRect(0, 0, 1400, 900); }
+  if (fn) fn(s);
+  g.restore();
+}
+function hl(x, y, w, h, s, color, k = 1) {   // highlight box in source px, no glow
+  g.save(); g.globalAlpha = k; g.strokeStyle = color; g.lineWidth = 3.5 / s * u * 1.3; g.setLineDash([]); g.beginPath(); g.roundRect(x - 5, y - 3, w + 10, h + 6, 6); g.stroke();
+  g.fillStyle = color; g.globalAlpha = .13 * k; g.fill(); g.restore();
+}
+function shade(rects, s, k) { // dim all of the panel except rects (source px)
+  g.save(); g.globalAlpha = k * .62; g.fillStyle = '#0A1016'; g.beginPath(); g.rect(0, 0, 1400, 900);
+  for (const [x, y, w, h] of rects) g.rect(x - 6, y - 4, w + 12, h + 8); g.fill('evenodd'); g.restore();
+}
+function colorize(line) {   // terminal tokens: RUN amber, CURTAIL/HOLD red, numbers cyan
+  const re = /(NO RECOMMENDATION|CURTAIL|THROTTLE|HOLD|RUN|SYNTHETIC|\$-?[\d,]+\.?\d*|\b\d+\/\d+\b)/g; const parts = []; let last = 0, m;
+  while ((m = re.exec(line))) { if (m.index > last) parts.push([line.slice(last, m.index), C.ink]); const t = m[0];
+    parts.push([t, /^(RUN)$/.test(t) ? C.amber : /^(CURTAIL|HOLD|NO RECOMMENDATION|SYNTHETIC)$/.test(t) ? C.red : t === 'THROTTLE' ? C.amber : C.cyan]); last = m.index + t.length; }
+  if (last < line.length) parts.push([line.slice(last), C.ink]); return parts;
+}
+// terminal: lines = [{s, t0, plain?}], typed at 160 chars/s from t0
+function terminal(lines, x, y, w, size, lt, o = {}) {
+  const lh = size * 1.42; let yy = y; g.save(); g.font = `400 ${size}px ${F.m}`; const cw = g.measureText('M').width; g.restore();
+  for (const ln of lines) {
+    const n = Math.floor(Math.max(0, lt - ln.t0) * (ln.cps || 170)); if (lt < ln.t0) { yy += ln.gap ?? 0; continue; }
+    const s = ln.s.slice(0, n); let xx = x;
+    if (ln.plain) text(s, xx, yy, size, { font: F.m, weight: 400, color: ln.color || C.mute });
+    else for (const [t, col] of colorize(s)) { text(t, xx, yy, size, { font: F.m, weight: col === C.ink ? 400 : 700, color: col }); xx += t.length * cw; }
+    if (n < ln.s.length && n > 0 && o.caret !== false) { g.fillStyle = C.amber; g.fillRect(x + s.length * cw + 2, yy - size * .6, cw * .6, size * 1.15); }
+    yy += lh + (ln.gap ?? 0);
+  }
+  return yy;
+}
+const CMP = CLI.compare.split('\n'), MON = CLI.monitor.split('\n');
+const MLINE = pre => MON.find(l => l.startsWith(pre));
+
+// ---------- SHOTS
+const S = {};
+// 01 | the question typed and sent (recording typing sped up ~1.8x)
+S.s01 = { from: 0, to: 4.8,
+  async load(lt) { const r = Math.min(13.39, 5.0 + lt * (8.4 / 4.6)); this.im = await seqFrame('ask', r - 5.0); },
+  draw(lt) {
+    const push = 1 + .05 * seg(lt, 0, 4.8);
+    if (!P) {
+      const d = { x: 80 * u, y: 70 * u, w: 1100 * u, h: 852 * u };
+      const k = ap(lt, 0, .01); tgPanel(this.im, d, { x: 140, y: 0, w: 1100, h: 852 }, push, 690, 640);
+      // hook text on the empty right
+      const a = ap(lt, .25, .5);
+      para('A Bitcoin miner asks its AI.', 1240 * u, 330 * u + (1 - a) * 30 * u, 64 * u, 600 * u, { weight: 700, alpha: a, lh: 1.12 });
+      text('Hash or curtail tonight?', 1240 * u, 560 * u, 50 * u, { weight: 500, color: C.amber, alpha: ap(lt, .9, .5) });
+      chip('real Telegram chat · typing sped up', 1240 * u, 650 * u, C.cyan, { alpha: ap(lt, 1.2, .4) });
+    } else {
+      const d = { x: L.safe.side, y: H * .52, w: W - 2 * L.safe.side, h: 330 * u };
+      tgPanel(this.im, d, { x: 150, y: 560, w: 1060, h: 292 }, push, 680, 720);
+      const a = ap(lt, .2, .5);
+      para('A Bitcoin miner asks its AI.', L.safe.side, H * .2 + (1 - a) * 30 * u, 92 * u, W - 2 * L.safe.side, { weight: 700, alpha: a, lh: 1.08 });
+      text('Hash or curtail tonight?', L.safe.side, H * .2 + 330 * u, 68 * u, { color: C.amber, alpha: ap(lt, .8, .5) });
+      chip('real Telegram chat · typing sped up', L.safe.side, H * .52 + 390 * u, C.cyan, { size: 24, alpha: ap(lt, 1.2, .4) });
+    }
+  } };
+// 02 | title + site card
+S.s02 = { from: 4.8, to: 12.0, draw(lt) {
+  const a = spring(lt - .05, ...SPRINGS.heavy);
+  const sz = (P ? 200 : 250) * u; text('Ballast', W * (P ? .5 : .08) + (P ? 0 : 0), H * (P ? .3 : .3) + (1 - a) * 60 * u, sz, { weight: 700, align: P ? 'center' : 'left', alpha: clamp(a * 1.4), track: -4 });
+  text('a Mind for Bitcoin mining sites', W * (P ? .5 : .08), H * (P ? .3 : .3) + sz * .62, 52 * u, { color: C.cyan, align: P ? 'center' : 'left', alpha: ap(lt, .5, .5) });
+  // site card slides up
+  const k = spring(lt - 1.2, ...SPRINGS.base), cw = P ? W - 2 * L.safe.side : 1240 * u, ch = P ? 560 * u : 330 * u;
+  const cx = P ? L.safe.side : W * .08, cy = (P ? H * .52 : H * .58) + (1 - k) * 280 * u;
+  g.save(); g.globalAlpha = clamp(k * 2); card(cx, cy, cw, ch, { fill: C.panel });
+  text('SITE', cx + 40 * u, cy + 46 * u, 24 * u, { font: F.m, weight: 700, color: C.mute, track: 3 });
+  text('West Texas 10 MW demo site', cx + 40 * u, cy + 100 * u, 52 * u, { weight: 700 });
+  const items = [['ERCOT node', 'HB_WEST'], ['Fleet', '500 PH/s'], ['Efficiency', '21 J/TH'], ['Location', 'Pecos, Texas']];
+  items.forEach(([lab, val], i) => { const col = P ? i % 2 : i, row = P ? Math.floor(i / 2) : 0, ix = cx + 40 * u + col * (P ? 470 * u : 290 * u), iy = cy + 190 * u + row * 120 * u;
+    const kk = ap(lt, 1.7 + i * .14, .3); text(lab, ix, iy, 24 * u, { color: C.mute, alpha: kk }); text(val, ix, iy + 52 * u, 46 * u, { font: F.m, weight: 700, color: C.cyan, alpha: kk }); });
+  g.restore();
+  const ka = ap(lt, 3.6, .4); const acts = [['RUN', C.amber], ['THROTTLE', C.amber], ['CURTAIL', C.red], ['HOLD', C.red]];
+  let ax = cx; const ay = cy + ch + 70 * u;
+  text('Every hour, it says', cx, ay - 46 * u, 28 * u, { color: C.mute, alpha: ka });
+  acts.forEach(([a2, col], i) => { const kk = ap(lt, 3.9 + i * .22, .3); ax += chip(a2, ax, ay + (1 - kk) * 16 * u, col, { size: 28, alpha: kk }) + 18 * u; });
+  caption('Not a dashboard. An agent with receipts.', lt, 5.2, 7.0);
+} };
+// 03 | the Mind's live answer
+S.s03 = { from: 12.0, to: 31.2,
+  async load(lt) {
+    if (lt >= 1.8 && lt < 3.8) this.im = await seqFrame('rep', 0.6 + (lt - 1.8));
+    else if (lt >= 3.8 && lt < 6.8) this.im = await seqFrame('rep', Math.min(8.39, 4.0 + (lt - 3.8) * (4.4 / 3.0)));
+    else this.im = null;
+  },
+  draw(lt) {
+    const dsk = { x: 80 * u, y: 70 * u, w: 1100 * u, h: 852 * u }, crop = { x: 140, y: 0, w: 1100, h: 852 };
+    const dpt = { x: L.safe.side, y: L.safe.top, w: W - 2 * L.safe.side, h: (W - 2 * L.safe.side) * 600 / 740 }, cropP = { x: 150, y: 126, w: 740, h: 600 };
+    const dest = P ? dpt : dsk, cr = P ? cropP : crop, fx = P ? 520 : 690, fy = 426;
+    // wait card
+    if (lt < 2.0) {
+      const k = out(lt, 1.7, .3), a = ap(lt, .0, .3);
+      g.save(); g.globalAlpha = k * a; card(dest.x, dest.y, dest.w, P ? dest.h * .62 : dest.h, { fill: C.panel });
+      const mid = dest.y + (P ? dest.h * .3 : dest.h / 2);
+      const el = Math.round(seg(lt, .2, 1.5) * 188);
+      text('waiting for live intelligence…', dest.x + dest.w / 2, mid - 60 * u, (P ? 52 : 46) * u, { align: 'center', weight: 500 });
+      text(`${Math.floor(el / 60)}:${String(el % 60).padStart(2, '0')}`, dest.x + dest.w / 2, mid + 30 * u, 120 * u, { font: F.m, weight: 700, align: 'center', color: C.amber });
+      text('about 3 min later · recording trimmed', dest.x + dest.w / 2, mid + 130 * u, 30 * u, { align: 'center', color: C.mute });
+      g.restore();
+    } else if (lt < 6.8) {
+      tgPanel(this.im, dest, cr, 1, fx, fy, null);
+    } else {
+      const z = 1 + .04 * seg(lt, 6.8, 19.2);
+      const kH = ap(lt, 7.2, .4), kT = ap(lt, 9.8, .4), kM = ap(lt, 12.6, .4), kP = ap(lt, 15.6, .4);
+      tgPanel(IMG.top, dest, cr, z, fx, fy, s => {
+        const sh = lt < 9.6 ? [[172, 150, 660, 28]] : lt < 12.4 ? [[172, 278, 700, 410]] : lt < 15.4 ? [[254, 340, 140, 24], [259, 654, 76, 24]] : [[172, 686, 700, 70]];
+        shade(sh, s, ap(lt, 7.0, .4) * (lt > 9.4 && lt < 9.8 ? 1 : 1));
+        if (lt < 9.6) hl(172, 150, 660, 28, s, C.amber, kH);
+        else if (lt < 12.4) hl(172, 278, 700, 410, s, C.cyan, kT);
+        else if (lt < 15.4) { hl(254, 340, 140, 24, s, C.amber, kM); hl(259, 654, 76, 24, s, C.amber, kM); }
+        else hl(172, 686, 700, 70, s, C.red, kP);
+      });
+    }
+    // right column (landscape) / under panel (portrait)
+    const rx = P ? L.safe.side : 1240 * u, rw = P ? W - 2 * L.safe.side : 600 * u, ry = P ? dest.y + dest.h + 30 * u : 90 * u;
+    if (lt >= 3.4 && lt < 6.8) { const a = ap(lt, 3.4, .4); chip('plan 708b2b3a8b · live run · scroll sped up', rx, ry + 24 * u, C.cyan, { size: P ? 22 : 20, alpha: a }); }
+    if (lt >= 7.0 && lt < 9.8) { const a = ap(lt, 7.2, .4); text('8 of 8 hours', rx, ry + 60 * u + (1 - a) * 20 * u, 70 * u, { weight: 700, color: C.amber, alpha: a });
+      text('RUN at 100%', rx, ry + 140 * u, 70 * u, { weight: 700, color: C.amber, alpha: ap(lt, 7.5, .4) });
+      text('revenue $52.30/MWh every hour', rx, ry + 215 * u, 30 * u, { font: F.m, color: C.cyan, alpha: ap(lt, 8.1, .4) }); }
+    if (lt >= 9.8) {   // margin bars, numbers from the reply
+      const hrs = [['05:00*', 47.19], ['06:00', 43.16], ['07:00', 41.83], ['08:00', 41.50], ['09:00', 36.93], ['10:00', 33.01], ['11:00', 26.81], ['12:00', 26.34]];
+      const a0 = ap(lt, 9.8, .4); const bx = rx + 120 * u, bw = rw - 120 * u - 150 * u, rh = (P ? 56 : 62) * u;
+      text('MARGIN, $/MWh', rx, ry + 30 * u, 24 * u, { font: F.m, weight: 700, color: C.mute, track: 2, alpha: a0 });
+      hrs.forEach(([lab, v], i) => { const k = easeOut(seg(lt, 10.1 + i * .28, 10.9 + i * .28)), yy = ry + 90 * u + i * rh;
+        text(lab, rx, yy, 26 * u, { font: F.m, color: C.mute, alpha: k });
+        g.save(); g.globalAlpha = k; rr(bx, yy - 17 * u, bw * (v / 50) * k, 34 * u, 6 * u); g.fillStyle = C.amber; g.fill(); g.restore();
+        text('$' + (v * k).toFixed(2), bx + bw * (v / 50) * k + 14 * u, yy, 26 * u, { font: F.m, weight: 700, color: C.ink, alpha: k }); });
+      text('* 05:00 is provisional', rx, ry + 90 * u + 8 * rh + 10 * u, 22 * u, { font: F.m, color: C.red, alpha: ap(lt, 13, .4) });
+    }
+    if (lt >= 12.6) { const a = ap(lt, 12.6, .4); }
+    caption('$47.19 → $26.34 per MWh across the window', lt, 12.8, 15.4);
+    caption('05:00 is provisional: the Mind says so itself.', lt, 15.8, 18.6);
+    if (lt >= 2.0) chip('testnet · Sepolia test USDC', P ? L.safe.side : 80 * u, P ? dest.y + dest.h + (lt < 6.8 ? 90 : 20) * u : H - 36 * u, C.amber, { size: P ? 22 : 20, alpha: ap(lt, 2.2, .4) });
+    if (P && lt >= 12.0) caption('$47.19 → $26.34 per MWh', lt, 12.0, 12.4);
+  } };
+// 04 | every number has a receipt (camera zooms into the real reply)
+S.s04 = { from: 31.2, to: 48.0, draw(lt) {
+  const dest = P ? { x: L.safe.side, y: L.safe.top, w: W - 2 * L.safe.side, h: (W - 2 * L.safe.side) * 852 / 740 } : { x: 80 * u, y: 70 * u, w: 1100 * u, h: 852 * u };
+  const cr = P ? { x: 150, y: 0, w: 740, h: 852 } : { x: 140, y: 0, w: 1100, h: 852 };
+  const aIn = spring(lt - .05, ...SPRINGS.base); g.save(); g.translate(0, (1 - aIn) * 120 * u); g.globalAlpha = clamp(aIn * 2);
+  const f = (a, b, c, d) => track(lt, [[0, a], [.9, b], [4.7, c], [8.5, d]], 150, 24);
+  const zs = P ? [1, 1.25, 1.25, 1.2] : [1, 1.85, 1.85, 1.9];
+  // focus points in source px: Gauge, Pecos, day-ahead, cost
+  const fp = [[520, 426], [520, 150], [520, 385], [520, 500], [520, 590]];
+  const z = track(lt, [[0, 1], [.9, zs[1]], [4.7, zs[2]], [8.5, zs[2]], [12.7, zs[3]]], 150, 24);
+  const fy = track(lt, [[0, 426], [.9, 150], [4.7, 385], [8.5, 520], [12.7, 590]], 150, 24);
+  const fx = P ? 520 : 520;
+  const boxes = [[172, 92, 700, 118, 0.9, 4.6, C.amber], [172, 335, 700, 80, 4.7, 8.4, C.cyan], [172, 440, 700, 135, 8.5, 12.6, C.cyan], [172, 556, 700, 50, 12.7, 16.8, C.amber]];
+  tgPanel(IMG.end, dest, cr, z, fx, fy, s => { const act = boxes.find(b => lt >= b[4] && lt < b[5]);
+    if (act) { shade([[act[0], act[1], act[2], act[3]]], s, ap(lt, act[4], .35)); hl(act[0], act[1], act[2], act[3], s, act[6], ap(lt, act[4] + .1, .3)); } });
+  g.restore();
+  const rx = P ? L.safe.side : 1240 * u, rw = P ? W - 2 * L.safe.side : 600 * u, ry = P ? dest.y + dest.h + 24 * u : 130 * u;
+  const stage = (a, b, fnc) => { if (lt >= a && lt < b + .3) { g.save(); g.globalAlpha = win(lt, a, b); g.translate(0, (1 - ap(lt, a, .4)) * 24 * u); fnc(lt - a); g.restore(); } };
+  stage(0.9, 4.6, () => { text('HASHPRICE', rx, ry, 24 * u, { font: F.m, weight: 700, color: C.mute, track: 2 });
+    text('Gauge 4283', rx, ry + 56 * u, 56 * u, { weight: 700 }); text('$26.36/PH/day', rx, ry + 130 * u, 56 * u, { font: F.m, weight: 700, color: C.cyan });
+    text('46,755.12 sats/PH-day · block 976849', rx, ry + 190 * u, (P ? 26 : 25) * u, { font: F.m, color: C.ink });
+    text('receipt 0x5fe34d4a…  ·  $0.01', rx, ry + 236 * u, 26 * u, { font: F.m, color: C.mute }); });
+  stage(4.7, 8.4, lt2 => { text('POWER PRICE, 05:00 REAL-TIME', rx, ry, 24 * u, { font: F.m, weight: 700, color: C.mute, track: 2 });
+    text('Pecos 7310042', rx, ry + 56 * u, 56 * u, { weight: 700 }); text('$2.11/MWh', rx, ry + 130 * u, 56 * u, { font: F.m, weight: 700, color: C.cyan });
+    text('receipt 0x96acdb78…  ·  $0.01', rx, ry + 190 * u, 26 * u, { font: F.m, color: C.mute });
+    const e = ap(lt2, 1.0, .4); text('= public ERCOT archive $2.11', rx, ry + 244 * u, 30 * u, { font: F.m, weight: 700, color: C.amber, alpha: e });
+    text('Pecos is our own miner (internal test).', rx, ry + 300 * u, 24 * u, { color: C.mute, alpha: ap(lt2, 1.6, .4) }); });
+  stage(8.5, 12.6, lt2 => { text('DAY-AHEAD, 06:00–12:00', rx, ry, 24 * u, { font: F.m, weight: 700, color: C.mute, track: 2 });
+    text('7 receipts', rx, ry + 56 * u, 56 * u, { weight: 700 }); text('matched ERCOT NP4-190-CD', rx, ry + 118 * u, 30 * u, { color: C.ink });
+    text('to the cent', rx, ry + 156 * u, 30 * u, { color: C.amber, weight: 700 });
+    const rc = ['0x93d575a3…', '0x71c46ea9…', '0xa204ea35…', '0xc2ea0c39…', '0x6fab076f…', '0x89f34993…', '0xbf450484…'];
+    rc.forEach((r, i) => { const k = ap(lt2, .3 + i * .42, .25); text(r, rx + (i % 2) * 290 * u, ry + 220 * u + Math.floor(i / 2) * 44 * u, 24 * u, { font: F.m, color: C.cyan, alpha: k }); }); });
+  stage(12.7, 16.8, lt2 => { text('THE BILL', rx, ry, 24 * u, { font: F.m, weight: 700, color: C.mute, track: 2 });
+    const n = Math.round(easeOut(seg(lt2, .1, .9)) * 10); text(`${n} Telegraph calls`, rx, ry + 60 * u, 52 * u, { weight: 700 });
+    text('$' + (easeOut(seg(lt2, .1, 1.1)) * .11).toFixed(2), rx, ry + 150 * u, 110 * u, { font: F.m, weight: 700, color: C.amber });
+    text('cap $0.40 · no checks missing', rx, ry + 222 * u, 27 * u, { font: F.m, color: C.mute, alpha: ap(lt2, 1.0, .4) });
+    text('recommendations only', rx, ry + 266 * u, 27 * u, { font: F.m, color: C.mute, alpha: ap(lt2, 1.4, .4) }); });
+  if (lt >= .9) chip('testnet · Sepolia test USDC', P ? L.safe.side : 80 * u, P ? dest.y + dest.h + 20 * u : H - 36 * u, C.amber, { size: P ? 22 : 20, alpha: ap(lt, 1.0, .4) });
+  if (!P) caption('Every number has a receipt.', lt, 0.1, 0.9 + 1.0);
+} };
+// 05 | it holds instead of guessing
+S.s05 = { from: 48.0, to: 67.2, draw(lt) {
+  const dest = { x: 80 * u, y: 70 * u, w: 720 * u, h: 700 * u };
+  const k = spring(lt - .05, ...SPRINGS.base); g.save(); g.globalAlpha = clamp(k * 2); g.translate(0, (1 - k) * 80 * u);
+  const sc = dest.w / 720, cropB = { x: 176, y: 205, w: 720, h: 555 };
+  g.save(); rr(dest.x, dest.y, dest.w, dest.h, 18 * u); g.clip(); g.fillStyle = '#0d1218'; g.fillRect(dest.x, dest.y, dest.w, dest.h);
+  const s = dest.w / cropB.w; g.translate(dest.x - cropB.x * s, dest.y - cropB.y * s + 0); g.scale(s, s); if (IMG.holdB) g.drawImage(IMG.holdB, 0, 0);
+  if (lt > 3.6 && lt < 7.8) { const kk = ap(lt, 3.8, .4); shade([[186, 275, 680, 58]], s, kk); hl(186, 275, 680, 58, s, C.red, kk); }
+  if (lt > 7.8 && lt < 11.6) { const kk = ap(lt, 8.0, .4); shade([[186, 435, 690, 70]], s, kk); hl(186, 435, 690, 70, s, C.red, kk); }
+  if (lt > 11.6 && lt < 14.6) { const kk = ap(lt, 11.8, .4); shade([[186, 565, 690, 130]], s, kk); hl(186, 565, 690, 130, s, C.cyan, kk); }
+  g.restore(); g.restore();
+  chip("the Mind's reply, plan 055fe017b0 (real recording)", dest.x, dest.y + dest.h + 38 * u, C.cyan, { size: 19, alpha: ap(lt, 1, .4) });
+  const rx = 880 * u, rw = 960 * u;
+  text('An earlier run came back', rx, 130 * u, 56 * u, { weight: 700, alpha: ap(lt, .8, .4) });
+  text('HOLD', rx, 215 * u, 110 * u, { weight: 700, color: C.red, alpha: ap(lt, 1.2, .4) });
+  const cardA = (t0, t1, label, body, col) => { const a = win(lt, t0, t1); if (a <= 0) return;
+    g.save(); g.globalAlpha = a; g.translate(0, (1 - ap(lt, t0, .4)) * 30 * u);
+    const ls = wrap(body, 29 * u, rw - 70 * u), h = ls.length * 37 * u + 100 * u; card(rx, 310 * u, rw, h, { fill: C.panel, stroke: col });
+    text(label, rx + 34 * u, 310 * u + 40 * u, 21 * u, { font: F.m, weight: 700, color: col, track: 1 });
+    ls.forEach((l, i) => text(l, rx + 34 * u, 310 * u + 90 * u + i * 37 * u, 29 * u, { weight: 500 })); g.restore(); };
+  cardA(7.6, 11.6, "CAUSE 1 · THE MIND'S REPLY, QUOTED (06a48c8e23)", 'every hour from 03:00 to 10:00 UTC today came back HOLD … The hashprice gauge answer came back empty — Telegraph provider 4283 "Gauge" returned no positive sats-per-PH-day figure', C.red);
+  cardA(11.6, 14.6, "CAUSE 2 · THE MIND'S REPLY, QUOTED (06a48c8e23)", 'No temperature forecast either — the hourly forecast fetch for Pecos, Texas failed', C.red);
+  cardA(14.6, 17.0, "ONE RERUN LATER · QUOTED (055fe017b0)", 'all eight hours (04:00–11:00 UTC) came back HOLD … Telegraph 4283 "Gauge" answered, but with all nulls … This time the weather side came through', C.cyan);
+  const fin = ap(lt, 17.0, .5);
+  if (lt >= 17.0) { card(rx, 310 * u, rw, 300 * u, { fill: C.panel, alpha: fin, stroke: C.amber });
+    text('FIXED IN THE REPO', rx + 34 * u, 350 * u, 21 * u, { font: F.m, weight: 700, color: C.amber, alpha: fin });
+    para('Hashprice is bought on the escrow route · a weather forecast fallback was added', rx + 34 * u, 410 * u, 33 * u, rw - 70 * u, { alpha: fin, weight: 500 });
+    text('commits 9f87f19 and 39a1aed', rx + 34 * u, 560 * u, 26 * u, { font: F.m, color: C.mute, alpha: ap(lt, 17.5, .4) }); }
+  caption('HOLD names the missing check. It never guesses a number.', lt, 14.8, 19.0, {});
+} };
+// 06 | with vs without Telegraph
+S.s06 = { from: 67.2, to: 86.4, draw(lt) {
+  const tx = 70 * u, tY = 90 * u, tW = 1100 * u; card(tx - 20 * u, tY - 50 * u, tW + 40 * u, 520 * u, { fill: C.panel });
+  text('$ npm run compare', tx, tY - 6 * u, 24 * u, { font: F.m, weight: 700, color: C.mute });
+  const cs = x => x.replace('Telegraph cost', 'cost').replace(/^Injected: .*/, 'Injected: same window, 24 SYNTHETIC bad inputs');
+  const L1 = [{ s: CMP[0].replace(', wrote compare/results.json and compare/results.md', ''), t0: .3, plain: true, cps: 400 }, { s: CMP[1], t0: .9, plain: true, cps: 300 }, { s: CMP[2], t0: 1.4, cps: 300 }, { s: CMP[3], t0: 1.9, cps: 300 }];
+  const L2 = [{ s: CMP[9], t0: 3.6, plain: true, cps: 400, color: C.red }, { s: CMP[10], t0: 4.6, cps: 300 }, { s: CMP[11], t0: 5.1, cps: 300 }];
+  const sz = 27 * u, lh6 = sz * 1.5; terminal(L1.map(l => ({ ...l, s: cs(l.s) })), tx, tY + 56 * u, tW, sz, lt);
+  const y2 = tY + 56 * u + 4 * lh6 + 50 * u; terminal(L2.map(l => ({ ...l, s: cs(l.s) })), tx, y2, tW, sz, lt);
+  if (lt > 2.6 && lt < 8) { const k = ap(lt, 2.6, .3); g.save(); g.globalAlpha = k; hl2(tx - 10 * u, tY + 56 * u + 1.5 * lh6, tW * .78, 2.1 * lh6, C.cyan); g.restore(); }
+  if (lt > 4.0) chip('SYNTHETIC bad inputs, offline replay', tx, y2 + 3 * lh6 + 40 * u, C.red, { size: 19, alpha: ap(lt, 4.0, .3) });
+  // two columns, numbers from compare/results.md
+  const cx0 = 1230 * u, cw = 620 * u;
+  const col = (t0, x, ttl, sub, rows, c) => { const a = ap(lt, t0, .5); g.save(); g.globalAlpha = a; g.translate(0, (1 - a) * 30 * u);
+    card(x, 100 * u, cw / 2 - 12 * u, 620 * u, { fill: C.panel, stroke: c }); text(ttl, x + 24 * u, 150 * u, 36 * u, { weight: 700, color: c }); text(sub, x + 24 * u, 192 * u, 21 * u, { color: C.mute });
+    rows.forEach((r, i) => { const k = easeOut(seg(lt, t0 + .5 + i * .8, t0 + 1.5 + i * .8)); text(r[0], x + 24 * u, 270 * u + i * 150 * u, 21 * u, { color: C.mute, alpha: k });
+      text(r[1](k), x + 24 * u, 330 * u + i * 150 * u, 54 * u, { font: F.m, weight: 700, color: r[2] || c, alpha: k }); }); g.restore(); };
+  col(8.8, cx0 - 10 * u, 'Web-only', '(modelled Mind)', [['bad inputs caught', k => Math.round(k * 0) + '/20', C.red], ['used silently', k => String(Math.round(k * 20)), C.red], ['lost to wrong calls', k => '$' + Math.round(k * 2199).toLocaleString('en-US'), C.red]], C.red);
+  col(9.6, cx0 + cw / 2 + 2 * u, 'Ballast', 'with Telegraph', [['bad inputs caught', k => Math.round(k * 20) + '/20', C.amber], ['used silently', k => String(Math.round(k * 0)), C.amber], ['lost to wrong calls', k => '$' + Math.round(k * 210), C.amber]], C.amber);
+  chip('SYNTHETIC injections', cx0, 765 * u, C.red, { size: 19, alpha: ap(lt, 8.8, .4) });
+  text('89 real ERCOT hours · 24 injected bad-input hours · source: compare/results.md', 70 * u, 830 * u, 21 * u, { font: F.m, color: C.mute, alpha: ap(lt, 8.8, .4) });
+  text('Ballast’s provider answers are replayed stand-ins (two recorded live); the web-only Mind is a model.', 70 * u, 870 * u, 21 * u, { font: F.m, color: C.mute, alpha: ap(lt, 9.2, .4) });
+  caption('Clean data: both get 82 of 89 right.', lt, 2.8, 6.4);
+  caption('Bad inputs in: web-only trusts all 20. Ballast catches all 20.', lt, 12.0, 17.8);
+} };
+function hl2(x, y, w, h, c) { g.save(); g.strokeStyle = c; g.lineWidth = 3 * u; g.beginPath(); g.roundRect(x, y, w, h, 6); g.stroke(); g.restore(); }
+// 07 | monitor explains changes
+S.s07 = { from: 86.4, to: 100.8, draw(lt) {
+  const tx = 70 * u, tY = 90 * u, tW = 1190 * u; card(tx - 20 * u, tY - 50 * u, tW + 40 * u, 640 * u, { fill: C.panel });
+  text('$ npm run monitor', tx, tY - 6 * u, 24 * u, { font: F.m, weight: 700, color: C.mute });
+  const sz = 21.5 * u;
+  const hdr = MON[0].slice(0, 86), hdr2 = 'SYNTHETIC: Evening ramp at Pecos: tick 1 uses the numbers from the';
+  const rows = [
+    { s: hdr, t0: .2, plain: true, cps: 400 }, { s: '[…] receipts start with "fixture:"; nothing is paid.', t0: .6, plain: true, cps: 300 },
+    { s: hdr2, t0: .9, cps: 400 }, { s: 'recorded live paid run of 2026-11-19; every later tick is invented.', t0: 1.4, cps: 400, gap: 14 * u },
+    { s: '=== Tick 3/12  2026-11-19 18:44Z  hashprice $29.31/PH/day ===', t0: 2.4, plain: true, cps: 400, color: C.ink },
+    { s: MLINE('world: SYNTHETIC price spike'), t0: 3.0, cps: 400 }, { s: 'CHANGED', t0: 3.5, plain: true, color: C.ink },
+    { s: '  - 18:00 changed RUN → CURTAIL: Pecos real-time for 18:15 rose from $15.92 to $142.10', t0: 3.9, cps: 260 },
+    { s: '    (E20, receipt fixture:fd21a28764c9); public ERCOT archive agrees within $0.40 (E21);', t0: 4.9, cps: 260 },
+    { s: '    margin fell from $39.23 to -$86.95/MWh.', t0: 5.8, cps: 260, gap: 14 * u },
+    { s: '=== Tick 6/12  2026-11-19 19:29Z  hashprice $27.00/PH/day ===', t0: 7.4, plain: true, cps: 400, color: C.ink },
+    { s: 'world: SYNTHETIC provider disagreement. [real-time: provider $31, public archive $70]', t0: 8.0, cps: 400 },
+    { s: '  - 19:00 changed RUN → NO RECOMMENDATION: providers disagree: Pecos ERCOT Power Prices', t0: 8.6, cps: 260 },
+    { s: '    (recorded stand-in, not a Telegraph answer) says 31, public ERCOT archive says 70', t0: 9.6, cps: 260 },
+    { s: '    USD/MWh (tolerance max($2, 5%)); the earlier RUN has not been refreshed', t0: 10.5, cps: 260 },
+  ];
+  terminal(rows.map(r => ({ ...r })), tx, tY + 46 * u, tW, sz, lt);
+  const kC = ap(lt, 4.0, .3), kN = ap(lt, 9.0, .3);
+  const rx = 1340 * u, rw = 520 * u;
+  if (lt > 4.2) { const a = ap(lt, 4.2, .4); card(rx, 130 * u, rw, 190 * u, { fill: C.panel, alpha: a, stroke: C.red }); text('18:00', rx + 30 * u, 175 * u, 26 * u, { font: F.m, color: C.mute, alpha: a });
+    text('RUN → CURTAIL', rx + 30 * u, 235 * u, 46 * u, { weight: 700, color: C.red, alpha: a }); text('real-time $15.92 → $142.10', rx + 30 * u, 285 * u, 25 * u, { font: F.m, color: C.cyan, alpha: a }); }
+  if (lt > 9.2) { const a = ap(lt, 9.2, .4); card(rx, 360 * u, rw, 190 * u, { fill: C.panel, alpha: a, stroke: C.red }); text('19:00', rx + 30 * u, 405 * u, 26 * u, { font: F.m, color: C.mute, alpha: a });
+    text('NO RECOMMENDATION', rx + 30 * u, 465 * u, 42 * u, { weight: 700, color: C.red, alpha: a }); text('providers disagree: 31 vs 70', rx + 30 * u, 515 * u, 25 * u, { font: F.m, color: C.cyan, alpha: a }); }
+  const cw7 = chip('SYNTHETIC timeline · demo replay · nothing paid', 70 * u, 780 * u, C.red, { size: 22 });
+  text('Only tick 1 uses recorded live numbers. Source: npm run monitor (demo)', 70 * u + cw7 + 24 * u, 780 * u, 21 * u, { font: F.m, color: C.mute });
+  caption('The monitor says why a call changed.', lt, 1.2, 3.6);
+  caption('And it will not make one up: no input, no recommendation.', lt, 10.2, 14.0);
+} };
+// 08 | how it is wired and what it cost
+S.s08 = { from: 100.8, to: 112.8, draw(lt) {
+  const nodes = [
+    { x: 80, w: 400, t: 'Mind', s: 'in Telegram', c: C.cyan, t0: .2 },
+    { x: 700, w: 460, t: 'Ballast', s: 'HTTP tool · plans every hour', c: C.amber, t0: 1.6 },
+    { x: 1380, w: 460, t: 'Telegraph', s: 'paid, receipted answers', c: C.cyan, t0: 3.0 }];
+  const ny = 270 * u, nh = 190 * u;
+  nodes.forEach(n => { const k = spring(lt - n.t0, ...SPRINGS.base); g.save(); g.globalAlpha = clamp(k * 2); g.translate(0, (1 - k) * 40 * u);
+    card(n.x * u, ny, n.w * u, nh, { fill: C.panel, stroke: n.c }); text(n.t, n.x * u + 32 * u, ny + 70 * u, 58 * u, { weight: 700 }); text(n.s, n.x * u + 32 * u, ny + 135 * u, 26 * u, { color: C.mute }); g.restore(); });
+  const edge = (x1, x2, t0) => { const k = easeOut(seg(lt, t0, t0 + .6)); g.save(); g.strokeStyle = C.amber; g.lineWidth = 4 * u; g.beginPath(); g.moveTo(x1 * u, ny + nh / 2); g.lineTo((x1 + (x2 - x1) * k) * u, ny + nh / 2); g.stroke();
+    if (k > .98) { g.fillStyle = C.amber; g.beginPath(); g.moveTo(x2 * u, ny + nh / 2); g.lineTo((x2 - 18) * u, ny + nh / 2 - 12 * u); g.lineTo((x2 - 18) * u, ny + nh / 2 + 12 * u); g.fill(); } g.restore(); };
+  edge(480, 700, 1.0); edge(1160, 1380, 2.4);
+  text('a question', 590 * u, ny + nh / 2 - 30 * u, 24 * u, { align: 'center', color: C.mute, alpha: ap(lt, 1.1, .3) });
+  text('buys answers', 1270 * u, ny + nh / 2 - 30 * u, 24 * u, { align: 'center', color: C.mute, alpha: ap(lt, 2.5, .3) });
+  const items = [['Pecos 7310042', 'ERCOT power price'], ['Gauge 4283', 'hashprice'], ['76001', 'weather verify']];
+  items.forEach((it, i) => { const a = ap(lt, 3.8 + i * .3, .4); text(it[0], 1240 * u, ny + nh + 70 * u + i * 62 * u, 32 * u, { font: F.m, weight: 700, color: C.cyan, alpha: a }); text(it[1], 1240 * u + 330 * u, ny + nh + 70 * u + i * 62 * u, 27 * u, { color: C.mute, alpha: a }); });
+  const pub = ap(lt, 5.0, .4); text('Free public cross-checks', 80 * u, ny + nh + 70 * u, 30 * u, { weight: 700, alpha: pub });
+  ['ERCOT MIS archive', 'mempool.space', 'Open-Meteo'].forEach((p, i) => text(p, 80 * u, ny + nh + 125 * u + i * 52 * u, 28 * u, { font: F.m, color: C.ink, alpha: ap(lt, 5.2 + i * .25, .4) }));
+  const bill = ap(lt, 6.8, .5); text('$0.11', 80 * u, 830 * u + (1 - bill) * 20 * u, 150 * u, { font: F.m, weight: 700, color: C.amber, alpha: bill });
+  text('for this 8-hour plan · 10 Telegraph calls', 640 * u, 800 * u, 36 * u, { alpha: ap(lt, 7.2, .4) });
+  chip('testnet · Sepolia test USDC', 640 * u, 862 * u, C.amber, { size: 22, alpha: ap(lt, 7.6, .4) });
+  caption('Recommendations flow out. Receipts flow back.', lt, 8.6, 11.6);
+} };
+// 09 | end card
+S.s09 = { from: 112.8, to: 120.0, draw(lt) {
+  const a = spring(lt - .05, ...SPRINGS.heavy); const x = P ? W / 2 : W * .08, al = P ? 'center' : 'left';
+  text('Ballast', x, H * (P ? .28 : .24) + (1 - a) * 40 * u, (P ? 190 : 210) * u, { weight: 700, align: al, alpha: clamp(a * 1.4), track: -4 });
+  const lines = [['github.com/nftkingiii/ballast', C.cyan], ['ballast-app.up.railway.app', C.cyan], ['@telegraphprotoc', C.mute]];
+  lines.forEach((l, i) => text(l[0], x, H * (P ? .42 : .45) + i * 70 * u, (P ? 44 : 44) * u, { font: F.m, weight: 700, color: l[1], align: al, alpha: ap(lt, .6 + i * .25, .4) }));
+  const k = ap(lt, 1.8, .5); const sy = H * (P ? .62 : .72);
+  card(P ? L.safe.side : W * .08 - 20 * u, sy, P ? W - 2 * L.safe.side : 1500 * u, (P ? 260 : 150) * u, { fill: C.panel, stroke: C.red, alpha: k });
+  g.save(); g.globalAlpha = k; para('Recommendations only. No miner was switched.', (P ? L.safe.side : W * .08) + 30 * u, sy + (P ? 80 : 75) * u, (P ? 54 : 46) * u, (P ? W - 2 * L.safe.side - 60 * u : 1440 * u), { weight: 700, lh: 1.15 }); g.restore();
+  chip('testnet · Sepolia test USDC', P ? L.safe.side : W * .08, sy + (P ? 320 : 220) * u, C.amber, { size: 22, alpha: ap(lt, 2.6, .4) });
+  // fade to slate at the very end
+  const f = seg(lt, 6.3, 7.2); if (f > 0) { g.fillStyle = `rgba(10,16,22,${f * .0})`; g.fillRect(0, 0, W, H); }
+} };
+
+const ORDER = ['s01', 's02', 's03', 's04', 's05', 's06', 's07', 's08', 's09'];
+function resolve(t) {
+  if (!P) { const id = ORDER.find(k => t >= S[k].from && t < S[k].to) || 's09'; return [S[id], t - S[id].from, id]; }
+  let a = 0; for (const [id, f, to] of VSEG) { if (t < a + (to - f) || id === 's09') return [S[id], f + (t - a), id]; a += to - f; }
+}
+async function draw(t) {
+  const [s, lt, id] = resolve(t);
+  if (s.load) await s.load(lt);
+  g.fillStyle = C.bg; g.fillRect(0, 0, W, H);
+  s.draw(lt);
+  // seam: a quick slate push on the downbeat cut (cut-on-beat, no wipes)
+  const dur = s.to - s.from;
+}
+window.seek = async t => { await window.ready; await draw(t); };
+
+if (!Q.has('render')) {
+  let t = 0, playing = true, last = performance.now();
+  addEventListener('click', () => playing = !playing);
+  addEventListener('keydown', e => { const d = e.shiftKey ? 1 : 1 / FILM.fps; if (e.key === 'ArrowRight') t += d; if (e.key === 'ArrowLeft') t -= d; t = loopT(t, FILM.dur); playing = false; });
+  window.ready.then(function loop(now = performance.now()) { if (playing) t = loopT(t + (now - last) / 1000, FILM.dur); last = now; draw(t); document.title = t.toFixed(2); requestAnimationFrame(loop); });
+}
+</script></body></html>

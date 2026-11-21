@@ -1,0 +1,13 @@
+compare: 89 hours in 0.78s, wrote compare/results.json and compare/results.md
+Clean: ERCOT's published prices as they are, no injections
+  A     correct 82/89  realized $15566.09  holds 0  Telegraph cost $0
+  B     correct 82/89  realized $15566.09  holds 0  Telegraph cost $1.78
+  B-prev correct 82/89  realized $15566.09  holds 0  Telegraph cost $1.78
+  A-DA  correct 62/89  realized $14540.29  holds 0  Telegraph cost $0
+  A@14  correct 75/89  realized $15327.11  holds 0  Telegraph cost $0
+  B@14  correct 75/89  realized $15327.11  holds 0  Telegraph cost $1.78
+  B-prev@14 correct 75/89  realized $15327.11  holds 0  Telegraph cost $1.78
+Injected: the same window with 24 SYNTHETIC bad inputs, identical for every policy
+  A     correct 69/89  realized $14686.38  holds 0  Telegraph cost $0
+  B     correct 80/89  realized $16674.96  holds 0  Telegraph cost $1.9
+  B-prev correct 75/89  realized $15187.24  holds 4  Telegraph cost $1.86

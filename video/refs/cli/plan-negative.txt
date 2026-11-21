@@ -1,0 +1,41 @@
+SYNTHETIC SCENARIO "Negative-price hour" - Hour +2 settles at -$18.40/MWh and hour +3 spikes to $450/MWh. Edited recorded data, not live: DEMO MODE - DEMO: recorded public data from 2026-11-19T17:50Z, not Telegraph answers. No Telegraph calls were made and nothing was paid; receipts below start with "fixture:".
+Site: West Texas 10 MW demo site   Generated: 2026-11-19T17:50:33.544Z
+Hashprice used: $29.39 per PH/s per day
+
+Hour (UTC)   Action    Run   Power $/MWh  Cost    Revenue  Margin   Temp C  Est. $  Evidence
+11-19 17:00  RUN       100%  16.79 RT     19.79   58.32    38.53    11.7    405     E6,E7
+11-19 18:00  RUN       100%  12.40 DA     20.40   58.32    37.92    13.5    398     E8,E9
+11-19 19:00  RUN       100%  -18.40 DA    -10.40  58.32    68.72    15.5    722     E10,E11
+11-19 20:00  CURTAIL   0%    450.00 DA    458.00  58.32    -399.68  17.3    0       E12,E13
+11-19 21:00  RUN       100%  17.35 DA     25.35   58.32    32.97    17.8    346     E14,E15
+11-19 22:00  RUN       100%  33.19 DA     41.19   58.32    17.13    18.7    180     E16,E17
+11-19 23:00  THROTTLE  50%   45.45 DA     53.45   58.32    4.87     19.1    26      E18,E19
+11-20 00:00  RUN       100%  36.99 DA     44.99   58.32    13.33    16.5    140     E20,E21
+Shared by every hour: E1, E2, E3, E4, E5
+
+Evidence
+Id   Check             Subject                                     Provider                                                                                     Answered (UTC)       Cost $  Receipt / job         Accepted
+E1   hashprice         block 976618                                public:keyless fixture: mempool.space reward-stats(144), prices, hashrate(3d)                2026-11-19T17:50:33  0.0000  -                     yes
+E2   hashprice         block 976618                                fixture:4283 Gauge (recorded stand-in, not a Telegraph answer)                               2026-11-19T17:50:32  0.0000  fixture:0ea979d20495  yes
+E3   weather-forecast  Pecos, Texas                                public:keyless fixture: Open-Meteo forecast                                                  2026-11-19T17:50:33  0.0000  -                     yes
+E4   weather-verify    2026-11-18                                  public:keyless fixture: Open-Meteo archive                                                   2026-11-19T17:50:33  0.0000  -                     yes
+E5   weather-verify    2026-11-18                                  fixture:76001 Open-Meteo Hourly Forecast Verify (recorded stand-in, not a Telegraph answer)  2026-11-19T17:50:33  0.0000  fixture:c0262486a8c8  yes
+E6   power-real-time   HB_WEST real-time 2026-11-19T17:30:00.000Z  fixture:7310042 Pecos ERCOT Power Prices (recorded stand-in, not a Telegraph answer)         2026-11-19T17:50:04  0.0000  fixture:56f6d4953a31  yes
+E7   power-real-time   HB_WEST real-time 2026-11-19T17:30:00.000Z  public:keyless fixture: ERCOT public MIS archive, NP6-905-CD                                 2026-11-19T17:50:33  0.0000  -                     yes
+E8   power-day-ahead   HB_WEST day-ahead 2026-11-19T18:00:00.000Z  fixture:7310042 Pecos ERCOT Power Prices (recorded stand-in, not a Telegraph answer)         2026-11-19T17:50:13  0.0000  fixture:9bae9c40b514  yes
+E9   power-day-ahead   HB_WEST day-ahead 2026-11-19T18:00:00.000Z  public:keyless fixture: ERCOT public MIS archive, NP4-190-CD                                 2026-11-19T17:50:33  0.0000  -                     yes
+E10  power-day-ahead   HB_WEST day-ahead 2026-11-19T19:00:00.000Z  fixture:7310042 Pecos ERCOT Power Prices (recorded stand-in, not a Telegraph answer)         2026-11-19T17:50:15  0.0000  fixture:930797586151  yes
+E11  power-day-ahead   HB_WEST day-ahead 2026-11-19T19:00:00.000Z  public:keyless fixture: ERCOT public MIS archive, NP4-190-CD                                 2026-11-19T17:50:33  0.0000  -                     yes
+E12  power-day-ahead   HB_WEST day-ahead 2026-11-19T20:00:00.000Z  fixture:7310042 Pecos ERCOT Power Prices (recorded stand-in, not a Telegraph answer)         2026-11-19T17:50:17  0.0000  fixture:f5c11b8ededc  yes
+E13  power-day-ahead   HB_WEST day-ahead 2026-11-19T20:00:00.000Z  public:keyless fixture: ERCOT public MIS archive, NP4-190-CD                                 2026-11-19T17:50:33  0.0000  -                     yes
+E14  power-day-ahead   HB_WEST day-ahead 2026-11-19T21:00:00.000Z  fixture:7310042 Pecos ERCOT Power Prices (recorded stand-in, not a Telegraph answer)         2026-11-19T17:50:19  0.0000  fixture:e7c94e26a1cd  yes
+E15  power-day-ahead   HB_WEST day-ahead 2026-11-19T21:00:00.000Z  public:keyless fixture: ERCOT public MIS archive, NP4-190-CD                                 2026-11-19T17:50:33  0.0000  -                     yes
+E16  power-day-ahead   HB_WEST day-ahead 2026-11-19T22:00:00.000Z  fixture:7310042 Pecos ERCOT Power Prices (recorded stand-in, not a Telegraph answer)         2026-11-19T17:50:21  0.0000  fixture:4b34500d3ebf  yes
+E17  power-day-ahead   HB_WEST day-ahead 2026-11-19T22:00:00.000Z  public:keyless fixture: ERCOT public MIS archive, NP4-190-CD                                 2026-11-19T17:50:33  0.0000  -                     yes
+E18  power-day-ahead   HB_WEST day-ahead 2026-11-19T23:00:00.000Z  fixture:7310042 Pecos ERCOT Power Prices (recorded stand-in, not a Telegraph answer)         2026-11-19T17:50:24  0.0000  fixture:a48042ea27b4  yes
+E19  power-day-ahead   HB_WEST day-ahead 2026-11-19T23:00:00.000Z  public:keyless fixture: ERCOT public MIS archive, NP4-190-CD                                 2026-11-19T17:50:33  0.0000  -                     yes
+E20  power-day-ahead   HB_WEST day-ahead 2026-11-20T00:00:00.000Z  fixture:7310042 Pecos ERCOT Power Prices (recorded stand-in, not a Telegraph answer)         2026-11-19T17:50:26  0.0000  fixture:a364e15d5ca1  yes
+E21  power-day-ahead   HB_WEST day-ahead 2026-11-20T00:00:00.000Z  public:keyless fixture: ERCOT public MIS archive, NP4-190-CD                                 2026-11-19T17:50:33  0.0000  -                     yes
+
+Intelligence cost: $0.0000 (10 Telegraph calls, cap $0.40); a paid run of this plan would cost about $0.10
+Missing checks: none

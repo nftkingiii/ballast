@@ -1,0 +1,10 @@
+node_modules/
+out/
+.env
+assets/capture/flow/
+refs/*.mp4
+assets/tg/
+assets/capture/
+audio/*.mp3
+audio/*.wav
+*.log
