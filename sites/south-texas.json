@@ -1,0 +1,46 @@
+{
+  "name": "South Texas · Corpus Christi (example site)",
+  "node": "HB_SOUTH",
+  "location": {
+    "name": "Corpus Christi, Texas",
+    "lat": 27.8,
+    "lon": -97.4
+  },
+  "fleet": {
+    "hashrateTh": 400000,
+    "efficiencyJPerTh": 21
+  },
+  "power": {
+    "mode": "realtime",
+    "adderUsdPerMwh": 3
+  },
+  "operating": {
+    "otherVariableUsdPerMwh": 0,
+    "throttleBandUsdPerMwh": 8,
+    "throttleFraction": 0.5,
+    "forwardBufferUsdPerMwh": 5
+  },
+  "heat": {
+    "derateAboveC": 30,
+    "efficiencyPenaltyPctPerC": 0.8,
+    "shutdownAboveC": 42
+  },
+  "planning": {
+    "hours": 8
+  },
+  "intelligence": {
+    "spendCapUsd": 0.4,
+    "providers": {
+      "power": "7310042",
+      "hashprice": [
+        "4283"
+      ],
+      "weather": [
+        "76001"
+      ]
+    },
+    "endpoints": {
+      "4283": "/hashprice"
+    }
+  }
+}

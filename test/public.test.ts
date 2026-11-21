@@ -267,7 +267,66 @@ test("only preset sites are accepted: no free-form site, no path tricks", async 
     for (const site of ["../package", "west-texas.json", "nope", "", { node: "HB_WEST" }]) assert.equal((await post(s.base, { site, mode: "demo" })).status, 400);
     assert.equal((await post(s.base, { site: "west-texas", mode: "paid" })).status, 400);
     assert.equal(loadSite("../package"), undefined);
-    assert.deepEqual(listSites().map((x) => x.id), ["west-texas"]);
+    assert.deepEqual(listSites().map((x) => x.id), ["west-texas", "houston", "north-texas", "panhandle", "south-texas"]);
+  } finally {
+    await s.close();
+  }
+});
+
+test("sites route lists five example sites, West Texas first, none called a demo site, each on its own hub", async () => {
+  const s = await serve();
+  try {
+    const { sites } = (await (await fetch(`${s.base}/public/sites`)).json()) as { sites: any[] };
+    assert.equal(sites.length, 5);
+    assert.equal(sites[0].id, "west-texas");
+    assert.equal(sites[0].name, "West Texas · Pecos (example site)");
+    assert.deepEqual(sites.map((x) => x.node), ["HB_WEST", "HB_HOUSTON", "HB_NORTH", "HB_PAN", "HB_SOUTH"]);
+    for (const x of sites) {
+      assert.doesNotMatch(x.name, /demo/i);
+      assert.match(x.name, /\(example site\)$/);
+      assert.equal(x.providers.power, "7310042");
+      assert.deepEqual([x.providers.hashprice, x.providers.weather], [["4283"], ["76001"]]);
+      assert.equal(x.demoMatches, x.id === "west-texas");
+      assert.equal(loadSite(x.id)?.intelligence.spendCapUsd, 0.4);
+    }
+  } finally {
+    await s.close();
+  }
+});
+
+test("demo run for a non-West site replays the West Texas answers under West Texas's own name and node, with the note", async () => {
+  const s = await serve();
+  try {
+    for (const id of ["panhandle", "north-texas", "houston", "south-texas"]) {
+      const r = await post(s.base, { site: id, mode: "demo" });
+      assert.equal(r.status, 200);
+      const start = r.events![0];
+      assert.equal(start.site, "West Texas · Pecos (example site)");
+      assert.equal(start.note, "Demo replays the recorded West Texas answers; pick Live run for this site's real prices");
+      assert.equal(start.requestedSite, id);
+      const res = last(r.events!);
+      assert.equal(res.type, "result");
+      assert.equal(res.note, start.note);
+      assert.equal(res.plan.site, "West Texas · Pecos (example site)");
+      assert.match(res.plan.label, /DEMO/);
+      assert.ok(!JSON.stringify(res).match(/HB_PAN|HB_NORTH|HB_HOUSTON|HB_SOUTH/), "a demo result never carries another site's node");
+    }
+    const west = await post(s.base, { site: "west-texas", mode: "demo" });
+    assert.equal(west.events![0].note, undefined);
+    assert.equal(last(west.events!).note, undefined);
+  } finally {
+    await s.close();
+  }
+});
+
+test("live run is still available for a non-West site and uses that site's own node", async () => {
+  let seen: string | undefined;
+  const s = await serve({ liveDeps: async (site) => ((seen = site.node), chargingDeps(0.01)()) });
+  try {
+    const r = await post(s.base, { site: "panhandle", mode: "live" });
+    assert.equal(r.status, 200);
+    assert.equal(seen, "HB_PAN");
+    assert.equal(last(r.events!).plan.site, "Texas Panhandle · Amarillo (example site)");
   } finally {
     await s.close();
   }

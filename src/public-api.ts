@@ -11,13 +11,14 @@ import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
 import type { IncomingMessage, ServerResponse } from "node:http";
 import { parseSite } from "./config.ts";
-import { listSites, loadComparison, loadSite } from "./public-data.ts";
+import { DEMO_SITE_ID, listSites, loadComparison, loadSite } from "./public-data.ts";
 import { LiveLimiter, WindowLimiter } from "./public-limits.ts";
 import { planSite, type PlanDeps } from "./plan.ts";
 import type { AskRequest, Transport } from "./telegraph.ts";
 import type { Plan } from "./types.ts";
 
 export const LIVE_LABEL = "live · testnet (Sepolia test USDC)";
+export const DEMO_REPLAY_NOTE = "Demo replays the recorded West Texas answers; pick Live run for this site's real prices";
 export const DEMO_LABEL = "DEMO · recorded stand-in answers, no Telegraph calls, nothing paid";
 
 export interface PublicOptions {
@@ -166,11 +167,15 @@ export function createPublicApi(options: PublicOptions) {
       if (!demoLimiter.allow(ip)) return json(res, 429, { error: "demo_rate_limited", message: "Too many demo runs from this address in the last minute. Wait a moment." });
       const out = stream(res);
       try {
-        const site = parseSite(raw);
+        // The recorded answers are for West Texas (HB_WEST) only. For any other site the demo replays the West Texas
+        // site itself, so the plan is named and keyed as West Texas and never carries the picked site's name or node.
+        const replay = siteId !== DEMO_SITE_ID;
+        const site = parseSite(replay ? loadSite(DEMO_SITE_ID)! : raw);
         const deps = options.demoDeps();
-        out.emit({ type: "start", mode, label: DEMO_LABEL, site: site.name });
+        const note = replay ? DEMO_REPLAY_NOTE : undefined;
+        out.emit({ type: "start", mode, label: DEMO_LABEL, site: site.name, ...(note ? { note, requestedSite: siteId } : {}) });
         const plan = await planSite(site, { ...deps, transport: watch(deps.transport, out.emit) });
-        out.emit({ type: "result", mode, label: DEMO_LABEL, plan: publicPlan(plan) });
+        out.emit({ type: "result", mode, label: DEMO_LABEL, ...(note ? { note } : {}), plan: publicPlan(plan) });
       } catch (error) {
         out.emit({ type: "error", message: `The demo run failed: ${(error as Error).message}` });
       }

@@ -73,6 +73,7 @@ async function refreshStatus() {
 function showSite() {
   const s = sites.find((x) => x.id === $("site").value);
   $("site-facts").textContent = s ? `${s.node} · ${s.location} · ${s.fleet} · next ${s.hours} hours` : "";
+  $("demo-note").hidden = !s || s.demoMatches;
 }
 
 function notice(message, offerDemo) {
@@ -186,7 +187,7 @@ function renderResult(e) {
 
   const banner = h("div", { class: `banner ${live ? "live" : "demo"}` },
     h("span", { class: "chip" }, live ? "LIVE" : "DEMO"),
-    h("span", { class: "t" }, live ? e.label : "Recorded stand-in answers. No Telegraph calls were made and nothing was paid. Receipts starting fixture: are not Telegraph receipts."));
+    h("span", { class: "t" }, live ? e.label : `${e.note ? `${e.note}. ` : ""}Recorded stand-in answers. No Telegraph calls were made and nothing was paid. Receipts starting fixture: are not Telegraph receipts.`));
 
   const stats = h("div", { class: "stats" },
     stat(live ? usd(plan.intelligenceCostUsd) : "$0.00", live ? `total cost, cap ${usd(plan.spendCapUsd)}` : `DEMO cost; a live run of this plan costs about ${usd(plan.projectedPaidCostUsd)}`),

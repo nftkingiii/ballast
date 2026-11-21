@@ -55,6 +55,7 @@ section[hidden] { display: none; }
 select { font: 400 1rem var(--display); color: var(--text); background: var(--panel-2); border: 1px solid var(--line); border-radius: 6px; padding: 10px 12px; }
 .facts { color: var(--muted); font-size: 0.8rem; }
 .buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.choice p.demo-note { color: var(--text); border-left: 2px solid var(--cyan); padding-left: 8px; }
 .choice p { color: var(--muted); font-size: 0.86rem; margin: 8px 0 0; }
 .btn { font: 500 1rem var(--display); border-radius: 6px; padding: 12px 22px; cursor: pointer; border: 1px solid var(--line); background: var(--panel-2); color: var(--text); width: 100%; transition: border-color .15s, background .15s; }
 .btn:hover:not(:disabled) { border-color: var(--cyan); }

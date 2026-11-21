@@ -4,6 +4,9 @@ import { readdirSync, readFileSync } from "node:fs";
 const SITES_DIR = new URL("../sites/", import.meta.url);
 const COMPARE_DIR = new URL("../compare/", import.meta.url);
 
+/** The preset the recorded demo answers belong to (node HB_WEST). */
+export const DEMO_SITE_ID = "west-texas";
+
 export interface SitePreset {
   id: string;
   name: string;
@@ -11,6 +14,8 @@ export interface SitePreset {
   location: string;
   hours: number;
   fleet: string;
+  /** True when the Demo run can replay recorded answers for exactly this site. */
+  demoMatches: boolean;
   providers: { power: string; hashprice: string[]; weather: string[] };
 }
 
@@ -27,10 +32,12 @@ export function listSites(dir: URL = SITES_DIR): SitePreset[] {
       location: String(raw.location?.name ?? ""),
       hours: Number(raw.planning?.hours ?? 8),
       fleet: `${(Number(raw.fleet?.hashrateTh) / 1000).toFixed(0)} PH/s at ${raw.fleet?.efficiencyJPerTh} J/TH`,
+      demoMatches: m[1] === DEMO_SITE_ID,
       providers: raw.intelligence?.providers,
     });
   }
-  return out;
+  // The recorded demo is West Texas, so it leads the picker; the rest follow by id.
+  return out.sort((a, b) => Number(b.id === DEMO_SITE_ID) - Number(a.id === DEMO_SITE_ID) || a.id.localeCompare(b.id));
 }
 
 /** Raw site config for a preset id. The id must match a file in sites/; nothing else is read. */
