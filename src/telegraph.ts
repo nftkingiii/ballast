@@ -286,8 +286,9 @@ export function createAnjomanTransport(
       if (reply.costUsd === null || reply.costUsd === undefined) {
         throw new TransportError(`job ${reply.jobId ?? "?"} reported no cost (${reply.status})${said ? `: "${said}"` : ""}`);
       }
+      // A named miner is only a hint on this route: never claim it answered unless Anjoman says so.
       return {
-        minerId: reply.sources?.[0]?.miner?.id ?? request.minerId,
+        minerId: reply.sources?.[0]?.miner?.id ?? `${request.minerId} (requested; miner not stated by Anjoman)`,
         result,
         costUsd: reply.costUsd,
         answeredAt: new Date(now()).toISOString(),

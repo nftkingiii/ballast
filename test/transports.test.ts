@@ -138,7 +138,7 @@ test("HTTP tool surface: needs the api key, serves the OpenAPI document, never l
   assert.equal(ok.body.plan.mode, "demo");
 });
 
-test("hybrid transport: power prices go to escrow, everything else to Anjoman", async () => {
+test("hybrid transport: power prices and hashprice go to escrow, weather to Anjoman", async () => {
   const { hybridTransport } = await import("../src/runtime.ts");
   const seen: string[] = [];
   const fake = (name: string) => ({ kind: "engine" as const, ask: async (r: { intent: string; minerId: string }) => { seen.push(`${name}:${r.intent}`); return { minerId: r.minerId, result: {}, costUsd: 0.01, answeredAt: "t", receipt: {} }; } });
@@ -146,7 +146,7 @@ test("hybrid transport: power prices go to escrow, everything else to Anjoman", 
   await t.ask({ ...request, intent: "GRID_POWER_PRICE_GENERAL" });
   await t.ask({ ...request, intent: "MINING_HASHPRICE_VERIFY_GENERAL" });
   await t.ask({ ...request, intent: "WEATHER_FORECAST_VERIFY_GENERAL" });
-  assert.deepEqual(seen, ["escrow:GRID_POWER_PRICE_GENERAL", "anjoman:MINING_HASHPRICE_VERIFY_GENERAL", "anjoman:WEATHER_FORECAST_VERIFY_GENERAL"]);
+  assert.deepEqual(seen, ["escrow:GRID_POWER_PRICE_GENERAL", "escrow:MINING_HASHPRICE_VERIFY_GENERAL", "anjoman:WEATHER_FORECAST_VERIFY_GENERAL"]);
   assert.equal(t.kind, "hybrid");
 });
 

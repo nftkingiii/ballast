@@ -52,7 +52,13 @@ async function loadSigner(env: NodeJS.ProcessEnv): Promise<EscrowSigner | undefi
  * because the Anjoman API treats a named miner as a hint and its ranking sent ERCOT HB_WEST asks to NYISO "WEST"
  * providers (2026-11-20). Everything else goes through the Anjoman API key, whose routing works for it.
  */
-export function hybridTransport(escrow: Transport, anjoman: Transport, escrowIntents: Set<string> = new Set(["GRID_POWER_PRICE_GENERAL"])): Transport {
+// Hashprice joined on 2026-11-21: through the API key, answers attributed to Gauge came back all null while
+// Gauge itself answered the same blocks correctly, so the named provider was not the one answering.
+export function hybridTransport(
+  escrow: Transport,
+  anjoman: Transport,
+  escrowIntents: Set<string> = new Set(["GRID_POWER_PRICE_GENERAL", "MINING_HASHPRICE_VERIFY_GENERAL"]),
+): Transport {
   return { kind: "hybrid", ask: (request) => (escrowIntents.has(request.intent) ? escrow : anjoman).ask(request) };
 }
 
@@ -63,7 +69,7 @@ export async function paidDeps(site: SiteConfig, env: NodeJS.ProcessEnv = proces
   const signer = await loadSigner(env);
   if (env.ANJOMAN_API_KEY && signer) {
     transport = hybridTransport(createEngineTransport(signer), createAnjomanTransport(env.ANJOMAN_API_KEY));
-    via = `Telegraph escrow for power prices (wallet ${signer.address}) and the Anjoman API key for the rest`;
+    via = `Telegraph escrow for power prices and hashprice (wallet ${signer.address}) and the Anjoman API key for the rest`;
   } else if (env.ANJOMAN_API_KEY) {
     transport = createAnjomanTransport(env.ANJOMAN_API_KEY);
     via = "Anjoman account balance (API key)";
