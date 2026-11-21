@@ -123,8 +123,8 @@ test("live run: stays under the per-run cap, labels live, hides the wallet, is l
     assert.equal(res.type, "result");
     assert.equal(res.mode, "live");
     assert.equal(res.plan.label, "live · testnet (Sepolia test USDC)");
-    assert.ok(res.plan.spendCapUsd <= 0.2 + 1e-9, "site cap of $0.40 is clamped to $0.20");
-    assert.ok(res.plan.intelligenceCostUsd <= 0.2 + 1e-9, `spent ${res.plan.intelligenceCostUsd}`);
+    assert.ok(res.plan.spendCapUsd <= 0.4 + 1e-9, "the per-run cap is $0.40");
+    assert.ok(res.plan.intelligenceCostUsd <= 0.4 + 1e-9, `spent ${res.plan.intelligenceCostUsd}`);
     assert.equal(res.plan.budgetBreached, true, "at $0.05 a call the fixture plan needs more than the cap, so later hours are held");
     assert.ok(res.plan.decisions.some((d: any) => d.action === "HOLD"));
     assert.ok(!r.text.includes(WALLET), "the paid label (which names the wallet) never reaches the browser");
@@ -147,7 +147,7 @@ test("live run: a cheap run is whole and under the cap", async () => {
   try {
     const res = last((await post(s.base, { site: "west-texas", mode: "live" })).events!);
     assert.equal(res.plan.budgetBreached, false);
-    assert.ok(res.plan.intelligenceCostUsd > 0 && res.plan.intelligenceCostUsd <= 0.2);
+    assert.ok(res.plan.intelligenceCostUsd > 0 && res.plan.intelligenceCostUsd <= 0.4);
     assert.ok(res.plan.evidence.some((e: any) => e.receipt.receiptHash));
   } finally {
     await s.close();

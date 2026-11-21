@@ -61,7 +61,7 @@ async function refreshStatus() {
     lastStatus = null;
   }
   const live = lastStatus?.live;
-  $("cap").textContent = usd(live?.perRunCapUsd ?? 0.2);
+  $("cap").textContent = usd(live?.perRunCapUsd ?? 0.4);
   const q = $("quota");
   if (!live) q.textContent = "Could not read the live run status. The demo run still works.";
   else if (!live.available) q.textContent = live.reason;

@@ -83,7 +83,7 @@ export function createPublicApi(options: PublicOptions) {
   const limiter = options.limiter ?? new LiveLimiter({ now });
   const demoLimiter = options.demoLimiter ?? new WindowLimiter(20, 60_000);
   const minBalance = options.minBalanceUsd ?? 1;
-  const runCap = options.perRunCapUsd ?? 0.2;
+  const runCap = options.perRunCapUsd ?? 0.4;
   const webDir = options.webDir ?? new URL("../web/", import.meta.url);
   const recent: RunRecord[] = [];
   let balanceCache: { at: number; usd: number | null } | undefined;
