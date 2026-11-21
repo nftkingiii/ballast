@@ -23,7 +23,12 @@ export function hashpriceUsdPerPhDay(avgRewardSatsPerBlock: number, btcUsd: numb
 
 export function createLivePublicSources(http: Fetch = fetch): PublicSources {
   const json = async <T>(url: string): Promise<T> => {
-    const res = await http(url, { signal: AbortSignal.timeout(30_000) });
+    // Name ourselves: public APIs such as api.weather.gov require a user agent, and anonymous requests from shared
+    // hosting IPs are the first to be throttled.
+    const res = await http(url, {
+      headers: { "user-agent": "ballast/0.1 (+https://github.com/nftkingiii/ballast)", accept: "application/json, application/geo+json" },
+      signal: AbortSignal.timeout(30_000),
+    });
     if (!res.ok) throw new Error(`${url} answered ${res.status}`);
     return (await res.json()) as T;
   };
@@ -63,15 +68,43 @@ export function createLivePublicSources(http: Fetch = fetch): PublicSources {
       };
     },
     async forecast(lat, lon) {
-      const body = await json<{ hourly: { time: string[]; temperature_2m: number[] } }>(
-        `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&hourly=temperature_2m&past_days=1&forecast_days=3&timezone=UTC`,
-      );
-      const hourlyC: Record<string, number> = {};
-      body.hourly.time.forEach((t, i) => {
-        const v = body.hourly.temperature_2m[i];
-        if (v !== undefined && v !== null) hourlyC[`${t}:00.000Z`] = v;
-      });
-      return { hourlyC, source: "Open-Meteo forecast" };
+      // Open-Meteo first, one retry; then the US National Weather Service hourly forecast (keyless, US sites only).
+      // Live runs from Railway saw Open-Meteo fetches fail three times on 2026-11-20/21.
+      const openMeteo = async () => {
+        const body = await json<{ hourly: { time: string[]; temperature_2m: number[] } }>(
+          `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&hourly=temperature_2m&past_days=1&forecast_days=3&timezone=UTC`,
+        );
+        const hourlyC: Record<string, number> = {};
+        body.hourly.time.forEach((t, i) => {
+          const v = body.hourly.temperature_2m[i];
+          if (v !== undefined && v !== null) hourlyC[`${t}:00.000Z`] = v;
+        });
+        return { hourlyC, source: "Open-Meteo forecast" };
+      };
+      const nws = async () => {
+        const point = await json<{ properties?: { forecastHourly?: string } }>(`https://api.weather.gov/points/${lat.toFixed(4)},${lon.toFixed(4)}`);
+        const url = point.properties?.forecastHourly;
+        if (!url) throw new Error("api.weather.gov has no hourly forecast for this point");
+        const body = await json<{ properties?: { periods?: { startTime: string; temperature: number; temperatureUnit: string }[] } }>(url);
+        const hourlyC: Record<string, number> = {};
+        for (const p of body.properties?.periods ?? []) {
+          const c = p.temperatureUnit === "F" ? ((p.temperature - 32) * 5) / 9 : p.temperature;
+          const hour = new Date(p.startTime);
+          hour.setUTCMinutes(0, 0, 0);
+          hourlyC[hour.toISOString()] = Math.round(c * 10) / 10;
+        }
+        if (!Object.keys(hourlyC).length) throw new Error("api.weather.gov returned no hourly periods");
+        return { hourlyC, source: "US National Weather Service hourly forecast (api.weather.gov)" };
+      };
+      const errors: string[] = [];
+      for (const attempt of [openMeteo, openMeteo, nws]) {
+        try {
+          return await attempt();
+        } catch (error) {
+          errors.push((error as Error).message);
+        }
+      }
+      throw new Error(`no forecast source answered: ${errors.join("; ")}`);
     },
     async observedHigh(lat, lon, date) {
       const body = await json<{ daily?: { temperature_2m_max?: (number | null)[] } }>(

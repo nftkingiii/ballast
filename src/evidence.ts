@@ -60,6 +60,22 @@ export interface WeatherInput {
 
 const iso = (ms: number) => new Date(ms).toISOString();
 const finite = (v: unknown): v is number => typeof v === "number" && Number.isFinite(v);
+
+/** A number from a number or a plain numeric string ("47,572" too); NaN otherwise. */
+const num = (v: unknown): number => {
+  if (finite(v)) return v;
+  if (typeof v === "string" && /^\s*-?[\d,]+(\.\d+)?\s*$/.test(v)) return Number(v.replace(/,/g, ""));
+  return NaN;
+};
+
+/** Lifts a single nested object (e.g. { result: {...} } or { answer: {...} }) so restated answers read the same. */
+function flattenAnswer(result: Record<string, unknown>): Record<string, unknown> {
+  for (const key of ["result", "answer", "data", "response"]) {
+    const inner = result[key];
+    if (inner && typeof inner === "object" && !Array.isArray(inner)) return { ...(inner as Record<string, unknown>), ...result };
+  }
+  return { ...result };
+}
 const sameInstant = (a: unknown, b: Date) => typeof a === "string" && Date.parse(a) === b.getTime();
 
 function record(ctx: Ctx, e: Omit<Evidence, "id">): Evidence {
@@ -157,12 +173,16 @@ export async function gatherHashprice(ctx: Ctx): Promise<HashpriceInput> {
     }
     const { evidence, answer } = got;
     out.evidence.push(evidence.id);
-    const r = answer.result;
-    const sats = r.hashprice_sats_per_ph_day;
-    const usd = finite(r.hashprice_usd_per_ph_day) && r.hashprice_usd_per_ph_day > 0 ? r.hashprice_usd_per_ph_day : finite(sats) ? (sats / 1e8) * reference.btcUsd : NaN;
+    const r = flattenAnswer(answer.result);
+    // Anjoman's agent may restate the miner's JSON: numbers as strings, nesting, or USD only. Read either unit,
+    // convert with the public BTC price, and keep what arrived when it can't be read.
+    let sats = num(r.hashprice_sats_per_ph_day);
+    let usd = num(r.hashprice_usd_per_ph_day);
+    if (!(sats > 0) && usd > 0) sats = (usd / reference.btcUsd) * 1e8;
+    if (!(usd > 0) && sats > 0) usd = (sats / 1e8) * reference.btcUsd;
+    if (finite(r.block_height) === false && num(r.block_height) > 0) r.block_height = num(r.block_height);
     let bad: string | undefined;
-    if (!finite(sats) || sats <= 0) bad = "no positive hashprice_sats_per_ph_day in the answer";
-    else if (!finite(usd) || usd <= 0) bad = "could not express the answer in USD per PH/s per day";
+    if (!(sats > 0) || !(usd > 0)) bad = `no positive hashprice (sats or USD per PH/s per day) in the answer: ${JSON.stringify(answer.result).slice(0, 160)}`;
     else if (finite(r.block_height) && tip - r.block_height > site.intelligence.maxBlocksBehind) bad = `stale: answer is for block ${r.block_height}, chain tip is ${tip}`;
     else if (tooOld(ctx, answer.answeredAt, site.intelligence.maxAgeMin.hashprice)) bad = `stale: answered at ${answer.answeredAt}`;
     if (bad) {
