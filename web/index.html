@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ballast</title>
+<meta name="description" content="Hourly hash-or-curtail plans for a Bitcoin mining site, built on receipted Telegraph intelligence. Recommendations only.">
+<meta name="color-scheme" content="dark">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="/app.css">
+</head>
+<body>
+<header class="top">
+  <a class="mark" href="#run" aria-label="Ballast">Ballast</a>
+  <nav class="tabs" role="tablist" aria-label="Sections">
+    <button role="tab" id="tab-run" aria-controls="panel-run" data-tab="run">Run</button>
+    <button role="tab" id="tab-recorded" aria-controls="panel-recorded" data-tab="recorded">Recorded run</button>
+    <button role="tab" id="tab-compare" aria-controls="panel-compare" data-tab="compare">With vs without</button>
+    <button role="tab" id="tab-how" aria-controls="panel-how" data-tab="how">How it works</button>
+  </nav>
+</header>
+
+<main>
+<!-- RUN -->
+<section id="panel-run" role="tabpanel" aria-labelledby="tab-run" hidden>
+  <h1>Hash or curtail, hour by hour</h1>
+  <p class="lead">Ballast buys a power price, a hashprice and a weather check from Telegraph, checks them against each other, and says RUN, CURTAIL or HOLD for each hour. When a check is missing it holds and names the check. It recommends only; no miner is switched.</p>
+
+  <p class="small"><a href="#how" id="watch">Watch the 2-minute demo</a></p>
+
+  <div class="card controls">
+    <label class="field">
+      <span>Site</span>
+      <select id="site"></select>
+    </label>
+    <div id="site-facts" class="facts mono"></div>
+    <div class="buttons">
+      <div class="choice">
+        <button id="btn-live" class="btn primary" type="button">Live run</button>
+        <p>Real paid Telegraph calls on testnet. Takes one to three minutes. Spend capped at <span id="cap">$0.20</span> a run.</p>
+      </div>
+      <div class="choice">
+        <button id="btn-demo" class="btn" type="button">Demo run</button>
+        <p>Free and unlimited. Recorded stand-in answers, marked DEMO wherever it shows a result.</p>
+      </div>
+    </div>
+    <p id="quota" class="quota mono" aria-live="polite"></p>
+  </div>
+
+  <div id="notice" class="notice" hidden role="alert"></div>
+  <ol id="progress" class="progress" hidden aria-live="polite"></ol>
+  <div id="result" hidden></div>
+
+  <h2>Recent live runs</h2>
+  <p class="muted small">Since the last restart. The host has no volume, so this list starts empty after a redeploy. Last 20 kept.</p>
+  <div id="recent" class="recent"></div>
+</section>
+
+<!-- RECORDED -->
+<section id="panel-recorded" role="tabpanel" aria-labelledby="tab-recorded" hidden>
+  <h1>A Mind asked, Ballast answered</h1>
+  <p class="lead">A recorded run, not one you can trigger here. A Mind on Telegram was asked "Should we hash or curtail tonight?" and called Ballast's key-protected tool, which bought the inputs below.</p>
+  <div id="recorded"></div>
+</section>
+
+<!-- COMPARE -->
+<section id="panel-compare" role="tabpanel" aria-labelledby="tab-compare" hidden>
+  <h1>With and without Telegraph</h1>
+  <p class="lead">The same 89 real ERCOT hours, run two ways: a policy that reads one unchecked price from the web, and Ballast with provider answers, public cross-checks, holds and receipts.</p>
+  <div id="compare"></div>
+</section>
+
+<!-- HOW -->
+<section id="panel-how" role="tabpanel" aria-labelledby="tab-how" hidden>
+  <h1>How it works</h1>
+  <p class="lead">A Mind calls one HTTP tool. Ballast does the buying and the checking, then returns a plan whose every input names its provider, time, cost and receipt.</p>
+
+  <div class="flow">
+    <div class="node">
+      <h3>Mind</h3>
+      <p>On hellominds, reached over Telegram.</p>
+      <p class="mono tiny" title="Mind ID">d05b3f42-f36b-1410-8467-00039ce7df11</p>
+    </div>
+    <div class="wire"><span>POST /plan_site<br>x-api-key</span></div>
+    <div class="node">
+      <h3>Ballast tool</h3>
+      <p>Plans each hour: margin = revenue minus power cost. Checks every answer before it counts.</p>
+    </div>
+    <div class="wire"><span>buys, with receipts</span></div>
+    <div class="node wide">
+      <h3>Telegraph</h3>
+      <ul class="plain">
+        <li><b class="mono">Pecos 7310042</b> power price, escrow route</li>
+        <li><b class="mono">Gauge 4283</b> hashprice, escrow route</li>
+        <li><b class="mono">Weather verify</b> via the Anjoman API</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="cols">
+    <div class="card">
+      <h3>What each hour can say</h3>
+      <dl class="legend">
+        <dt><span class="tag run">RUN</span></dt><dd>Margin clears the throttle band ($8/MWh on the demo site).</dd>
+        <dt><span class="tag throttle">THROTTLE</span></dt><dd>Margin is positive but thin, so run part of the fleet.</dd>
+        <dt><span class="tag curtail">CURTAIL</span></dt><dd>Margin is below zero.</dd>
+        <dt><span class="tag hold">HOLD</span></dt><dd>An input is missing or conflicting. The plan names the check instead of guessing.</dd>
+      </dl>
+    </div>
+    <div class="card">
+      <h3>What gets rejected</h3>
+      <ul class="plain">
+        <li>A stale answer</li>
+        <li>An answer for another node or market</li>
+        <li>An answer that disagrees with free public data beyond tolerance</li>
+        <li>Spend past the cap: later hours are held</li>
+      </ul>
+      <p class="muted small">A wrong-market or wrong-interval answer is asked again, then read from the public archive and labelled public.</p>
+    </div>
+  </div>
+
+  <h2>Demo video</h2>
+  <div id="video" class="video" data-src="https://youtu.be/sy5iDpDbihM">
+    <p class="muted"><a href="https://youtu.be/sy5iDpDbihM" rel="noopener">Watch the demo on YouTube</a></p>
+  </div>
+
+  <h2>Links and limits</h2>
+  <ul class="plain links">
+    <li><a href="https://github.com/nftkingiii/ballast" rel="noopener">github.com/nftkingiii/ballast</a></li>
+    <li>Testnet only: payments are Sepolia test USDC.</li>
+    <li>Pecos is our own miner, so Pecos answers are an internal test, not outside usage.</li>
+  </ul>
+  <p class="closing">Recommendations only. No miner is switched.</p>
+</section>
+</main>
+
+<footer class="foot muted small">Ballast. Testnet. Recommendations only.</footer>
+<script src="/app.js" defer></script>
+</body>
+</html>

@@ -5,10 +5,14 @@
 //   POST /explain_decision  { planId, hour }         -> { text }
 //   POST /monitor_site      { site?, timeline?, ticks?, monitorId?, capUsd? } -> { monitorId, text, tick, done }
 //   POST /whats_changed     { monitorId, tick? }     -> { text }
+//   GET  /, /public/*, POST /public/run   the public web page and its routes (src/public-api.ts); no api key, limits enforced there
 // Set BALLAST_TOOL_TOKEN to require it as the x-api-key header. Paid mode is BALLAST_PAID=1 on the server only.
 import { createServer, type IncomingMessage, type ServerResponse } from "node:http";
 import { timingSafeEqual } from "node:crypto";
 import { createTools, TOOL_SCHEMAS, type Tools } from "./tools.ts";
+import { createPublicApi, type PublicApi } from "./public-api.ts";
+import { demoDeps, paidDeps } from "./runtime.ts";
+import { readEscrowAvailableUsd } from "./telegraph.ts";
 
 const MAX_BODY = 64 * 1024;
 
@@ -56,7 +60,7 @@ function readBody(req: IncomingMessage): Promise<unknown> {
 
 const safeEqual = (a: string, b: string) => a.length === b.length && timingSafeEqual(Buffer.from(a), Buffer.from(b));
 
-export function createHandler(tools: Tools, token = process.env.BALLAST_TOOL_TOKEN) {
+export function createHandler(tools: Tools, token = process.env.BALLAST_TOOL_TOKEN, publicApi?: PublicApi) {
   let windowStart = Date.now();
   let count = 0;
   return async (req: IncomingMessage, res: ServerResponse) => {
@@ -67,6 +71,7 @@ export function createHandler(tools: Tools, token = process.env.BALLAST_TOOL_TOK
     const url = new URL(req.url ?? "/", "http://localhost");
     if (req.method === "GET" && url.pathname === "/health") return send(200, { ok: true });
     if (req.method === "GET" && url.pathname === "/openapi.json") return send(200, openApi(process.env.BALLAST_PUBLIC_URL ?? `${String(req.headers["x-forwarded-proto"] ?? "http").split(",")[0]}://${req.headers.host ?? "localhost"}`));
+    if (publicApi && (await publicApi.handle(req, res, url, () => readBody(req)))) return;
     if (req.method !== "POST") return send(404, { error: "not_found" });
 
     if (token && !safeEqual(String(req.headers["x-api-key"] ?? ""), token)) return send(401, { error: "bad_api_key" });
@@ -91,7 +96,18 @@ if (process.argv[1]?.endsWith("http.ts")) {
   const paid = process.env.BALLAST_PAID === "1";
   const tools = createTools({ paid, maxCapUsd: Number(process.env.BALLAST_MAX_CAP_USD ?? "0.5") });
   const port = Number(process.env.PORT ?? 8787);
-  createServer(createHandler(tools)).listen(port, () => {
+  // The public page's live button needs BALLAST_PUBLIC_LIVE=1 on top of paid credentials; otherwise it only offers the demo.
+  const liveEnabled = process.env.BALLAST_PUBLIC_LIVE === "1";
+  const publicApi = createPublicApi({
+    liveEnabled,
+    liveDeps: (site) => paidDeps(site),
+    demoDeps: () => demoDeps(),
+    getBalanceUsd: async () => {
+      if (!process.env.ANJOMAN_API_KEY) throw new Error("no ANJOMAN_API_KEY to read the escrow balance with");
+      return readEscrowAvailableUsd(process.env.ANJOMAN_API_KEY);
+    },
+  });
+  createServer(createHandler(tools, process.env.BALLAST_TOOL_TOKEN, publicApi)).listen(port, () => {
     console.log(`ballast listening on :${port} in ${paid ? "PAID" : "DEMO"} mode${process.env.BALLAST_TOOL_TOKEN ? ", api key required" : ", NO api key set"}`);
   });
 }
