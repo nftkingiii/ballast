@@ -6,7 +6,7 @@ import { createHandler } from "../src/http.ts";
 import { createPublicApi, type PublicOptions } from "../src/public-api.ts";
 import { LiveLimiter, WindowLimiter } from "../src/public-limits.ts";
 import { demoDeps } from "../src/runtime.ts";
-import { readEscrowAvailableUsd, type Transport } from "../src/telegraph.ts";
+import { readLedgerAvailableUsd, type Transport } from "../src/telegraph.ts";
 import { createTools } from "../src/tools.ts";
 import { loadComparison, loadSite, listSites } from "../src/public-data.ts";
 
@@ -310,11 +310,26 @@ test("comparison data is read from compare/results.md", () => {
   assert.equal(c.injectedKinds!.rows.length, 6);
 });
 
-test("escrow balance reader: unit from the field name, and anything unreadable throws", async () => {
-  const reply = (body: unknown, status = 200) => (async () => new Response(JSON.stringify(body), { status })) as unknown as typeof fetch;
-  assert.equal(await readEscrowAvailableUsd("k", reply({ availableUsd: 3.5 })), 3.5);
-  assert.equal(await readEscrowAvailableUsd("k", reply({ available_uusdc: "2500000" })), 2.5);
-  assert.equal(await readEscrowAvailableUsd("k", reply({ data: { available: "1.25" } })), 1.25);
-  await assert.rejects(readEscrowAvailableUsd("k", reply({ hello: 1 })));
-  await assert.rejects(readEscrowAvailableUsd("k", reply({}, 401)));
+test("ledger balance reader: the recorded node response shape, micro-USDC strings, fails closed", async () => {
+  const addr = "0xF276ECa360dFF2c0119e15CCb20645071d18F18A";
+  const recorded = { available: "4700000", balance: "4700000", charged: "300000", deposited: "5000000" };
+  let url = "";
+  const reply = (body: unknown, status = 200) => (async (u: string) => ((url = u), new Response(JSON.stringify(body), { status }))) as unknown as typeof fetch;
+  assert.equal(await readLedgerAvailableUsd(addr, reply(recorded)), 4.7);
+  assert.equal(url, `https://devnode.telegraphprotocol.com/v1/ledger/account/${addr}`);
+  assert.equal(await readLedgerAvailableUsd(addr, reply({ available: "999999" })), 0.999999);
+  for (const bad of [{ available: "abc" }, { available: "1.5" }, { available: "-5" }, { available: null }, {}, { balance: "4700000" }]) await assert.rejects(readLedgerAvailableUsd(addr, reply(bad)));
+  await assert.rejects(readLedgerAvailableUsd(addr, reply(recorded, 500)));
+  await assert.rejects(readLedgerAvailableUsd("../x", reply(recorded)));
+});
+
+test("status shows the escrow available in dollars to the cent and never an address", async () => {
+  const s = await serve({ getBalanceUsd: async () => 4.7 });
+  try {
+    const text = await (await fetch(`${s.base}/public/status`)).text();
+    assert.equal(JSON.parse(text).live.escrowAvailableUsd, 4.7);
+    assert.ok(!/0x[0-9a-fA-F]{40}/.test(text));
+  } finally {
+    await s.close();
+  }
 });

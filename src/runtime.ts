@@ -28,7 +28,7 @@ export function demoDeps(fx: Fixture = loadFixture()): PlanDeps {
  * Credentials are read from the environment only and never printed.
  */
 /** An escrow signer from BALLAST_SIGNER_KEY (a hex key in the environment) or BALLAST_SIGNER_MODULE (a local module). */
-async function loadSigner(env: NodeJS.ProcessEnv): Promise<EscrowSigner | undefined> {
+export async function loadSigner(env: NodeJS.ProcessEnv): Promise<EscrowSigner | undefined> {
   if (env.BALLAST_SIGNER_KEY) {
     const { privateKeyToAccount } = await import("viem/accounts");
     let key = env.BALLAST_SIGNER_KEY.trim();

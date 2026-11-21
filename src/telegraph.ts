@@ -299,24 +299,15 @@ export function createAnjomanTransport(
 }
 
 /**
- * Available escrow balance in USD, read from the Anjoman backend with the API key (GET /engine/escrow/balance answers 401 without one).
- * The response shape was not verified against a funded account: the unit is taken from the field name, and anything this cannot
- * read as a number throws, so a caller that needs a floor refuses rather than guesses.
+ * Available escrow balance of a wallet in USD, from the node ledger (keyless GET /v1/ledger/account/{address}).
+ * Amounts are micro-USDC strings, e.g. {"available":"4700000","balance":"4700000","charged":"300000","deposited":"5000000"} is $4.70.
+ * Anything that is not a non-negative whole number of micro-USDC throws, so a caller that needs a floor refuses rather than guesses.
  */
-export async function readEscrowAvailableUsd(apiKey: string, http: Fetch = fetch, url = `${ANJOMAN_API}/engine/escrow/balance`): Promise<number> {
-  const res = await http(url, { headers: { authorization: `Bearer ${apiKey}` }, signal: AbortSignal.timeout(10_000) });
-  if (!res.ok) throw new TransportError(`escrow balance read failed with ${res.status}`, res.status);
-  const body = (await res.json()) as Record<string, unknown>;
-  const pools = [body, ...(typeof body.data === "object" && body.data ? [body.data as Record<string, unknown>] : [])];
-  for (const o of pools) {
-    for (const [key, unit] of [["availableUsd", 1], ["available_usd", 1], ["availableUSDC", 1], ["available_uusdc", 1e-6], ["availableUusdc", 1e-6], ["available", 0], ["availableBalance", 0], ["balance", 0]] as const) {
-      const raw = o[key];
-      const n = typeof raw === "string" ? Number(raw) : raw;
-      if (typeof n !== "number" || !Number.isFinite(n)) continue;
-      if (unit) return n * unit;
-      // A bare field: a decimal string or a number with a fraction is dollars; a whole number is micro-USDC.
-      return typeof raw === "string" ? (raw.includes(".") ? n : n / 1e6) : Number.isInteger(n) ? n / 1e6 : n;
-    }
-  }
-  throw new TransportError("escrow balance response had no readable available amount");
+export async function readLedgerAvailableUsd(address: string, http: Fetch = fetch, base = DEVNODE): Promise<number> {
+  if (!/^0x[0-9a-fA-F]{40}$/.test(address)) throw new TransportError("not a wallet address");
+  const res = await http(`${base}/v1/ledger/account/${address}`, { signal: AbortSignal.timeout(10_000) });
+  if (!res.ok) throw new TransportError(`ledger read failed with ${res.status}`, res.status);
+  const available = ((await res.json()) as { available?: unknown }).available;
+  if ((typeof available !== "string" && typeof available !== "number") || !/^[0-9]+$/.test(String(available))) throw new TransportError("ledger response has no readable available amount");
+  return Number(available) / 1e6;
 }

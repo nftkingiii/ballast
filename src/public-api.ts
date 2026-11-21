@@ -115,7 +115,8 @@ export function createPublicApi(options: PublicOptions) {
       else if (s.remainingToday === 0) [available, reason] = [false, `All ${s.dailyMax} live runs for today (UTC) are used. They reset at 00:00 UTC.`];
       else if (s.remainingForYou === 0) [available, reason] = [false, `You have used your ${s.perIpMax} live runs for today (UTC).`];
     }
-    return { live: { available, reason, label: LIVE_LABEL, ...s, perRunCapUsd: runCap, minBalanceUsd: minBalance }, demo: { label: DEMO_LABEL } };
+    const escrow = options.liveEnabled ? balanceCache?.usd ?? null : null;
+    return { live: { available, reason, escrowAvailableUsd: escrow === null ? null : Math.round(escrow * 100) / 100, label: LIVE_LABEL, ...s, perRunCapUsd: runCap, minBalanceUsd: minBalance }, demo: { label: DEMO_LABEL } };
   }
 
   function publicPlan(plan: Plan): Plan {

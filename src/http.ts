@@ -11,8 +11,8 @@ import { createServer, type IncomingMessage, type ServerResponse } from "node:ht
 import { timingSafeEqual } from "node:crypto";
 import { createTools, TOOL_SCHEMAS, type Tools } from "./tools.ts";
 import { createPublicApi, type PublicApi } from "./public-api.ts";
-import { demoDeps, paidDeps } from "./runtime.ts";
-import { readEscrowAvailableUsd } from "./telegraph.ts";
+import { demoDeps, loadSigner, paidDeps } from "./runtime.ts";
+import { readLedgerAvailableUsd } from "./telegraph.ts";
 
 const MAX_BODY = 64 * 1024;
 
@@ -102,9 +102,11 @@ if (process.argv[1]?.endsWith("http.ts")) {
     liveEnabled,
     liveDeps: (site) => paidDeps(site),
     demoDeps: () => demoDeps(),
+    // The floor is the signer wallet's available escrow on the node ledger (the money live runs actually spend).
     getBalanceUsd: async () => {
-      if (!process.env.ANJOMAN_API_KEY) throw new Error("no ANJOMAN_API_KEY to read the escrow balance with");
-      return readEscrowAvailableUsd(process.env.ANJOMAN_API_KEY);
+      const signer = await loadSigner(process.env);
+      if (!signer) throw new Error("no escrow signer configured");
+      return readLedgerAvailableUsd(signer.address);
     },
   });
   createServer(createHandler(tools, process.env.BALLAST_TOOL_TOKEN, publicApi)).listen(port, () => {

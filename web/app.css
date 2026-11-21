@@ -39,6 +39,7 @@ ul.plain li { padding: 4px 0; }
 .tabs::-webkit-scrollbar { display: none; }
 .tabs button { font: 500 0.95rem var(--display); color: var(--muted); background: none; border: 0; border-bottom: 2px solid transparent; padding: 17px 12px 15px; cursor: pointer; white-space: nowrap; }
 .tabs button:hover { color: var(--text); }
+  .tabs .short { display: none; }
 .tabs button[aria-selected="true"] { color: var(--text); border-bottom-color: var(--cyan); }
 :focus-visible { outline: 2px solid var(--cyan); outline-offset: 2px; }
 
@@ -166,6 +167,11 @@ tr.why ul { margin: 0; padding-left: 18px; }
 
 @media (max-width: 720px) {
   .hide-sm, .mbar { display: none; }
+  .tabs .long { display: none; }
+  .tabs .short { display: inline; }
+  .top { gap: 10px; }
+  .tabs { gap: 0; justify-content: space-between; }
+  .tabs button { padding-left: 6px; padding-right: 6px; }
   td, th { padding-left: 6px; padding-right: 6px; }
   .top { gap: 12px; padding: 0 12px; }
   .tabs button { padding: 17px 9px 15px; font-size: 0.88rem; }
