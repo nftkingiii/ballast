@@ -1,1 +1,16 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><rect width="32" height="32" rx="6" fill="#0c141b"/><rect x="6" y="19" width="20" height="4" fill="#f5a524"/><rect x="6" y="9" width="12" height="4" fill="#3dd6e8"/></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <title>Ballast</title>
+  <!-- Eight hour bars: the margin profile of the live run (plan 708b2b3a8b, $47.19 to $26.34/MWh), resting on a ballast weight. -->
+  <rect width="512" height="512" rx="112" fill="#0a1117"/>
+  <g fill="#f5a524">
+    <rect x="139" y="151" width="24" height="140" rx="5"/>
+    <rect x="169" y="163" width="24" height="128" rx="5"/>
+    <rect x="199" y="167" width="24" height="124" rx="5"/>
+    <rect x="229" y="168" width="24" height="123" rx="5"/>
+    <rect x="259" y="182" width="24" height="109" rx="5"/>
+    <rect x="289" y="193" width="24" height="98" rx="5"/>
+    <rect x="319" y="211" width="24" height="80" rx="5"/>
+    <rect x="349" y="213" width="24" height="78" rx="5"/>
+  </g>
+  <path d="M139 309 H373 L340 357 Q337 361 332 361 H180 Q175 361 172 357 Z" fill="#3dd6e8"/>
+</svg>
