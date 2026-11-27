@@ -2,7 +2,7 @@
 
 Hourly hash-or-curtail decisions for a Bitcoin mining site in ERCOT. For each hour Ballast compares what the fleet earns (hashprice) with what the power costs and answers RUN, THROTTLE, CURTAIL or HOLD, with every input's provider, time and receipt, the total intelligence cost, and the checks that are missing. Built for Telegraph Hackathon Season II, Mission 12 (Mining & Power), and shaped to run as a tool for a Mind on Minds by Animoca Brands.
 
-Status: the core, the demo mode and both tool surfaces are built and tested. **Paid mode has not been run against Telegraph yet** (no account, key or funds); see RESEARCH.md for what that needs.
+Status: live at https://ballast-app.up.railway.app, with paid testnet runs through Telegraph (Ethereum Sepolia, test USDC). The first full run through a Mind (2026-11-21, plan f2efd8bf94) returned 8 of 8 hours RUN with margins of $26.73 to $47.18/MWh, from 10 Telegraph calls for $0.11; each ERCOT price matched ERCOT's published report to the cent. The public page runs capped live plans on five ERCOT example sites. Walkthrough video: https://youtu.be/sy5iDpDbihM
 
 ## Run the demo (no account, no cost)
 
@@ -84,7 +84,7 @@ Timelines: `demo`, `disagreement`, `stale`, `missing-hashprice`, `spend-cap`, `n
 - **Abstention.** `NO RECOMMENDATION` with a kind (`conflict`, `stale`, `missing`, `budget`), the reasons, the last decision (marked not current), and what would let it decide: which check, from which provider. The current hour needs a fresh real-time answer every tick and never falls back to day-ahead. Held hours are retried every tick and revisited when the input arrives.
 - **Spend.** One cap for the whole session, not per run. A tick buys only what is due: real-time for the current hour each tick, hashprice hourly, day-ahead for new hours and every 6 h, weather every 6 h; slow inputs ride on their freshness window if a refresh fails. When the cap is reached nothing more is bought and hours that needed a refresh become `NO RECOMMENDATION`. Without a hashprice nothing is bought at all.
 - **History.** Kept in memory; `--log file.json` rewrites the full history and evidence ledger after every tick.
-- **Live.** `--live --paid --cap <usd> [--every 15] [--ticks n]` is the only path that waits and buys. It refuses to start without `--paid`, a cap above zero, and credentials in the environment. It has not been run.
+- **Live.** `--live --paid --cap <usd> [--every 15] [--ticks n]` is the only path that waits and buys. It refuses to start without `--paid`, a cap above zero, and credentials in the environment. This CLI path itself hasn't been used for a run; the deployed server's paid mode (below) is what runs live checks, through the Mind tool and the public page.
 
 Tools: `monitor_site({site?, timeline?, ticks?, monitorId?, capUsd?})` starts or advances a session; `whats_changed({monitorId, tick?})` explains a tick without buying. On a server in paid mode (`BALLAST_PAID=1`) each `monitor_site` call runs one live check, so the caller sets the cadence; the session cap is enforced across calls and clamped to `BALLAST_MAX_CAP_USD`. A request cannot switch paid mode on.
 
